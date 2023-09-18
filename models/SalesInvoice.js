@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const SalesInvoiceSchema = new mongoose.Schema({
      
+    userEmail:{type: String},
     inputList:{ type: Array },
     fullAmount:{ type: Number },
     fullTax:{ type: Number },

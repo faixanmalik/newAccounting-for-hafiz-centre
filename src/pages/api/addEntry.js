@@ -56,14 +56,14 @@ export default async function handler(req, res) {
             }
         }
         else if( path === 'bankAccount'){
-            const { bankBranch, accountNo, accountType, accountDesc, accountTitle, chartsOfAccount,  borrowingLimit, importEntries, row } = req.body;
+            const { userEmail, bankBranch, accountNo, accountType, accountDesc, accountTitle, chartsOfAccount,  borrowingLimit, importEntries, row } = req.body;
 
             if(importEntries){
                 await BankAccount.insertMany(row);
                 res.status(200).json({ success: true, message: "Entry Added !" }) 
             }
             else{
-                let newBankAccount = new BankAccount( { bankBranch, accountNo, accountType, accountDesc, accountTitle, chartsOfAccount,  borrowingLimit } );
+                let newBankAccount = new BankAccount( { userEmail, bankBranch, accountNo, accountType, accountDesc, accountTitle, chartsOfAccount,  borrowingLimit } );
                 await newBankAccount.save();
                 res.status(200).json({ success: true, message: "Entry Added !" }) 
             }
@@ -142,9 +142,9 @@ export default async function handler(req, res) {
 
         // Sales Invoice
         else if( path === 'SalesInvoice'){
-            const { phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
+            const { userEmail, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
 
-            let newEntry = new SalesInvoice( { phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
+            let newEntry = new SalesInvoice( { userEmail, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
             await newEntry.save();
             res.status(200).json({ success: true, message: "Entry Added !" }) 
         }

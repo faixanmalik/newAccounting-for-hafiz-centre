@@ -15,7 +15,7 @@ import { DownloadTableExcel } from 'react-export-table-to-excel';
 import {XLSX, read, utils} from 'xlsx';
 
 
-const ContactList = ({dbContact}) => {
+const ContactList = ({userEmail, dbContact}) => {
 
   const [open, setOpen] = useState(false)
 
@@ -40,6 +40,7 @@ const ContactList = ({dbContact}) => {
 
   const [allContact, setAllContact] = useState(dbContact)
   const [filterCharts, setFilterCharts] = useState('allContacts')
+  const [filteredInvoices, setFilteredInvoices] = useState([])
   
 
   // authentications
@@ -64,7 +65,12 @@ const ContactList = ({dbContact}) => {
       setIsAdmin(true)
     }
 
-  }, [filterCharts]);
+    let filteredInvoices = allContact.filter((item)=>{
+      return item.userEmail === userEmail;
+    })
+    setFilteredInvoices(filteredInvoices)
+
+  }, [filterCharts, userEmail]);
 
 
   const tableRef = useRef(null);
@@ -268,7 +274,7 @@ const ContactList = ({dbContact}) => {
     e.preventDefault()
     
     // fetch the data from form to makes a file in local system
-    const data = { name, type,  email, phoneNo, country, streetAddress, city, state, zip, taxRigNo, paymentMethod, terms , openingBalance, date, path:'contactList' };
+    const data = { userEmail, name, type,  email, phoneNo, country, streetAddress, city, state, zip, taxRigNo, paymentMethod, terms , openingBalance, date, path:'contactList' };
       let res = await fetch(`/api/addEntry`, {
       method: 'POST',
       headers: { 
@@ -394,7 +400,7 @@ const ContactList = ({dbContact}) => {
 
                 <tbody>
                   
-                  {allContact.map((item, index)=>{
+                  {filteredInvoices.map((item, index)=>{
                     return <tr key={item._id} className="bg-white border-b hover:bg-gray-50">
                     <td className="w-4 p-4">
                       <div className="flex items-center">
@@ -428,7 +434,7 @@ const ContactList = ({dbContact}) => {
                 </tbody>
 
               </table>
-                {allContact.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found</h1> : ''}
+                {filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found</h1> : ''}
             </div>
             </div>
           </form>

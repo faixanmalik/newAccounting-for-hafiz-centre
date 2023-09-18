@@ -21,13 +21,14 @@ import Product from 'models/Product';
     return classes.filter(Boolean).join(' ')
   }
 
-  const CreditSalesInvoice = ({ dbVouchers, dbProducts, dbContacts, dbEmployees, dbTaxRate }) => {
+  const CreditSalesInvoice = ({ userEmail, dbVouchers, dbProducts, dbContacts, dbEmployees, dbTaxRate }) => {
     
     const [open, setOpen] = useState(false)
     const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
+    const [filteredInvoices, setFilteredInvoices] = useState([])
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -44,11 +45,16 @@ import Product from 'models/Product';
     useEffect(() => {
       setContacts(dbContacts, dbEmployees)
 
+      let filteredInvoices = dbVouchers.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredInvoices(filteredInvoices)
+
       const myUser = JSON.parse(localStorage.getItem('myUser'))
       if(myUser.department === 'Admin'){
         setIsAdmin(true)
       }
-    }, [])
+    }, [userEmail])
    
 
     // JV
@@ -160,7 +166,7 @@ import Product from 'models/Product';
 
 
       // fetch the data from form to makes a file in local system
-      const data = { phoneNo, email, discount, amountPaid, amountReceived, billStatus, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path:'CreditSalesInvoice' };
+      const data = { userEmail, phoneNo, email, discount, amountPaid, amountReceived, billStatus, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path:'CreditSalesInvoice' };
 
       let res = await fetch(`/api/addEntry`, {
         method: 'POST',
@@ -438,7 +444,7 @@ import Product from 'models/Product';
                     </tr>
                   </thead>
                   <tbody>
-                    {dbVouchers.map((item, index)=>{
+                    {filteredInvoices.map((item, index)=>{
                     return <tr key={index} className="bg-white border-b hover:bg-gray-50">
                       <td className="w-4 p-4">
                         <div className="flex items-center">
@@ -477,7 +483,7 @@ import Product from 'models/Product';
                     
                   </tbody>
                 </table>
-                { dbVouchers.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
+                { filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
               </div>
 
             </div>

@@ -15,7 +15,9 @@ export default function App({ Component, pageProps }) {
   //  react top loading bar
   const [progress, setProgress] = useState(0)
   const [user, setUser] = useState({value: null})
+  const [userEmail, setUserEmail] = useState('')
   const [key, setKey] = useState(0)
+
 
   //  Use Effect for routerChange
   useEffect(() => {
@@ -30,30 +32,37 @@ export default function App({ Component, pageProps }) {
     let myUser = JSON.parse(localStorage.getItem("myUser"));
 
     if( myUser ){
+      setUserEmail(myUser.email);
       setUser({value: myUser.token , role: myUser.role, email: myUser.email, name: myUser.name, department: myUser.department });
       setKey(Math.random());
     }
     
-  }, [router.query])
+  }, [router.query, userEmail])
+
   
   useEffect(() => {
 
     async function fetchData() {
       let getUser = JSON.parse(localStorage.getItem("myUser"));
-      let token = getUser.token;
+      if(getUser){
+
+        let token = getUser.token;
       
-      const data = { token };
-      let res = await fetch(`/api/getuser`, {
-        method: 'POST',
-        headers: { 
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(data),
-      })
-      let response = await res.json()
-      if(response.success === false){
-        router.push(`/login`);
+        const data = { token };
+        let res = await fetch(`/api/getuser`, {
+          method: 'POST',
+          headers: { 
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(data),
+        })
+        let response = await res.json()
+        if(response.success === false){
+          router.push(`/login`);
+        }
+
       }
+      
     }
     fetchData();
 
@@ -74,7 +83,7 @@ export default function App({ Component, pageProps }) {
   return <>
     <Navbar key={key} user={user} logout={logout}/>
     <LoadingBar color='#0800FF' height={3} progress={progress} waitingTime={300} onLoaderFinished={() => setProgress(0)}/>  
-    <Component {...pageProps}/>
+    <Component {...pageProps} userEmail={userEmail}/>
     <Footer/>
   </>
 }

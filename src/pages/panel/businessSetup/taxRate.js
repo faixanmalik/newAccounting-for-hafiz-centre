@@ -16,7 +16,7 @@ import {XLSX, read, utils} from 'xlsx';
 
 
 
-const TaxRate = ({dbTaxRate, charts}) => {
+const TaxRate = ({userEmail, dbTaxRate, charts}) => {
 
 
   const [open, setOpen] = useState(false)
@@ -30,6 +30,7 @@ const TaxRate = ({dbTaxRate, charts}) => {
   const [id, setId] = useState('')
   const [selectedIds, setSelectedIds] = useState([]);
   const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
+  const [filteredInvoices, setFilteredInvoices] = useState([])
 
   // authentications
   const [isAdmin, setIsAdmin] = useState(false)
@@ -39,7 +40,12 @@ const TaxRate = ({dbTaxRate, charts}) => {
     if(myUser.department === 'Admin'){
       setIsAdmin(true)
     }
-  }, []);
+
+    let filteredInvoices = dbTaxRate.filter((item)=>{
+      return item.userEmail === userEmail;
+    })
+    setFilteredInvoices(filteredInvoices)
+  }, [userEmail]);
 
   
   function handleRowCheckboxChange(e, id) {
@@ -189,7 +195,7 @@ const TaxRate = ({dbTaxRate, charts}) => {
     e.preventDefault()
     
     // fetch the data from form to makes a file in local system
-    const data = { name, taxRate, chartsOfAccount, path:'TaxRate' };
+    const data = { userEmail, name, taxRate, chartsOfAccount, path:'TaxRate' };
     
       let res = await fetch(`/api/addEntry`, {
       method: 'POST',
@@ -309,7 +315,7 @@ const TaxRate = ({dbTaxRate, charts}) => {
 
                 <tbody>
                   
-                  {dbTaxRate.map((item, index)=>{
+                  {filteredInvoices.map((item, index)=>{
                     return <tr key={item._id} className="bg-white border-b hover:bg-gray-50">
                     <td className="w-4 p-4">
                       <div className="flex items-center">
@@ -337,7 +343,7 @@ const TaxRate = ({dbTaxRate, charts}) => {
                 </tbody>
 
               </table>
-                {dbTaxRate.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No Bank Account found</h1> : ''}
+                {filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No Bank Account found</h1> : ''}
             </div>
             </div>
           </form>

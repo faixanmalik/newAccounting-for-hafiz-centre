@@ -23,13 +23,14 @@ import PaymentType from 'models/PaymentType';
     return classes.filter(Boolean).join(' ')
   }
 
-  const Expenses = ({ dbVouchers, dbAccounts, dbPaymentType, dbContacts, dbEmployees, dbTaxRate, dbProject }) => {
+  const Expenses = ({ userEmail,  dbVouchers, dbAccounts, dbPaymentType, dbContacts, dbEmployees, dbTaxRate, dbProject }) => {
     
     const [open, setOpen] = useState(false)
     const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
+    const [filteredInvoices, setFilteredInvoices] = useState([])
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -49,7 +50,12 @@ import PaymentType from 'models/PaymentType';
       if(myUser.department === 'Admin'){
         setIsAdmin(true)
       }
-    }, [])
+
+      let filteredInvoices = dbVouchers.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredInvoices(filteredInvoices)
+    }, [userEmail])
 
 
     // JV
@@ -150,7 +156,7 @@ import PaymentType from 'models/PaymentType';
       });
 
       // fetch the data from form to makes a file in local system
-      const data = { phoneNo, email, city, fromAccount, paidBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path:'Expenses' };
+      const data = { userEmail, phoneNo, email, city, fromAccount, paidBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path:'Expenses' };
 
       let res = await fetch(`/api/addEntry`, {
         method: 'POST',
@@ -429,7 +435,7 @@ import PaymentType from 'models/PaymentType';
                     </tr>
                   </thead>
                   <tbody>
-                    {dbVouchers.map((item, index)=>{
+                    {filteredInvoices.map((item, index)=>{
                     return <tr key={index} className="bg-white border-b hover:bg-gray-50">
                       <td className="w-4 p-4">
                         <div className="flex items-center">
@@ -465,7 +471,7 @@ import PaymentType from 'models/PaymentType';
                     
                   </tbody>
                 </table>
-                { dbVouchers.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
+                { filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
               </div>
 
             </div>

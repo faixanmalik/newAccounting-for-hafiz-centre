@@ -17,7 +17,7 @@ import {XLSX, read, utils} from 'xlsx';
 
 
 
-const ChartsOfAccounts = ({dbAllCharts}) => {
+const ChartsOfAccounts = ({userEmail, dbAllCharts}) => {
 
   const tableRef = useRef(null);
   const [open, setOpen] = useState(false)
@@ -29,6 +29,7 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
 
   // authentications
   const [isAdmin, setIsAdmin] = useState(false)
+  const [filteredInvoices, setFilteredInvoices] = useState([])
 
 
   useEffect(() => {
@@ -49,7 +50,12 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
     if(myUser.department === 'Admin'){
       setIsAdmin(true)
     }
-  }, [filterCharts]);
+
+    let filteredInvoices = allCharts.filter((item)=>{
+      return item.userEmail === userEmail;
+    })
+    setFilteredInvoices(filteredInvoices)
+  }, [filterCharts, userEmail]);
 
 
 
@@ -256,7 +262,7 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
     e.preventDefault()
 
     // fetch the data from form to makes a file in local system
-    const data = { account, accountCode, accountName, balance , asof,  desc, subAccount, path:'chartsOfAccounts'};
+    const data = { userEmail, account, accountCode, accountName, balance , asof,  desc, subAccount, path:'chartsOfAccounts'};
 
       let res = await fetch(`/api/addEntry`, {
       method: 'POST',
@@ -392,7 +398,7 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
                   </thead>
                   <tbody>
                     
-                    {allCharts.map((item)=>{
+                    {filteredInvoices.map((item)=>{
                       return <tr key={item._id} className="bg-white border-b hover:bg-gray-50">
 
                       <td className="w-4 p-4">
@@ -425,7 +431,7 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
                   </tbody>
 
                 </table>
-                  {allCharts.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found</h1> : ''}
+                  {filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found</h1> : ''}
               </div>
             </div>
           </form>

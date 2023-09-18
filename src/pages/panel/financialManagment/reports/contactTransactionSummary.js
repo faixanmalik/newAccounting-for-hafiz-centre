@@ -18,7 +18,7 @@ import ReceiptVoucher from 'models/ReceiptVoucher';
 import PaymentVoucher from 'models/PaymentVoucher';
 import Expenses from 'models/Expenses';
 
-const ContactTransactionSummary = ({ dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts,  dbContacts }) => {
+const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts,  dbContacts }) => {
 
     // Cash Receipt
     const [fromDate, setFromDate] = useState('')
@@ -40,50 +40,53 @@ const ContactTransactionSummary = ({ dbExpensesVoucher, dbPaymentVoucher, dbRece
 
             // Data filter
             const dbAll = allVouchers.filter((data) => {
-                
-                if (data.name === `${contact}`) {
+                if(data.userEmail === userEmail) {
 
-                    if(data.type == 'PaymentVoucher' || data.type == 'ReceiptVoucher'){
+                    if (data.name === `${contact}`) {
 
-                        Object.assign(data, {
-                            transactionAmount: data.totalPaid,
-                        });
+                        if(data.type == 'PaymentVoucher' || data.type == 'ReceiptVoucher'){
 
-                        if(fromDate && toDate){
-                            const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-                            return dbDate >= fromDate && dbDate <= toDate;
+                            Object.assign(data, {
+                                transactionAmount: data.totalPaid,
+                            });
+
+                            if(fromDate && toDate){
+                                const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
+                                return dbDate >= fromDate && dbDate <= toDate;
+                            }
+                            else{
+                                return data.name;
+                            }
+                        }
+                        else if( data.type == 'PurchaseInvoice' || data.type == 'CreditSalesInvoice' || data.type == 'SalesInvoice' || data.type == 'Expenses' || data.type === 'DebitNote' || data.type === 'CreditNote'){
+                            Object.assign(data, {
+                                transactionAmount: data.fullAmount,
+                            });
+        
+                            if(fromDate && toDate){
+                                const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
+                                return dbDate >= fromDate && dbDate <= toDate;
+                            }
+                            else{
+                                return data.name;
+                            }
                         }
                         else{
-                            return data.name;
-                        }
-                    }
-                    else if( data.type == 'PurchaseInvoice' || data.type == 'CreditSalesInvoice' || data.type == 'SalesInvoice' || data.type == 'Expenses' || data.type === 'DebitNote' || data.type === 'CreditNote'){
-                        Object.assign(data, {
-                            transactionAmount: data.fullAmount,
-                        });
-    
-                        if(fromDate && toDate){
-                            const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-                            return dbDate >= fromDate && dbDate <= toDate;
-                        }
-                        else{
-                            return data.name;
-                        }
-                    }
-                    else{
-                        Object.assign(data, {
-                            transactionAmount: data.totalDebit,
-                        });
-    
-                        if(fromDate && toDate){
-                            const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-                            return dbDate >= fromDate && dbDate <= toDate;
-                        }
-                        else{
-                            return data.name;
-                        }
+                            Object.assign(data, {
+                                transactionAmount: data.totalDebit,
+                            });
+        
+                            if(fromDate && toDate){
+                                const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
+                                return dbDate >= fromDate && dbDate <= toDate;
+                            }
+                            else{
+                                return data.name;
+                            }
 
+                        }
                     }
+
                 }
             })
             

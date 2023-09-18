@@ -24,12 +24,15 @@ import PaymentType from 'models/PaymentMethod';
     return classes.filter(Boolean).join(' ')
   }
 
-  const SalesInvoice = ({ dbVouchers, dbProducts, dbPaymentType, dbContacts, dbEmployees, dbTaxRate, dbProject }) => {
+  const SalesInvoice = ({ userEmail, dbVouchers, dbProducts, dbPaymentType, dbContacts, dbEmployees, dbTaxRate, dbProject }) => {
     
     const [open, setOpen] = useState(false)
     const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
+
+    const [filteredInvoices, setFilteredInvoices] = useState([])
+
 
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
 
@@ -47,11 +50,17 @@ import PaymentType from 'models/PaymentMethod';
     useEffect(() => {
       setContacts(dbContacts, dbEmployees)
 
+      let filteredInvoices = dbVouchers.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredInvoices(filteredInvoices)
+
       const myUser = JSON.parse(localStorage.getItem('myUser'))
       if(myUser.department === 'Admin'){
         setIsAdmin(true)
       }
-    }, [])
+
+    }, [userEmail])
 
 
     // JV
@@ -156,7 +165,7 @@ import PaymentType from 'models/PaymentMethod';
       });
 
       // fetch the data from form to makes a file in local system
-      const data = { phoneNo, email, discount, city, fromAccount:receivedBy, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path:'SalesInvoice' };
+      const data = { userEmail, phoneNo, email, discount, city, fromAccount:receivedBy, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path:'SalesInvoice' };
 
       let res = await fetch(`/api/addEntry`, {
         method: 'POST',
@@ -438,7 +447,7 @@ import PaymentType from 'models/PaymentMethod';
                     </tr>
                   </thead>
                   <tbody>
-                    {dbVouchers.map((item, index)=>{
+                    {filteredInvoices.map((item, index)=>{
                     return <tr key={index} className="bg-white border-b hover:bg-gray-50">
                       <td className="w-4 p-4">
                         <div className="flex items-center">
@@ -474,7 +483,7 @@ import PaymentType from 'models/PaymentMethod';
                     
                   </tbody>
                 </table>
-                { dbVouchers.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
+                { filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
               </div>
 
             </div>

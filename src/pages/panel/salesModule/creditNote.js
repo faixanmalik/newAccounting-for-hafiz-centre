@@ -22,13 +22,14 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
     return classes.filter(Boolean).join(' ')
   }
 
-  const CreditNote = ({ dbVouchers, dbCreditSalesInvoice, dbPaymentMethod, dbContacts, dbEmployees, }) => {
+  const CreditNote = ({ userEmail, dbVouchers, dbCreditSalesInvoice, dbPaymentMethod, dbContacts, dbEmployees, }) => {
     
     const [open, setOpen] = useState(false)
     const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [filteredData, setFilteredData] = useState(dbCreditSalesInvoice)
+    const [filteredInvoices, setFilteredInvoices] = useState([])
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -48,7 +49,13 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
       if(myUser.department === 'Admin'){
         setIsAdmin(true)
       }
-    }, [])
+
+      let filteredInvoices = dbVouchers.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredInvoices(filteredInvoices)
+
+    }, [userEmail])
 
 
     // JV
@@ -147,7 +154,7 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
       });
 
       // fetch the data from form to makes a file in local system
-      const data = { phoneNo, email, city, paidBy, amount, dueDate, inputList, name,  memo, journalDate, journalNo, totalReceived, totalBalance, attachment, path:'CreditNote' };
+      const data = { userEmail, phoneNo, email, city, paidBy, amount, dueDate, inputList, name,  memo, journalDate, journalNo, totalReceived, totalBalance, attachment, path:'CreditNote' };
 
       let res = await fetch(`/api/addEntry`, {
         method: 'POST',
@@ -223,7 +230,6 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
         setDueDate(dbDueDate)
       }
     }
-
 
 
     const change = (e, index, id, balance, prevReceived, billNo) => {
@@ -378,7 +384,7 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
                     </tr>
                   </thead>
                   <tbody>
-                    {dbVouchers.map((item, index)=>{
+                    {filteredInvoices.map((item, index)=>{
                     return <tr key={index} className="bg-white border-b hover:bg-gray-50">
                       <td className="w-4 p-4">
                         <div className="flex items-center">
@@ -414,7 +420,7 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
                     
                   </tbody>
                 </table>
-                { dbVouchers.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
+                { filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
               </div>
 
             </div>

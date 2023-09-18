@@ -15,7 +15,7 @@ import { DownloadTableExcel } from 'react-export-table-to-excel';
 import {XLSX, read, utils} from 'xlsx';
 
 
-const BankAccount = ({dbBankAccount, charts}) => {
+const BankAccount = ({dbBankAccount, charts, userEmail}) => {
 
 
   const [open, setOpen] = useState(false)
@@ -34,6 +34,7 @@ const BankAccount = ({dbBankAccount, charts}) => {
   // id For delete contact
   const [id, setId] = useState('')
   const [selectedIds, setSelectedIds] = useState([]);
+  const [filteredInvoices, setFilteredInvoices] = useState([])
 
   // authentications
   const [isAdmin, setIsAdmin] = useState(false)
@@ -43,7 +44,12 @@ const BankAccount = ({dbBankAccount, charts}) => {
     if(myUser.department === 'Admin'){
       setIsAdmin(true)
     }
-  }, []);
+    let filteredInvoices = dbBankAccount.filter((item)=>{
+      return item.userEmail === userEmail;
+    })
+    setFilteredInvoices(filteredInvoices)
+
+  }, [userEmail]);
 
   
   function handleRowCheckboxChange(e, id) {
@@ -138,7 +144,7 @@ const BankAccount = ({dbBankAccount, charts}) => {
   const editEntry = async(id)=>{
     setOpen(true)
 
-    const data = { id,  bankBranch, accountNo, accountType, accountDesc, accountTitle, chartsOfAccount,  borrowingLimit,  path: 'bankAccount'};
+    const data = { id, bankBranch, accountNo, accountType, accountDesc, accountTitle, chartsOfAccount,  borrowingLimit,  path: 'bankAccount'};
     
     let res = await fetch(`/api/editEntry`, {
       method: 'POST',
@@ -173,7 +179,7 @@ const BankAccount = ({dbBankAccount, charts}) => {
         window.location.reload();
       }
       else {
-          toast.error(response.message , { position: "bottom-center", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
+        toast.error(response.message , { position: "bottom-center", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
       }
     
   }
@@ -210,7 +216,7 @@ const BankAccount = ({dbBankAccount, charts}) => {
     e.preventDefault()
     
     // fetch the data from form to makes a file in local system
-    const data = { bankBranch, accountNo, accountType, accountDesc, accountTitle, chartsOfAccount,  borrowingLimit, path:'bankAccount' };
+    const data = { userEmail, bankBranch, accountNo, accountType, accountDesc, accountTitle, chartsOfAccount,  borrowingLimit, path:'bankAccount' };
     
       let res = await fetch(`/api/addEntry`, {
       method: 'POST',
@@ -340,8 +346,7 @@ const BankAccount = ({dbBankAccount, charts}) => {
                 </thead>
 
                 <tbody>
-                  
-                  {dbBankAccount.map((item, index)=>{
+                  {filteredInvoices.map((item, index)=>{
                     return <tr key={item._id} className="bg-white border-b hover:bg-gray-50">
                     <td className="w-4 p-4">
                       <div className="flex items-center">
@@ -375,7 +380,7 @@ const BankAccount = ({dbBankAccount, charts}) => {
                 </tbody>
 
               </table>
-                {dbBankAccount.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No Bank Account found</h1> : ''}
+                {filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No Bank Account found</h1> : ''}
             </div>
             </div>
           </form>

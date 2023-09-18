@@ -20,7 +20,7 @@ function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
-  const JournalVoucher = ({ dbVouchers, dbCharts, dbContacts, dbEmployees }) => {
+  const JournalVoucher = ({ userEmail, dbVouchers, dbCharts, dbContacts, dbEmployees }) => {
     
     const [open, setOpen] = useState(false)
     const [contacts, setContacts] = useState([])
@@ -29,7 +29,8 @@ function classNames(...classes) {
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
 
     // authentications
-  const [isAdmin, setIsAdmin] = useState(false)
+    const [isAdmin, setIsAdmin] = useState(false)
+    const [filteredInvoices, setFilteredInvoices] = useState([])
   
 
     function handleRowCheckboxChange(e, id) {
@@ -47,7 +48,13 @@ function classNames(...classes) {
       if(myUser.department === 'Admin'){
         setIsAdmin(true)
       }
-    }, [])
+
+      let filteredInvoices = dbVouchers.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredInvoices(filteredInvoices)
+
+    }, [userEmail])
     
 
     // JV
@@ -102,7 +109,7 @@ function classNames(...classes) {
       });
 
       // fetch the data from form to makes a file in local system
-      const data = { totalDebit , totalCredit, inputList, name, desc,  memo, journalDate, journalNo, attachment, path:'journalVoucher' };
+      const data = { userEmail, totalDebit , totalCredit, inputList, name, desc,  memo, journalDate, journalNo, attachment, path:'journalVoucher' };
 
       if( totalDebit != totalCredit ){
         toast.error("Debit Credit values must be equal" , { position: "bottom-center", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
@@ -336,7 +343,7 @@ function classNames(...classes) {
                     </tr>
                   </thead>
                   <tbody>
-                    {dbVouchers.map((item)=>{ 
+                    {filteredInvoices.map((item)=>{ 
                     return <tr key={item._id} className="bg-white border-b hover:bg-gray-50">
                       <td className="w-4 p-4">
                         <div className="flex items-center">
@@ -372,7 +379,7 @@ function classNames(...classes) {
                     
                   </tbody>
                 </table>
-                { dbVouchers.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
+                { filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
               </div>
 
             </div>

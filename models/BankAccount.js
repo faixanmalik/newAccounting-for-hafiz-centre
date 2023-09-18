@@ -9,6 +9,7 @@ const BankAccountSchema = new mongoose.Schema({
     accountTitle:{type: String},
     chartsOfAccount: {type: String},
     borrowingLimit: {type: Number},
+    userEmail: {type: String},
 
   },{timestamps:true});
 
