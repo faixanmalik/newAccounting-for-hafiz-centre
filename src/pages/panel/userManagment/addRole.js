@@ -10,7 +10,7 @@ import { AiOutlineDelete, AiOutlineEdit } from 'react-icons/ai';
 import Role from 'models/Role';
 
 
-const AddRole = ({dbRole}) => {
+const AddRole = ({ userEmail, dbRole }) => {
 
   const [open, setOpen] = useState(false)
 
@@ -23,6 +23,7 @@ const AddRole = ({dbRole}) => {
   const [id, setId] = useState('')
   const [selectedIds, setSelectedIds] = useState([]);
   const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
+  const [filteredInvoices, setFilteredInvoices] = useState([])
 
   // authentications
   const [isAdmin, setIsAdmin] = useState(false)
@@ -33,7 +34,13 @@ const AddRole = ({dbRole}) => {
     if(myUser.department === 'Admin'){
       setIsAdmin(true)
     }
-  }, []);
+
+    let filteredInvoices = dbRole.filter((item)=>{
+      return item.userEmail === userEmail;
+    })
+    setFilteredInvoices(filteredInvoices)
+
+  }, [userEmail]);
 
 
 
@@ -127,7 +134,7 @@ const AddRole = ({dbRole}) => {
     e.preventDefault()
     
     // fetch the data from form to makes a file in local system
-    const data = { roleName, roleDesc, path:'addRole' };
+    const data = { userEmail, roleName, roleDesc, path:'addRole' };
       let res = await fetch(`/api/addEntry`, {
       method: 'POST',
       headers: { 
@@ -218,7 +225,7 @@ const AddRole = ({dbRole}) => {
 
                 <tbody>
                   
-                  {dbRole.map((item, index)=>{
+                  {filteredInvoices.map((item, index)=>{
                     return <tr key={item._id} className="bg-white border-b hover:bg-gray-50">
                     <td className="w-4 p-4">
                       <div className="flex items-center">
@@ -242,7 +249,7 @@ const AddRole = ({dbRole}) => {
                 </tbody>
 
               </table>
-                {dbRole.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found</h1> : ''}
+                {filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found</h1> : ''}
             </div>
             </div>
           </form>
