@@ -5,12 +5,13 @@ import moment from 'moment/moment';
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const SalesChart = ({dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts}) => {
+const SalesChart = ({ userEmail, dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts}) => {
 
 
     const [monthlyGrossProfit, setMonthlyGrossProfit] = useState([])
     const [monthlySales, setMonthlySales] = useState([])
     const [isCash, setIsCash] = useState(false)
+    
 
 
 
@@ -65,17 +66,82 @@ const SalesChart = ({dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptV
         // Data filter
         const dbAll = allVouchers.filter((data) => {
 
-            if(data.type === 'PurchaseInvoice'){
-                let journal = data.inputList.filter((newData)=>{
+            if(data.userEmail === userEmail) {
 
-                    let debitAmount = newData.totalAmountPerItem;
-                    let creditAmount = newData.amount;
-                    let debitAccount = newData.account;
-                    let creditAccount = 'Accounts Payable';
+                if(data.type === 'PurchaseInvoice'){
+                    let journal = data.inputList.filter((newData)=>{
+
+                        let debitAmount = newData.totalAmountPerItem;
+                        let creditAmount = newData.amount;
+                        let debitAccount = newData.account;
+                        let creditAccount = 'Accounts Payable';
+
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
+                                return newData;
+                            }
+                        }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else if(data.type === 'ReceiptVoucher'){
+                    
+                    let journal = data.inputList.filter((newData)=>{
+
+                        let debitAmount = newData.paid;
+                        let creditAmount = newData.paid;
+                        let debitAccount = newData.paidBy;
+                        let creditAccount = 'Accounts Receivable';
+
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
+                                return newData;
+                            }
+                        }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else if(data.type === 'PaymentVoucher'){
+                    let debitAmount = data.totalPaid;
+                    let debitAccount = 'Accounts Payable';
+                    let creditAmount = data.totalPaid;
+                    let creditAccount = data.fromAccount;
 
                     if(account === debitAccount || account === creditAccount){
-                        Object.assign(newData, {
+                        Object.assign(data, {
                             coaAccount: account,
+                            account: account,
                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
                             debitAccount: account === debitAccount ? debitAccount : '',
                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
@@ -86,27 +152,56 @@ const SalesChart = ({dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptV
                             let checkDbDate = data.journalDate? data.journalDate : data.date;
                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                             if (dbDate >= fromDate && dbDate <= toDate) {
-                                return newData;
+                                return data;
                             }
                         }
                         else {
-                            return newData;
+                            return data;
                         }
                     }
-                })
-                dbAllEntries = dbAllEntries.concat(journal);
-            }
-            else if(data.type === 'ReceiptVoucher'){
-                
-                let journal = data.inputList.filter((newData)=>{
+                }
+                else if(data.type === 'DebitNote'){
+                    
+                    let journal = data.inputList.filter((newData)=>{
 
-                    let debitAmount = newData.paid;
-                    let creditAmount = newData.paid;
-                    let debitAccount = newData.paidBy;
+                        let debitAmount = newData.amount;
+                        let creditAmount = newData.totalAmountPerItem;
+                        let debitAccount = 'Accounts Payable';
+                        let creditAccount = 'Purchase Return';
+
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
+                                return newData;
+                            }
+                        }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                    
+                }
+                else if(data.type === 'CreditNote'){
+                    let debitAmount = data.fullAmount;
+                    let creditAmount = data.totalAmount;
+                    let debitAccount = 'Sales Return';
                     let creditAccount = 'Accounts Receivable';
 
                     if(account === debitAccount || account === creditAccount){
-                        Object.assign(newData, {
+                        Object.assign(data, {
                             coaAccount: account,
                             account: account,
                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
@@ -119,260 +214,228 @@ const SalesChart = ({dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptV
                             let checkDbDate = data.journalDate? data.journalDate : data.date;
                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                             if (dbDate >= fromDate && dbDate <= toDate) {
-                                return newData;
+                                return data;
                             }
                         }
                         else {
-                            return newData;
-                        }
-                    }
-                })
-                dbAllEntries = dbAllEntries.concat(journal);
-            }
-            else if(data.type === 'PaymentVoucher'){
-                let debitAmount = data.totalPaid;
-                let debitAccount = 'Accounts Payable';
-                let creditAmount = data.totalPaid;
-                let creditAccount = data.fromAccount;
-
-                if(account === debitAccount || account === creditAccount){
-                    Object.assign(data, {
-                        coaAccount: account,
-                        account: account,
-                        debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                        debitAccount: account === debitAccount ? debitAccount : '',
-                        credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                        creditAccount: account === creditAccount ? creditAccount : '',
-                    });
-
-                    if(fromDate && toDate){
-                        let checkDbDate = data.journalDate? data.journalDate : data.date;
-                        const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                        if (dbDate >= fromDate && dbDate <= toDate) {
                             return data;
                         }
                     }
-                    else {
-                        return data;
-                    }
                 }
-            }
-            else if(data.type === 'DebitNote'){
-                
-                let journal = data.inputList.filter((newData)=>{
+                else if(data.type === 'Expenses'){
+                    let journal = data.inputList.filter((newData)=>{
+                        let debitAmount = newData.totalAmountPerItem;
+                        let debitAccount = newData.accounts;
+                        let creditAmount = newData.amount;
+                        let creditAccount = data.paidBy;
+                        
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
 
-                    let debitAmount = newData.amount;
-                    let creditAmount = newData.totalAmountPerItem;
-                    let debitAccount = 'Accounts Payable';
-                    let creditAccount = 'Purchase Return';
-
-                    if(account === debitAccount || account === creditAccount){
-                        Object.assign(newData, {
-                            coaAccount: account,
-                            account: account,
-                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                            debitAccount: account === debitAccount ? debitAccount : '',
-                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                            creditAccount: account === creditAccount ? creditAccount : '',
-                        });
-
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
                                 return newData;
                             }
                         }
-                        else {
-                            return newData;
-                        }
-                    }
-                })
-                dbAllEntries = dbAllEntries.concat(journal);
-                
-            }
-            else if(data.type === 'CreditNote'){
-                let debitAmount = data.fullAmount;
-                let creditAmount = data.totalAmount;
-                let debitAccount = 'Sales Return';
-                let creditAccount = 'Accounts Receivable';
-
-                if(account === debitAccount || account === creditAccount){
-                    Object.assign(data, {
-                        coaAccount: account,
-                        account: account,
-                        debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                        debitAccount: account === debitAccount ? debitAccount : '',
-                        credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                        creditAccount: account === creditAccount ? creditAccount : '',
-                    });
-
-                    if(fromDate && toDate){
-                        let checkDbDate = data.journalDate? data.journalDate : data.date;
-                        const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                        if (dbDate >= fromDate && dbDate <= toDate) {
-                            return data;
-                        }
-                    }
-                    else {
-                        return data;
-                    }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
                 }
-            }
-            else if(data.type === 'Expenses'){
-                let journal = data.inputList.filter((newData)=>{
-                    let debitAmount = newData.totalAmountPerItem;
-                    let debitAccount = newData.accounts;
-                    let creditAmount = newData.amount;
-                    let creditAccount = data.paidBy;
-                    
-                    if(account === debitAccount || account === creditAccount){
-                        Object.assign(newData, {
-                            coaAccount: account,
-                            account: account,
-                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                            debitAccount: account === debitAccount ? debitAccount : '',
-                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                            creditAccount: account === creditAccount ? creditAccount : '',
-                        });
+                else if(data.type === 'SalesInvoice'){
+                    let journal = data.inputList.filter((newData)=>{
 
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
+                        // check product account
+                        let product = newData.products;
+                        let checkProductLinking = dbProducts.filter((item)=>{
+                            return item.name === product;
+                        });
+                        let linkedCOA = checkProductLinking[0].linkAccount;
+
+
+                        let debitAmount = newData.totalAmountPerItem;
+                        let debitAccount = data.fromAccount;
+                        let creditAmount = newData.amount;
+                        let creditAccount = linkedCOA;
+
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
                                 return newData;
                             }
                         }
-                        else {
-                            return newData;
-                        }
-                    }
-                })
-                dbAllEntries = dbAllEntries.concat(journal);
-            }
-            else if(data.type === 'SalesInvoice'){
-                let journal = data.inputList.filter((newData)=>{
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else if(data.type === 'CreditSalesInvoice'){
+                    let journal = data.inputList.filter((newData)=>{
 
-                    // check product account
-                    let product = newData.products;
-                    let checkProductLinking = dbProducts.filter((item)=>{
-                        return item.name === product;
+                        let product = newData.products;
+                        let checkProductLinking = dbProducts.filter((item)=>{
+                            return item.name === product;
+                        });
+                        let linkedCOA = checkProductLinking[0].linkAccount;
+
+
+                        let debitAmount = newData.totalAmountPerItem;
+                        let debitAccount = data.fromAccount;
+                        let creditAmount = newData.amount;
+                        let creditAccount = linkedCOA;
+
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
+                                return newData;
+                            }
+                        }
+
                     });
-                    let linkedCOA = checkProductLinking[0].linkAccount;
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else{
+                    let journal = data.inputList.filter((newData)=>{
 
+                        let debitAmount = newData.debit && newData.debit;
+                        let debitAccount = newData.debit && newData.account;
+                        
+                        let creditAmount = newData.credit && newData.credit;
+                        let creditAccount = newData.credit && newData.account;
 
-                    let debitAmount = newData.totalAmountPerItem;
-                    let debitAccount = data.fromAccount;
-                    let creditAmount = newData.amount;
-                    let creditAccount = linkedCOA;
+                        
+                        if(account === debitAccount || account === creditAccount){
 
-                    if(account === debitAccount || account === creditAccount){
-                        Object.assign(newData, {
-                            coaAccount: account,
-                            account: account,
-                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                            debitAccount: account === debitAccount ? debitAccount : '',
-                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                            creditAccount: account === creditAccount ? creditAccount : '',
-                        });
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
 
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
                                 return newData;
                             }
                         }
-                        else {
-                            return newData;
-                        }
-                    }
-                })
-                dbAllEntries = dbAllEntries.concat(journal);
-            }
-            else if(data.type === 'CreditSalesInvoice'){
-                let journal = data.inputList.filter((newData)=>{
 
-                    let product = newData.products;
-                    let checkProductLinking = dbProducts.filter((item)=>{
-                        return item.name === product;
                     });
-                    let linkedCOA = checkProductLinking[0].linkAccount;
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
 
+                if(data.fullTax > 0){
+                    if(data.type === 'CreditNote'){
+                        let debitAmount = data.fullTax;
+                        let debitAccount = 'Tax Payable';
+                        let creditAmount = 0;
+                        let creditAccount = 'Tax Payable';
 
-                    let debitAmount = newData.totalAmountPerItem;
-                    let debitAccount = data.fromAccount;
-                    let creditAmount = newData.amount;
-                    let creditAccount = linkedCOA;
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(data, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
 
-                    if(account === debitAccount || account === creditAccount){
-                        Object.assign(newData, {
-                            coaAccount: account,
-                            account: account,
-                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                            debitAccount: account === debitAccount ? debitAccount : '',
-                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                            creditAccount: account === creditAccount ? creditAccount : '',
-                        });
-
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
-                                return newData;
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return data;
+                                }
+                            }
+                            else {
+                                return data;
                             }
                         }
-                        else {
-                            return newData;
-                        }
                     }
+                    else if(account !== null && account !== ""){
+                        let debitAmount = 0;
+                        let debitAccount = 'Tax Payable';
+                        let creditAmount = data.fullTax;
+                        let creditAccount = 'Tax Payable';
 
-                });
-                dbAllEntries = dbAllEntries.concat(journal);
-            }
-            else{
-                let journal = data.inputList.filter((newData)=>{
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(data, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
 
-                    let debitAmount = newData.debit && newData.debit;
-                    let debitAccount = newData.debit && newData.account;
-                    
-                    let creditAmount = newData.credit && newData.credit;
-                    let creditAccount = newData.credit && newData.account;
-
-                    
-                    if(account === debitAccount || account === creditAccount){
-
-                        Object.assign(newData, {
-                            coaAccount: account,
-                            account: account,
-                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                            debitAccount: account === debitAccount ? debitAccount : '',
-                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                            creditAccount: account === creditAccount ? creditAccount : '',
-                        });
-
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
-                                return newData;
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return data;
+                                }
+                            }
+                            else {
+                                return data;
                             }
                         }
-                        else {
-                            return newData;
-                        }
+
                     }
 
-                });
-                dbAllEntries = dbAllEntries.concat(journal);
-            }
-
-            if(data.fullTax > 0){
-                if(data.type === 'CreditNote'){
-                    let debitAmount = data.fullTax;
-                    let debitAccount = 'Tax Payable';
+                }
+                if(data.discount > 0){
+                    
+                    let debitAmount = data.discount;
+                    let debitAccount = 'Sales Discount';
                     let creditAmount = 0;
-                    let creditAccount = 'Tax Payable';
+                    let creditAccount = 'Sales Discount';
 
                     if(account === debitAccount || account === creditAccount){
                         Object.assign(data, {
@@ -394,65 +457,6 @@ const SalesChart = ({dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptV
                         else {
                             return data;
                         }
-                    }
-                }
-                else if(account !== null && account !== ""){
-                    let debitAmount = 0;
-                    let debitAccount = 'Tax Payable';
-                    let creditAmount = data.fullTax;
-                    let creditAccount = 'Tax Payable';
-
-                    if(account === debitAccount || account === creditAccount){
-                        Object.assign(data, {
-                            coaAccount: account,
-                            account: account,
-                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                            debitAccount: account === debitAccount ? debitAccount : '',
-                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                            creditAccount: account === creditAccount ? creditAccount : '',
-                        });
-
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
-                                return data;
-                            }
-                        }
-                        else {
-                            return data;
-                        }
-                    }
-
-                }
-
-            }
-            if(data.discount > 0){
-                
-                let debitAmount = data.discount;
-                let debitAccount = 'Sales Discount';
-                let creditAmount = 0;
-                let creditAccount = 'Sales Discount';
-
-                if(account === debitAccount || account === creditAccount){
-                    Object.assign(data, {
-                        coaAccount: account,
-                        account: account,
-                        debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                        debitAccount: account === debitAccount ? debitAccount : '',
-                        credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                        creditAccount: account === creditAccount ? creditAccount : '',
-                    });
-
-                    if(fromDate && toDate){
-                        let checkDbDate = data.journalDate? data.journalDate : data.date;
-                        const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                        if (dbDate >= fromDate && dbDate <= toDate) {
-                            return data;
-                        }
-                    }
-                    else {
-                        return data;
                     }
                 }
             }

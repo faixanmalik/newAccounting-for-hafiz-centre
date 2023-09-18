@@ -20,7 +20,7 @@ import CreditNote from 'models/CreditNote';
 import ReceiptVoucher from 'models/ReceiptVoucher';
 import PaymentVoucher from 'models/PaymentVoucher';
 import Expenses from 'models/Expenses';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 
 export default function Home({customer, dbProducts, supplier, employees, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts }) {
@@ -29,6 +29,18 @@ export default function Home({customer, dbProducts, supplier, employees, dbExpen
   const noOfProducts = dbProducts.length;
   const noOfSuppliers = supplier.length;
   const noOfEmployees = employees.length;
+
+  const [userEmail, setUserEmail] = useState('')
+
+
+  
+  useEffect(() => {
+    let getUser = JSON.parse(localStorage.getItem("myUser"));
+    if(getUser){
+      setUserEmail(getUser.email)
+    }
+  }, [])
+  
 
 
   return (
@@ -97,13 +109,13 @@ export default function Home({customer, dbProducts, supplier, employees, dbExpen
         {/***Sales & Feed***/}
         <Row>
           <Col sm="12" lg="12">
-            <SalesChart dbProducts={dbProducts} dbCharts={dbCharts} dbJournalVoucher={dbJournalVoucher} dbExpensesVoucher={dbExpensesVoucher} dbPaymentVoucher={dbPaymentVoucher} dbReceiptVoucher={dbReceiptVoucher} dbDebitNote={dbDebitNote} dbCreditNote={dbCreditNote} dbPurchaseInvoice={dbPurchaseInvoice} dbSalesInvoice={dbSalesInvoice} dbCreditSalesInvoice={dbCreditSalesInvoice}/>
+            <SalesChart userEmail={userEmail} dbProducts={dbProducts} dbCharts={dbCharts} dbJournalVoucher={dbJournalVoucher} dbExpensesVoucher={dbExpensesVoucher} dbPaymentVoucher={dbPaymentVoucher} dbReceiptVoucher={dbReceiptVoucher} dbDebitNote={dbDebitNote} dbCreditNote={dbCreditNote} dbPurchaseInvoice={dbPurchaseInvoice} dbSalesInvoice={dbSalesInvoice} dbCreditSalesInvoice={dbCreditSalesInvoice}/>
           </Col>
         </Row>
 
         <Row>
           <Col sm="12" lg="12">
-            <AssetsChart dbProducts={dbProducts} dbCharts={dbCharts} dbJournalVoucher={dbJournalVoucher} dbExpensesVoucher={dbExpensesVoucher} dbPaymentVoucher={dbPaymentVoucher} dbReceiptVoucher={dbReceiptVoucher} dbDebitNote={dbDebitNote} dbCreditNote={dbCreditNote} dbPurchaseInvoice={dbPurchaseInvoice} dbSalesInvoice={dbSalesInvoice} dbCreditSalesInvoice={dbCreditSalesInvoice}/>
+            <AssetsChart userEmail={userEmail} dbProducts={dbProducts} dbCharts={dbCharts} dbJournalVoucher={dbJournalVoucher} dbExpensesVoucher={dbExpensesVoucher} dbPaymentVoucher={dbPaymentVoucher} dbReceiptVoucher={dbReceiptVoucher} dbDebitNote={dbDebitNote} dbCreditNote={dbCreditNote} dbPurchaseInvoice={dbPurchaseInvoice} dbSalesInvoice={dbSalesInvoice} dbCreditSalesInvoice={dbCreditSalesInvoice}/>
           </Col>
         </Row>
       </main>

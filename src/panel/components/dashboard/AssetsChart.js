@@ -5,7 +5,7 @@ import moment from 'moment/moment';
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts}) => {
+const AssetsChart = ({ userEmail, dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts}) => {
 
     const [monthlyAssets, setMonthlyAssets] = useState([])
     const [monthlyLiabilities, setMonthlyLiabilities] = useState([])
@@ -46,90 +46,6 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
     }, []);
 
 
-//   useEffect(() => {
-//     junFunction()
-//     .then(() => febFunction())
-//     .then(() => marFunction())
-//     .then(() => aprilFunction())
-//     .then(() => mayFunction())
-//     .then(() => juneFunction())
-//     .then(() => julyFunction())
-//     .then(() => augFunction())
-//     .then(() => sepFunction())
-//     .then(() => octFunction())
-//     .then(() => novFunction())
-//     .then(() => decFunction())
-//   }, [])
-
-
-
-//   const junFunction = async()=>{
-//     let fromDate = '2023-01-01';
-//     let toDate = '2023-01-31';
-//     submit(fromDate, toDate)
-//   }
-
-//   const febFunction = async()=>{
-//     let fromDate = '2023-02-01';
-//     let toDate = '2023-02-28';
-//     submit(fromDate, toDate)
-//   }
-
-//   const marFunction = async()=>{
-//     let fromDate = '2023-03-01';
-//     let toDate = '2023-03-31';
-//     submit(fromDate, toDate)
-//   }
-  
-//   const aprilFunction = async()=>{
-//     let fromDate = '2023-04-01';
-//     let toDate = '2023-04-30';
-//     submit(fromDate, toDate)
-//   }
-//   const mayFunction = async()=>{
-//     let fromDate = '2023-05-01';
-//     let toDate = '2023-05-31';
-//     submit(fromDate, toDate)
-//   }
-//   const juneFunction = async()=>{
-//     let fromDate = '2023-06-01';
-//     let toDate = '2023-06-30';
-//     submit(fromDate, toDate)
-//   }
-//   const julyFunction = async()=>{
-//     let fromDate = '2023-07-01';
-//     let toDate = '2023-07-31';
-//     submit(fromDate, toDate)
-//   }
-//   const augFunction = async()=>{
-//     let fromDate = '2023-08-01';
-//     let toDate = '2023-08-30';
-//     submit(fromDate, toDate)
-//   }
-//   const sepFunction = async()=>{
-//     let fromDate = '2023-09-01';
-//     let toDate = '2023-09-31';
-//     submit(fromDate, toDate)
-//   }
-//   const octFunction = async()=>{
-//     let fromDate = '2023-10-01';
-//     let toDate = '2023-10-30';
-//     submit(fromDate, toDate)
-//   }
-//   const novFunction = async()=>{
-//     let fromDate = '2023-11-01';
-//     let toDate = '2023-11-31';
-//     submit(fromDate, toDate)
-//   }
-//   const decFunction = async()=>{
-//     let fromDate = '2023-12-01';
-//     let toDate = '2023-12-31';
-//     submit(fromDate, toDate);
-//     monthly(monthlyAssts);
-//   }
-  
-
-
   let monthlyAssts = [];
   let monthlyLiabilits = []
   const submit = (fromDate, toDate)=>{
@@ -146,6 +62,9 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
       // Data filter
       const dbAll = allVouchers.filter((data) => {
 
+        if(data.userEmail === userEmail) {
+
+        
           if(data.type === 'PurchaseInvoice'){
               let journal = data.inputList.filter((newData)=>{
 
@@ -537,6 +456,7 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                     }
               }
           }
+        }
       })
 
       dbAllEntries = dbAllEntries.concat(dbAll);
