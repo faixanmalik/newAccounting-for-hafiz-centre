@@ -72,6 +72,8 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
     const [totalReceived, setTotalReceived] = useState(0)
     const [totalNetBalance, setTotalNetBalance] = useState(0)
 
+    const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
+
 
     // JV
     const [inputList, setInputList] = useState('');
@@ -188,6 +190,7 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
 
     const getData = async (id) =>{
       setOpen(true)
+      setIsOpenSaveChange(false)
 
       const data = { id, path: 'CreditNote' };
       let res = await fetch(`/api/getDataEntry`, {
@@ -275,6 +278,7 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
       setAmount('')
       setPaidBy('')
       setDueDate('')
+      setIsOpenSaveChange(true)
     }
 
 
@@ -749,7 +753,7 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
                             pageStyle='print'
                           />
 
-                          <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+                          {isOpenSaveChange && <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>}
                         </div>
                       </div>
                     </form>

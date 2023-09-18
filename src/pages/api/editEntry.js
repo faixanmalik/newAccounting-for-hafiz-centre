@@ -15,6 +15,7 @@ import CreditNote from 'models/CreditNote';
 import SalesInvoice from 'models/SalesInvoice';
 import Expenses from 'models/Expenses';
 import PaymentMethod from 'models/PaymentMethod';
+import User from 'models/User';
 
 
 export default async function handler(req, res) {
@@ -394,12 +395,7 @@ export default async function handler(req, res) {
                         })
                     res.status(200).json({ success: true, message: "Update Successfully!" }) 
                 }
-            }
-
-
-
-
-            
+            }   
             else{
                 res.status(400).json({ success: false, message: "Internal server error!" }) 
             }
@@ -506,12 +502,7 @@ export default async function handler(req, res) {
                         })
                     res.status(200).json({ success: true, message: "Update Successfully!" }) 
                 }
-            }
-
-
-
-
-            
+            }   
             else{
                 res.status(400).json({ success: false, message: "Internal server error!" }) 
             }
@@ -758,6 +749,31 @@ export default async function handler(req, res) {
                             paidBy : paidBy,
                             attachment : attachment,
                         })
+                    res.status(200).json({ success: true, message: "Update Successfully!" }) 
+                }
+            }
+            else{
+                res.status(400).json({ success: false, message: "Internal server error!" }) 
+            }
+        }
+
+        else if(path === 'clients'){
+
+            const { id, businessName, email, password, firstName, lastName } = req.body;
+
+            let dbData = await User.findById(id)
+
+            if(dbData){
+                if( businessName == dbData.businessName 
+                    && email == dbData.email
+                    && password == dbData.password
+                    && firstName == dbData.firstName
+                    && lastName == dbData.lastName
+                    ){
+                        res.status(400).json({ success: false, message: "Already found!" }) 
+                    }
+                else{
+                    await User.findByIdAndUpdate(id, {  businessName: businessName, email : email, password: password, firstName:firstName, lastName:lastName})
                     res.status(200).json({ success: true, message: "Update Successfully!" }) 
                 }
             }

@@ -36,6 +36,7 @@ const ContactList = ({dbContact}) => {
   const [terms, setTerms] = useState('Due on receipt')
   const [openingBalance, setOpeningBalance] = useState('')
   const [date, setDate] = useState('')
+  const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
 
   const [allContact, setAllContact] = useState(dbContact)
   const [filterCharts, setFilterCharts] = useState('allContacts')
@@ -231,6 +232,7 @@ const ContactList = ({dbContact}) => {
 
   const getData = async (id) =>{
     setOpen(true)
+    setIsOpenSaveChange(false)
 
     const data = { id, path: 'contactList' };
     let res = await fetch(`/api/getDataEntry`, {
@@ -304,7 +306,7 @@ const ContactList = ({dbContact}) => {
         <div className="md:col-span-1">
           <div className="px-4 sm:px-0 flex">
             <h3 className="text-lg font-medium leading-6 text-gray-900">Contact List</h3>
-            <button onClick={()=>{ setOpen(true), setName(''), setEmail(''), setPhoneNo(''), setCountry('United States'), setStreetAddress(''), setCity(''), setState(''), setZip(''), setTaxRigNo(''), setTerms('Due on receipt'), setOpeningBalance(''), setPaymentMethod('Cash'), setDate('')}} 
+            <button onClick={()=>{ setOpen(true), setIsOpenSaveChange(true), setName(''), setEmail(''), setPhoneNo(''), setCountry('United States'), setStreetAddress(''), setCity(''), setState(''), setZip(''), setTaxRigNo(''), setTerms('Due on receipt'), setOpeningBalance(''), setPaymentMethod('Cash'), setDate('')}} 
               className={`${isAdmin === false ? 'cursor-not-allowed': ''} ml-auto bg-blue-800 hover:bg-blue-900 text-white px-14 py-2 rounded-lg`} disabled={isAdmin === false}>
                New
             </button>
@@ -561,7 +563,7 @@ const ContactList = ({dbContact}) => {
                               </div>
                               <div className="bg-gray-50 space-x-3 px-4 py-3 text-right sm:px-6">
                                 <button type='button' onClick={()=>{editEntry(id)}} className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save Changes</button>
-                                <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+                                {isOpenSaveChange && <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>}
                             </div>
                             
                             </div>

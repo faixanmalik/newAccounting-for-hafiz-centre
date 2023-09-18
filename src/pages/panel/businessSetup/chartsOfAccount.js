@@ -25,6 +25,7 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
   // Filter Usestates
   const [allCharts, setallCharts] = useState(dbAllCharts)
   const [filterCharts, setFilterCharts] = useState('allCharts')
+  const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
 
   // authentications
   const [isAdmin, setIsAdmin] = useState(false)
@@ -178,6 +179,7 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
 
   const getData = async (id) =>{
     setOpen(true)
+    setIsOpenSaveChange(false)
 
     const data = { id, path: 'chartsOfAccounts' };
     let res = await fetch(`/api/getDataEntry`, {
@@ -304,7 +306,8 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
               setSubAccount(''),
               setBalance(''),
               setAsof(''),
-              setDesc('')
+              setDesc(''),
+              setIsOpenSaveChange(true)
             }}
             className={`${isAdmin === false ? 'cursor-not-allowed': ''} ml-auto bg-blue-800 hover:bg-blue-900 text-white px-14 py-2 rounded-lg`} disabled={isAdmin === false}>
             New
@@ -559,7 +562,7 @@ const ChartsOfAccounts = ({dbAllCharts}) => {
                             </div>
                             <div className="bg-gray-50 space-x-3 px-4 py-3 text-right sm:px-6">
                               <button type='button' onClick={editEntry} className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save Changes</button>
-                              <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+                              {isOpenSaveChange && <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>}
                             </div>
                           </div>
                           

@@ -27,6 +27,7 @@ import Product from 'models/Product';
     const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
+    const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -273,6 +274,7 @@ import Product from 'models/Product';
 
     const getData = async (id) =>{
       setOpen(true)
+      setIsOpenSaveChange(false)
 
       const data = { id, path: 'CreditSalesInvoice' };
       let res = await fetch(`/api/getDataEntry`, {
@@ -367,6 +369,7 @@ import Product from 'models/Product';
                 setReference('')
                 setAddress('')
                 setDueDate('')
+                setIsOpenSaveChange(true)
               }} 
               className={`${isAdmin === false ? 'cursor-not-allowed': ''} ml-auto bg-blue-800 hover:bg-blue-900 text-white px-14 py-2 rounded-lg`} disabled={isAdmin === false}>
               New
@@ -856,7 +859,7 @@ import Product from 'models/Product';
                             pageStyle='print'
                           />
                           <button type='button' onClick={()=>{editEntry(id)}} className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save Changes</button>
-                          <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+                          {isOpenSaveChange && <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>}
                         </div>
                       </div>
                     </form>

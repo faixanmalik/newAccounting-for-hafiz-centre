@@ -30,6 +30,7 @@ import PaymentMethod from 'models/PaymentMethod';
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [filteredData, setFilteredData] = useState(dbPurchaseInvoice)
+    const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -189,6 +190,7 @@ import PaymentMethod from 'models/PaymentMethod';
 
     const getData = async (id) =>{
       setOpen(true)
+      setIsOpenSaveChange(false)
 
       const data = { id, path: 'DebitNote' };
       let res = await fetch(`/api/getDataEntry`, {
@@ -276,7 +278,9 @@ import PaymentMethod from 'models/PaymentMethod';
       setAmount('')
       setPaidBy('')
       setDueDate('')
+      setIsOpenSaveChange(true)
     }
+
 
 
    
@@ -750,7 +754,7 @@ import PaymentMethod from 'models/PaymentMethod';
                             pageStyle='print'
                           />
 
-                          <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>
+                          {isOpenSaveChange && <button type="submit" className="inline-flex justify-center rounded-md border border-transparent bg-indigo-600 py-2 px-4 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2">Save</button>}
                         </div>
                       </div>
                     </form>
