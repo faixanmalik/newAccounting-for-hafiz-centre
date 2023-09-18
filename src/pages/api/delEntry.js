@@ -16,6 +16,7 @@ import Expenses from 'models/Expenses';
 import PaymentVoucher from 'models/PaymentVoucher';
 import ReceiptVoucher from 'models/ReceiptVoucher';
 import PaymentMethod from 'models/PaymentMethod';
+import User from 'models/User';
 
 
 export default async function handler(req, res) {
@@ -59,9 +60,6 @@ export default async function handler(req, res) {
             await Role.deleteMany( { _id: { $in: selectedIds } } )
             res.status(200).json({ success: true, message: "Deleted Successfully !" }) 
         }
-
-
-
         else if (path === 'CreditSalesInvoice'){
             const { selectedIds } = req.body;
             await CreditSalesInvoice.deleteMany( { _id: { $in: selectedIds } } )
@@ -272,6 +270,12 @@ export default async function handler(req, res) {
             } catch (error) {
                 res.status(400).json({ success: false, message: "Internal Server Error !" }) 
             }
+        }
+
+        else if (path === 'clients'){
+            const { selectedIds } = req.body;
+            await User.deleteMany( { _id: { $in: selectedIds } } )
+            res.status(200).json({ success: true, message: "Deleted Successfully !" }) 
         }
 
         

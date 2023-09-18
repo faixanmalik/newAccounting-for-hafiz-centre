@@ -15,6 +15,7 @@ import SalesInvoice from 'models/SalesInvoice';
 import Expenses from 'models/Expenses';
 import PaymentVoucher from 'models/PaymentVoucher';
 import PaymentMethod from 'models/PaymentMethod';
+import User from 'models/User';
 
 
 export default async function handler(req, res) {
@@ -201,6 +202,18 @@ export default async function handler(req, res) {
             else{
                 res.status(400).json({ success: false, message: "Internal server error!" }) 
             }
+        }
+
+        else if( path === 'clients' ){
+            const { id } = req.body;
+            let data = await User.findById(id)
+            if(data){
+                res.status(200).json({ success: true, data}) 
+            } 
+            else{
+                res.status(400).json({ success: false, message: "Internal server error!" }) 
+            }
+
         }
 
 

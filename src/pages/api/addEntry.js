@@ -15,6 +15,7 @@ import PaymentVoucher from 'models/PaymentVoucher';
 import ReceiptVoucher from 'models/ReceiptVoucher';
 import PaymentMethod from 'models/PaymentMethod';
 import CreditSalesInvoice from 'models/CreditSalesInvoice';
+import User from 'models/User';
 
 
 export default async function handler(req, res) {
@@ -291,6 +292,14 @@ export default async function handler(req, res) {
             await newEntry.save();
 
             res.status(200).json({ success: true, message: "Entry Added !" })
+        }
+
+        else if( path === 'clients'){
+            const { businessName, email, password, firstName, lastName } = req.body;
+            
+            let newEntry = new User( { businessName, email, password, firstName, lastName, } );
+            await newEntry.save();
+            res.status(200).json({ success: true, message: "Entry Added!" }) 
         }
         
 

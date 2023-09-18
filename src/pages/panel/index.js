@@ -20,6 +20,7 @@ import CreditNote from 'models/CreditNote';
 import ReceiptVoucher from 'models/ReceiptVoucher';
 import PaymentVoucher from 'models/PaymentVoucher';
 import Expenses from 'models/Expenses';
+import { useEffect } from "react";
 
 
 export default function Home({customer, dbProducts, supplier, employees, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts }) {
@@ -28,6 +29,7 @@ export default function Home({customer, dbProducts, supplier, employees, dbExpen
   const noOfProducts = dbProducts.length;
   const noOfSuppliers = supplier.length;
   const noOfEmployees = employees.length;
+
 
   return (
     <>

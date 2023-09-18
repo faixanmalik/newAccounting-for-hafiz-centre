@@ -8,7 +8,6 @@ import { useRouter } from 'next/router';
 import Footer from '../../components/Footer'
 import Navbar from '../../components/Navbar'
 
-
 export default function App({ Component, pageProps }) {
 
   const router = useRouter();
@@ -29,12 +28,37 @@ export default function App({ Component, pageProps }) {
     }, []);
 
     let myUser = JSON.parse(localStorage.getItem("myUser"));
+
     if( myUser ){
-      setUser({value: myUser.token , email: myUser.email, name: myUser.name, department: myUser.department });
+      setUser({value: myUser.token , role: myUser.role, email: myUser.email, name: myUser.name, department: myUser.department });
       setKey(Math.random());
     }
     
   }, [router.query])
+  
+  useEffect(() => {
+
+    async function fetchData() {
+      let getUser = JSON.parse(localStorage.getItem("myUser"));
+      let token = getUser.token;
+      
+      const data = { token };
+      let res = await fetch(`/api/getuser`, {
+        method: 'POST',
+        headers: { 
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      })
+      let response = await res.json()
+      if(response.success === false){
+        router.push(`/login`);
+      }
+    }
+    fetchData();
+
+  }, [])
+  
 
 
 

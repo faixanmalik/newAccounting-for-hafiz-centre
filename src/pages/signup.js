@@ -12,16 +12,9 @@ function Signup() {
 
   const router = useRouter();
 
-  useEffect(() => {
-    if(localStorage.getItem("token")){
-      router.push('/panel')
-    }
-  }, [])
 
-
-
-  const [firstname, setFirstname] = useState('')
-  const [lastname, setLastname] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setlastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmpassword, setConfirmpassword] = useState('')
@@ -42,11 +35,11 @@ function Signup() {
 
 
   const handleChange = (e) => {
-    if (e.target.name === 'firstname') {
-      setFirstname(e.target.value)
+    if (e.target.name === 'firstName') {
+      setFirstName(e.target.value)
     }
-    else if (e.target.name === 'lastname') {
-      setLastname(e.target.value)
+    else if (e.target.name === 'lastName') {
+      setlastName(e.target.value)
     }
     else if (e.target.name === 'email') {
       setEmail(e.target.value)
@@ -80,7 +73,7 @@ function Signup() {
     
 
     // fetch the data from form to makes a file in local system
-    const data = { firstname, lastname, email, password, confirmpassword, businessName, country, industry, day,  month };
+    const data = { firstName, lastName, email, password, confirmpassword, businessName, country, industry, day,  month };
     if( password !== confirmpassword ){
       document.getElementById('checkPassword').innerHTML = "Your Password is not Match!"
     }
@@ -95,6 +88,11 @@ function Signup() {
       })
       let response = await res.json();
         if (response.success === true) {
+          setFirstName('')
+          setlastName('')
+          setEmail('')
+          setPassword('')
+          setConfirmpassword('')
           toast.success(response.message , { position: "bottom-center", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
           setTimeout(() => {
             router.push(`/login`);
@@ -102,16 +100,9 @@ function Signup() {
         }
         else{
           toast.error(response.message , { position: "bottom-center", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
-          setTimeout(() => {
-            router.push(`/login`);
-          }, 1500);
         }
 
-        setFirstname('')
-        setLastname('')
-        setEmail('')
-        setPassword('')
-        setConfirmpassword('')
+        
 
     }
   }
@@ -136,8 +127,8 @@ function Signup() {
           <div className="bg-white px-6 py-8 rounded shadow-md text-black md:max-w-md">
             <h1 className="mb-8 text-3xl text-center">Sign up</h1>
               <div className='flex space-x-2'>
-                <input type="text" onChange={handleChange} value={firstname} className="bg-gray-100 bg-opacity-50 mb-3 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="firstname" placeholder="First Name"/>
-                <input type="text" onChange={handleChange} value={lastname} className="bg-gray-100 bg-opacity-50 mb-3 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="lastname" placeholder="Last Name"/>
+                <input type="text" onChange={handleChange} value={firstName} className="bg-gray-100 bg-opacity-50 mb-3 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="firstName" placeholder="First Name"/>
+                <input type="text" onChange={handleChange} value={lastName} className="bg-gray-100 bg-opacity-50 mb-3 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="lastName" placeholder="Last Name"/>
               </div>
                 <input type="text" onChange={handleChange} value={businessName} className="bg-gray-100 bg-opacity-50 mb-3 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="businessName" placeholder="Business Name"/>
                 <input type="text" onChange={handleChange} value={industry} className="bg-gray-100 bg-opacity-50 mb-3 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="industry" placeholder="Industry"/>

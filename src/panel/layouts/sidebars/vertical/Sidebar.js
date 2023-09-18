@@ -1,4 +1,4 @@
-import { React, Fragment, useState } from 'react'
+import { React, Fragment, useState, useEffect } from 'react'
 import Logo from "../../logo/Logo";
 import { useRouter } from "next/router";
 import { Dialog, Transition } from '@headlessui/react'
@@ -27,12 +27,18 @@ import { Link } from 'react-feather';
 
 const Sidebar2 = ({ showMobilemenu }) => {
 
-    
   const router = useRouter();
   const location = router.pathname;
   const [open, setOpen] = useState(false)
 
-  
+  const [isOwner, setisOwner] = useState(false)
+
+  useEffect(() => {
+    let myUser = JSON.parse(localStorage.getItem("myUser"));
+    if(myUser && myUser.role === 'super admin'){
+      setisOwner(true)
+    }
+  }, [])
   
 
   return (
@@ -178,6 +184,9 @@ const Sidebar2 = ({ showMobilemenu }) => {
             <MenuItem href="/panel/userManagment/addRole" icon={<BiUserCheck className='text-lg'/>} className={ location === '/panel/userManagment/addRole' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Add Role
             </MenuItem>
+            {isOwner === true && <MenuItem href="/panel/userManagment/clients" icon={<BiUserCheck className='text-lg'/>} className={ location === '/panel/userManagment/clients' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
+              Clients
+            </MenuItem>}
             {/*<MenuItem href="/panel/userManagment/userRights" icon={<BiUserCheck className='text-lg'/>} className={ location === '/panel/userManagment/userRights' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               User Rights
             </MenuItem>*/}

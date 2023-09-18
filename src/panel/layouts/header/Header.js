@@ -42,11 +42,11 @@ const Header = ({ showMobmenu }) => {
 
   useEffect(() => {
     const myUser = JSON.parse(localStorage.getItem('myUser'))
-    if(myUser.businessName){
+    if(myUser && myUser.businessName){
       setBusinessName(myUser.businessName)
     }
     else{
-      setBusinessName(myUser.name)
+      setBusinessName(myUser && myUser.name)
     }
   }, [])
 

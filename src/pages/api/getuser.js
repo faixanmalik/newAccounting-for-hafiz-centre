@@ -14,19 +14,15 @@ const handler = async (req,res)=>{
         let dbuser = await User.findOne({"email": user.email})
         if(dbuser){
             // working
-            const {firstname, lastname, email, phoneno ,streetAddress, state, zip} = dbuser
-            res.status(200).json({ success: true , firstname, lastname, email, phoneno,streetAddress, state, zip })
+            const {firstName, lastName, email } = dbuser
+            res.status(200).json({ success: true , firstName, lastName, email })
         }
         else{
-            let employee = await Employees.findOne({"email": user.email})
-            const {name, email, phoneno ,streetAddress, state, zip} = employee
-            res.status(200).json({ success: true , firstname:name, lastname:'', email, phoneno,streetAddress, state, zip })
+            res.status(400).json({ success: false , message: "No user Found!" })
         }
-        
-
     }
     else{
-        res.status(400).json({ success: false , message: "No user Found!" })
+        res.status(400).json({ success: false , message: "Internal Server Error!" })
     }
 
 }
