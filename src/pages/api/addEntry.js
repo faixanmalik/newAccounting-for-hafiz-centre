@@ -142,9 +142,9 @@ export default async function handler(req, res) {
 
         // Sales Invoice
         else if( path === 'SalesInvoice'){
-            const { userEmail, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
+            const { userEmail, discount, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
 
-            let newEntry = new SalesInvoice( { userEmail, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
+            let newEntry = new SalesInvoice( { userEmail, discount, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
             await newEntry.save();
             res.status(200).json({ success: true, message: "Entry Added !" }) 
         }

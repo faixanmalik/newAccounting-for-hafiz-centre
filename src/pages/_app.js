@@ -60,7 +60,9 @@ export default function App({ Component, pageProps }) {
         if(response.success === false){
           router.push(`/login`);
         }
-
+      }
+      else{
+        router.push(`/login`);
       }
       
     }

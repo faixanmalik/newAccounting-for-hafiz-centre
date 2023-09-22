@@ -83,6 +83,7 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
         // Data filter
         const dbAll = allVouchers.filter((data) => {
 
+            
             if(data.userEmail === userEmail) {
 
     
@@ -503,6 +504,7 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
 
                 }
                 if(data.discount > 0){
+                    
                     
                     let debitAmount = data.discount;
                     let debitAccount = 'Sales Discount';

@@ -592,7 +592,7 @@ export default async function handler(req, res) {
         // Sales Invoice
         else if (path === 'SalesInvoice'){
 
-            const { id,  phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment } = req.body;
+            const { id,  phoneNo, discount, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment } = req.body;
 
             let editEntry = await SalesInvoice.findById(id)
 
@@ -646,6 +646,7 @@ export default async function handler(req, res) {
                     && city === editEntry.city
                     && fullAmount === editEntry.fullAmount
                     && fullTax === editEntry.fullTax
+                    && discount === editEntry.discount
                     && totalAmount === editEntry.totalAmount
                     && receivedBy === editEntry.receivedBy
                     && fromAccount === editEntry.fromAccount
@@ -662,6 +663,7 @@ export default async function handler(req, res) {
                             project:project, inputList:inputList,name:name, 
                             memo:memo,journalDate:journalDate, journalNo : journalNo, 
                             receivedBy : receivedBy,
+                            discount : discount,
                             attachment : attachment,
                         })
                     res.status(200).json({ success: true, message: "Update Successfully!" }) 

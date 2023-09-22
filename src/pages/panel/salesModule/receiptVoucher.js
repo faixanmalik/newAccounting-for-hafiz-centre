@@ -279,9 +279,6 @@ import PaymentMethod from 'models/PaymentMethod';
       setIsOpenSaveChange(true)
     }
 
-
-   
-
     // For print
     const componentRef = useRef();
     const speceficComponentRef = useRef();

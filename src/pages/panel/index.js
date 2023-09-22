@@ -37,7 +37,7 @@ export default function Home({customer, dbProducts, supplier, employees, dbExpen
   useEffect(() => {
     let getUser = JSON.parse(localStorage.getItem("myUser"));
     if(getUser){
-      setUserEmail(getUser.email)
+      setUserEmail(getUser)
     }
   }, [])
   

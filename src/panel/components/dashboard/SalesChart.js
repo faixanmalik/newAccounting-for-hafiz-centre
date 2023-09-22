@@ -5,13 +5,19 @@ import moment from 'moment/moment';
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const SalesChart = ({ userEmail, dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts}) => {
+const SalesChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts}) => {
 
 
     const [monthlyGrossProfit, setMonthlyGrossProfit] = useState([])
     const [monthlySales, setMonthlySales] = useState([])
     const [isCash, setIsCash] = useState(false)
-    
+    const [userEmail, setUserEmail] = useState('')
+
+    useEffect(() => {
+        let getUser = JSON.parse(localStorage.getItem("myUser"));
+        setUserEmail(getUser.email)
+        callFunctions();
+    }, [userEmail]);
 
 
 
@@ -42,11 +48,6 @@ const SalesChart = ({ userEmail, dbProducts, dbExpensesVoucher, dbPaymentVoucher
             }
         }
     };
-
-    useEffect(() => {
-        callFunctions();
-    }, []);
-
 
 
   
