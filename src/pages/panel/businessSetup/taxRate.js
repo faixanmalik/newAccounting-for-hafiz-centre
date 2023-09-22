@@ -197,6 +197,7 @@ const TaxRate = ({userEmail, dbTaxRate, charts}) => {
     // fetch the data from form to makes a file in local system
     const data = { userEmail, name, taxRate, chartsOfAccount, path:'TaxRate' };
     
+    
       let res = await fetch(`/api/addEntry`, {
       method: 'POST',
       headers: {

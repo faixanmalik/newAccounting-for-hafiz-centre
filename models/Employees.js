@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const EmployeesSchema = new mongoose.Schema({
     name:{type: String},
+    userEmail:{type: String},
     fatherName:{type: String},
     dob:{type: Date},
     email:{type: String},

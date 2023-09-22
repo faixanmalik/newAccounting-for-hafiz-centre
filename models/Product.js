@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const ProductSchema = new mongoose.Schema({
     code:{type: String, required: true},
     name:{type: String},
+    userEmail:{type: String},
     linkAccount: {type: String},
     desc: {type: String},
   },{timestamps:true});

@@ -7,7 +7,9 @@ const ChartSchema = new mongoose.Schema({
     balance: {type: Number},
     asof: {type: Date },
     desc:{type: String},
+    userEmail:{type: String},
     subAccount:{type: String}
+    
     
   },{timestamps:true});
 

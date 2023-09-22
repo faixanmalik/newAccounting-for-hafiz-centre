@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 
 const ProjectSchema = new mongoose.Schema({
     projectName:{type: String},
+    userEmail:{type: String},
     projectDesc:{type: String},
     
   },{timestamps:true});

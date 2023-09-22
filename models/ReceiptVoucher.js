@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const ReceiptInvoiceSchema = new mongoose.Schema({
      
     inputList:{ type: Array },
+    userEmail:{type: String},
     fullAmount:{ type: Number },
     fullTax:{ type: Number },
     totalAmount:{ type: Number },
