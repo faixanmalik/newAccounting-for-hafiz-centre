@@ -187,9 +187,6 @@ const Sidebar2 = ({ showMobilemenu }) => {
             {isOwner === true && <MenuItem href="/panel/userManagment/clients" icon={<BiUserCheck className='text-lg'/>} className={ location === '/panel/userManagment/clients' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Clients
             </MenuItem>}
-            {/*<MenuItem href="/panel/userManagment/userRights" icon={<BiUserCheck className='text-lg'/>} className={ location === '/panel/userManagment/userRights' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
-              User Rights
-            </MenuItem>*/}
           </SubMenu>
 
           <SubMenu label="Business Setup" icon={<IoBusinessOutline className='text-lg'/>}>
@@ -207,6 +204,9 @@ const Sidebar2 = ({ showMobilemenu }) => {
             </MenuItem>
             <MenuItem href="/panel/businessSetup/bankAccount" icon={<BsBank className='text-lg'/>} className={ location === '/panel/businessSetup/bankAccounts' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Bank Accounts
+            </MenuItem>
+            <MenuItem href="/panel/businessSetup/paymentMethod" icon={<MdPayment className='text-lg'/>} className={ location === '/panel/businessSetup/paymentMethod' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
+              Payment Method
             </MenuItem>
           </SubMenu>
 
@@ -269,20 +269,6 @@ const Sidebar2 = ({ showMobilemenu }) => {
             <MenuItem href="/panel/financialManagment/reports/contactTransactionSummary" icon={<HiOutlineDocumentReport className='text-lg'/>} className={ location === '/panel/financialManagment/reports/contactTransactionSummary' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Contact Transaction
             </MenuItem>
-          </SubMenu>
-
-
-          <SubMenu label="Settings" icon={<AiOutlineSetting className='text-lg'/>}>
-            <MenuItem href="/panel/settings/paymentMethod" icon={<MdPayment className='text-lg'/>} className={ location === '/panel/settings/paymentMethod' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
-              Payment Method
-            </MenuItem>
-            <MenuItem href="/panel/settings/project" icon={<AiOutlineProject className='text-lg'/>} className={ location === '/panel/settings/project' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
-              Project
-            </MenuItem>
-            <MenuItem href="/panel/settings/location" icon={<BiLocationPlus className='text-lg'/>} className={ location === '/panel/settings/location' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
-              Location
-            </MenuItem>
-            
           </SubMenu>
           
         </Menu>
