@@ -380,7 +380,7 @@ const BankAccount = ({dbBankAccount, charts, userEmail}) => {
                 </tbody>
 
               </table>
-                {filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No Bank Account found</h1> : ''}
+                {filteredInvoices.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found</h1> : ''}
             </div>
             </div>
           </form>
