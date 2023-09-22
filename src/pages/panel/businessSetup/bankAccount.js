@@ -328,7 +328,7 @@ const BankAccount = ({dbBankAccount, charts, userEmail}) => {
                         Branh Name
                     </th>
                     <th scope="col" className="px-6 py-3">
-                        Account Title
+                        Title
                     </th>
                     <th scope="col" className="px-6 py-3">
                         Account Number
