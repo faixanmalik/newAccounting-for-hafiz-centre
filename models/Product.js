@@ -4,6 +4,7 @@ const ProductSchema = new mongoose.Schema({
     code:{type: String, required: true},
     name:{type: String},
     userEmail:{type: String},
+    availableQty:{type: Number},
     linkAccount: {type: String},
     desc: {type: String},
   },{timestamps:true});

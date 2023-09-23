@@ -119,20 +119,9 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
 
   const [code, setCode] = useState('')
   const [name, setName] = useState('')
-
-  const [purchaseStatus, setPurchaseStatus] = useState('')
-  
-  const [costPrice, setCostPrice] = useState('')
+  const [availableQty, setAvailableQty] = useState(0)
   const [linkAccount, setlinkAccount] = useState('')
-  const [purchaseTaxRate, setPurchaseTaxRate] = useState('')
   const [desc, setdesc] = useState('')
-  
-  
-  const [salesStatus, setSalesStatus] = useState('')
-  const [salesPrice, setSalesPrice] = useState('')
-  const [salesAccount, setSalesAccount] = useState('')
-  const [salesTaxRate, setSalesTaxRate] = useState('')
-  const [salesDesc, setSalesDesc] = useState('')
 
 
   const handleChange = (e) => {
@@ -142,39 +131,15 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
     else if(e.target.name === 'name'){
       setName(e.target.value)
     }
-    else if(e.target.name === 'purchaseStatus'){
-      setPurchaseStatus(e.target.value)
-    }
-    
-    else if(e.target.name === 'costPrice'){
-      setCostPrice(e.target.value)
+    else if(e.target.name === 'availableQty'){
+      setAvailableQty(e.target.value)
     }
     else if(e.target.name === 'linkAccount'){
       setlinkAccount(e.target.value)
     }
-    else if(e.target.name === 'purchaseTaxRate'){
-      setPurchaseTaxRate(e.target.value)
-    }
     else if(e.target.name === 'desc'){
-        setdesc(e.target.value)
+      setdesc(e.target.value)
     }
-
-    else if(e.target.name === 'salesStatus'){
-      setSalesStatus(e.target.value)
-    }
-    else if(e.target.name === 'salesPrice'){
-      setSalesPrice(e.target.value)
-    }
-    else if(e.target.name === 'salesAccount'){
-      setSalesAccount(e.target.value)
-    }
-    else if(e.target.name === 'salesTaxRate'){
-      setSalesTaxRate(e.target.value)
-    }
-    else if(e.target.name === 'salesDesc'){
-        setSalesDesc(e.target.value)
-    }
-    
 
   }
 
@@ -182,9 +147,9 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
     e.preventDefault()
 
     // fetch the data from form to makes a file in local system
-    const data = { userEmail, code, name, linkAccount, desc, path: 'productAndServices'  };
+    const data = { userEmail, code, name, availableQty, linkAccount, desc, path: 'productAndServices'  };
 
-      let res = await fetch(`/api/addEntry`, {
+    let res = await fetch(`/api/addEntry`, {
       method: 'POST',
       headers: { 
         'Content-Type': 'application/json',
@@ -219,6 +184,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
 
         setCode(response.product.code)
         setName(response.product.name)
+        setAvailableQty(response.product.availableQty)
         setlinkAccount(response.product.linkAccount)
         setdesc(response.product.desc)
       }
@@ -251,7 +217,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
 
   const editEntry = async(id)=>{
 
-    const data = { id, code, name, linkAccount, desc , path: 'productAndServices' };
+    const data = { id, code, name, availableQty, linkAccount, desc , path: 'productAndServices' };
     let res = await fetch(`/api/editEntry`, {
       method: 'POST',
       headers: {
@@ -363,6 +329,9 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                             Name
                         </th>
                         <th scope="col" className="px-6 py-3">
+                            Available Qty
+                        </th>
+                        <th scope="col" className="px-6 py-3">
                             Linked Account
                         </th>
                         <th scope="col" className="px-6 py-3">
@@ -387,6 +356,9 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                     </td>
                     <td className="px-6 py-3">
                       {item.name}
+                    </td>
+                    <td className="px-6 py-3">
+                      {item.availableQty}
                     </td>
                     <td className="px-6 py-3">
                       {item.linkAccount}
@@ -426,7 +398,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                     <div className="overflow-hidden shadow sm:rounded-md">
                       <div className="bg-white px-4 py-5 sm:p-6">
                         <div className="grid grid-cols-6 gap-6">
-                          <div className="col-span-6 sm:col-span-3">
+                          <div className="col-span-6 sm:col-span-2">
                             <label htmlFor="code" className="block text-sm font-medium text-gray-700">
                               Code (required)
                             </label>
@@ -441,7 +413,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                               required
                             />
                           </div>
-                          <div className="col-span-6 sm:col-span-3">
+                          <div className="col-span-6 sm:col-span-2">
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                               Name
                             </label>
@@ -452,6 +424,20 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                               name="name"
                               id="name"
                               autoComplete="given-name"
+                              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              required
+                            />
+                          </div>
+                          <div className="col-span-6 sm:col-span-2">
+                            <label htmlFor="availableQty" className="block text-sm font-medium text-gray-700">
+                              Available Qty
+                            </label>
+                            <input
+                              value={availableQty}
+                              onChange={handleChange}
+                              type="number"
+                              name="availableQty"
+                              id="availableQty"
                               className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                               required
                             />
@@ -468,7 +454,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                               name="linkAccount"
                               className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             >
-                                <option>Select account</option>
+                              <option>Select account</option>
                               {filteredCharts.map((item)=>{
                                 return <option key={item.accountCode} value={item.accountName}>{item.accountCode} - {item.accountName}</option>
                               })}

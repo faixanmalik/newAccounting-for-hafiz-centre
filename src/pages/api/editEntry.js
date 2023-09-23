@@ -65,15 +65,18 @@ export default async function handler(req, res) {
             }
         }
         else if (path === 'productAndServices'){
-            const { id, code, name, linkAccount, desc } = req.body;
+            const { id, code, name, availableQty, linkAccount, desc } = req.body;
             let dbProduct = await Product.findById(id)
 
             if(dbProduct){
-                if( code === dbProduct.code && name === dbProduct.name && linkAccount === dbProduct.linkAccount && desc === dbProduct.desc ){
+                if( code === dbProduct.code 
+                    && name === dbProduct.name 
+                    && availableQty === dbProduct.availableQty 
+                    && linkAccount === dbProduct.linkAccount && desc === dbProduct.desc ){
                     res.status(400).json({ success: false, message: "Already found!" }) 
                 }
                 else{
-                    let editProduct =  await Product.findByIdAndUpdate(id, { code: code, name: name, linkAccount: linkAccount, desc:desc})
+                    let editProduct =  await Product.findByIdAndUpdate(id, { code: code, name: name, availableQty: availableQty, linkAccount: linkAccount, desc:desc})
                     res.status(200).json({ success: true, message: "Update Successfully!", editProduct }) 
                 }
             }
