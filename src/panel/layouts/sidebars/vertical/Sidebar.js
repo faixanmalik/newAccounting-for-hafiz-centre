@@ -242,12 +242,6 @@ const Sidebar2 = ({ showMobilemenu }) => {
               Journal Voucher
             </MenuItem>
           </SubMenu>
-
-          <SubMenu label="Payroll" icon={<FiUserPlus className='text-lg'/>}>
-            <MenuItem href="/panel/payroll/employees" icon={<FiUsers className='text-lg'/>} className={ location === '/panel/payroll/employees' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
-              Employees
-            </MenuItem>
-          </SubMenu>
           
           <SubMenu label="Reports" icon={<HiOutlineDocumentReport className='text-lg'/>}>
             <MenuItem href="/panel/financialManagment/reports/generalLedger" icon={<HiOutlineDocumentReport className='text-lg'/>} className={ location === '/panel/financialManagment/reports/generalLedger' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
@@ -264,6 +258,12 @@ const Sidebar2 = ({ showMobilemenu }) => {
             </MenuItem>
             <MenuItem href="/panel/financialManagment/reports/contactTransactionSummary" icon={<HiOutlineDocumentReport className='text-lg'/>} className={ location === '/panel/financialManagment/reports/contactTransactionSummary' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Contact Transaction
+            </MenuItem>
+          </SubMenu>
+
+          <SubMenu label="Payroll" icon={<FiUserPlus className='text-lg'/>}>
+            <MenuItem href="/panel/payroll/employees" icon={<FiUsers className='text-lg'/>} className={ location === '/panel/payroll/employees' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
+              Employees
             </MenuItem>
           </SubMenu>
           

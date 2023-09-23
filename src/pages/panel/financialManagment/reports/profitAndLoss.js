@@ -67,7 +67,7 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
         
                             let debitAmount = newData.totalAmountPerItem;
                             let creditAmount = newData.amount;
-                            let debitAccount = newData.account;
+                            let debitAccount = 'Purchases';
                             let creditAccount = 'Accounts Payable';
         
                             if(account === debitAccount || account === creditAccount){

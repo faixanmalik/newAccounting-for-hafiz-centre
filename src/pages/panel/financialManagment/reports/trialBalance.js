@@ -60,10 +60,10 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
         
                     if(data.type === 'PurchaseInvoice'){
                         let journal = data.inputList.filter((newData)=>{
-        
+                            
                             let debitAmount = newData.totalAmountPerItem;
                             let creditAmount = newData.amount;
-                            let debitAccount = newData.account;
+                            let debitAccount = 'Purchases';
                             let creditAccount = 'Accounts Payable';
         
                             if(account === debitAccount || account === creditAccount){

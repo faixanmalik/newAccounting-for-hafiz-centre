@@ -89,10 +89,10 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
     
                 if(data.type === 'PurchaseInvoice'){
                     let journal = data.inputList.filter((newData)=>{
-
+    
                         let debitAmount = newData.totalAmountPerItem;
                         let creditAmount = newData.amount;
-                        let debitAccount = newData.account;
+                        let debitAccount = 'Purchases';
                         let creditAccount = 'Accounts Payable';
 
                         if(account === debitAccount || account === creditAccount){
@@ -589,12 +589,6 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
         }
     }
 
-
-
-
-
-
-
     const handleChange = (e) => {
         if (e.target.name === 'account') {
             setAccount(e.target.value)
@@ -606,8 +600,6 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
             setToDate(e.target.value)
         }
     }
-    
-
 
 
     return (
@@ -718,7 +710,7 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                             {item.journalNo ? item.journalNo : item.billNo}
                                         </td>
                                         <td className="px-6 py-3">
-                                            <div className='text-blue-700 font-bold'>{item.products ? item.products : item.account}</div>
+                                            <div className='text-blue-700 font-bold'>{item.products ? item.products : item.product ? item.product : item.account}</div>
                                         </td>
                                         <td className="px-6 py-3">
                                             {item.date 
