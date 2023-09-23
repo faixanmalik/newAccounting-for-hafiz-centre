@@ -62,9 +62,27 @@ export default async function handler(req, res) {
         }
         else if (path === 'CreditSalesInvoice'){
             const { selectedIds } = req.body;
-            await CreditSalesInvoice.deleteMany( { _id: { $in: selectedIds } } )
-            res.status(200).json({ success: true, message: "Deleted Successfully !" }) 
-            
+
+            try {
+                selectedIds.forEach( async(newItem) => {
+                    let data = await CreditSalesInvoice.findById(newItem);
+                    
+                    if(data.inputList.length > 0){
+                        
+                        let inputList = data.inputList;
+                        for (const newItem of inputList) {
+                            await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: newItem.qty } })
+                        }
+                    }
+                });
+
+                await CreditSalesInvoice.deleteMany( { _id: { $in: selectedIds } } )
+                res.status(200).json({ success: true, message: "Deleted Successfully !" })  
+                
+            } catch (error) {
+                res.status(400).json({ success: false, message: "Internal Server Error !" }) 
+            }
+
         }
         else if (path === 'PurchaseInvoice'){
             const { selectedIds } = req.body;
@@ -83,8 +101,27 @@ export default async function handler(req, res) {
         }
         else if (path === 'SalesInvoice'){
             const { selectedIds } = req.body;
-            await SalesInvoice.deleteMany( { _id: { $in: selectedIds } } )
-            res.status(200).json({ success: true, message: "Deleted Successfully !" }) 
+
+            try {
+                selectedIds.forEach( async(newItem) => {
+                    let data = await SalesInvoice.findById(newItem);
+                    
+                    if(data.inputList.length > 0){
+                        
+                        let inputList = data.inputList;
+                        for (const newItem of inputList) {
+                            await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: newItem.qty } })
+                        }
+                    }
+                });
+
+                await SalesInvoice.deleteMany( { _id: { $in: selectedIds } } )
+                res.status(200).json({ success: true, message: "Deleted Successfully !" })  
+                
+            } catch (error) {
+                res.status(400).json({ success: false, message: "Internal Server Error !" }) 
+            }
+
         }
         else if (path === 'Expenses'){
             const { selectedIds } = req.body;

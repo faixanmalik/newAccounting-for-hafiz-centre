@@ -117,6 +117,10 @@ export default async function handler(req, res) {
         else if( path === 'CreditSalesInvoice'){
             const { userEmail, phoneNo, email, discount, billStatus, amountPaid, amountReceived, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
 
+            for (const newItem of inputList) {
+                await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: -newItem.qty } })
+            }
+
             let newEntry = new CreditSalesInvoice( { userEmail, phoneNo, email, discount, billStatus, amountPaid, amountReceived, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
             await newEntry.save();
             res.status(200).json({ success: true, message: "Entry Added !" }) 
@@ -143,6 +147,10 @@ export default async function handler(req, res) {
         // Sales Invoice
         else if( path === 'SalesInvoice'){
             const { userEmail, discount, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
+
+            for (const newItem of inputList) {
+                await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: -newItem.qty } })
+            }
 
             let newEntry = new SalesInvoice( { userEmail, discount, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
             await newEntry.save();

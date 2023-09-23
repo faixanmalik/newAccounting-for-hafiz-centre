@@ -102,8 +102,8 @@ import Product from 'models/Product';
 
     // JV
     const [inputList, setInputList] = useState([
-      { billNo: '', date: journalDate, products:'', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
-      { billNo: '', date: journalDate, products:'', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
+      { billNo: '', date: journalDate, products:'', qty: '', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
+      { billNo: '', date: journalDate, products:'', qty: '', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
     ]);
 
 
@@ -207,7 +207,7 @@ import Product from 'models/Product';
     // JV
     const addLines = () => {
       setInputList([...inputList,
-        {products:'', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
+        {products:'', desc:'', amount:'', qty: '', taxRate:'', taxAmount:'', totalAmountPerItem:''},
       ])
     }
     const delLines = (indexToDelete) => {
@@ -378,7 +378,7 @@ import Product from 'models/Product';
                     ? dbVouchers.length + 1
                     : parseInt(dbVouchers[dbVouchers.length - 1].journalNo.slice(4)) + 1}`,
                   
-                      date: journalDate, products:'', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:'' 
+                      date: journalDate, products:'', desc:'', qty: '', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:'' 
                     },
                 ])
                 setMemo('')
@@ -519,8 +519,8 @@ import Product from 'models/Product';
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 translate-y-4 md:translate-y-0 md:scale-95" enterTo="opacity-100 translate-y-0 md:scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 translate-y-0 md:scale-100" leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95">
-              <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-5xl">
-                <div className="relative flex w-full items-center overflow-hidden bg-white px-4 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
+              <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-6xl">
+                <div className="relative flex w-full items-center overflow-hidden bg-white px-3 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
                   <button type='button' className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 sm:top-8 sm:right-6 md:top-6 md:right-6 lg:top-6 lg:right-8" onClick={() => setOpen(false)}>
                     <span className="sr-only">Close</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -529,7 +529,7 @@ import Product from 'models/Product';
                   <div className='w-full'>
                     <form method="POST" onSubmit={submit}>
                       <div className="overflow-hidden shadow sm:rounded-md">
-                        <div ref={speceficComponentRef} className="bg-white px-4 py-5 sm:p-6">
+                        <div ref={speceficComponentRef} className="bg-white px-4 py-5">
 
                           <div className='flex space-x-4 mb-14'>
 
@@ -683,6 +683,9 @@ import Product from 'models/Product';
                                           Description 
                                       </th>
                                       <th scope="col" className="p-2">
+                                          Qty
+                                      </th>
+                                      <th scope="col" className="p-2">
                                           Amount
                                       </th>
                                       <th scope="col" className="p-2">
@@ -722,7 +725,16 @@ import Product from 'models/Product';
                                           className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         />
                                       </td>
-
+                                      <td className="p-2">
+                                        <input
+                                          type="number"
+                                          onChange={ e=> change(e, index) }
+                                          value={ inputList.qty }
+                                          name="qty"
+                                          id="qty"
+                                          className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        />
+                                      </td>
                                       <td className="p-2">
                                         <input
                                             type="number"
