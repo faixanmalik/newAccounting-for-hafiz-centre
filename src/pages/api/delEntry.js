@@ -66,13 +66,19 @@ export default async function handler(req, res) {
             try {
                 selectedIds.forEach( async(newItem) => {
                     let data = await CreditSalesInvoice.findById(newItem);
-                    
-                    if(data.inputList.length > 0){
-                        
-                        let inputList = data.inputList;
-                        for (const newItem of inputList) {
-                            await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: newItem.qty } })
+                    if (data) {
+                        if (data.inputList && data.inputList.length > 0) {
+                            let inputList = data.inputList;
+                            for (const newItem of inputList) {
+                                await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: newItem.qty } })
+                            }
                         }
+                        else {
+                            console.log(`No inputList found for SalesInvoice with ID ${newItem}`);
+                        }
+                    }
+                    else {
+                        console.log(`SalesInvoice with ID ${newItem} not found`);
                     }
                 });
 
@@ -105,13 +111,19 @@ export default async function handler(req, res) {
             try {
                 selectedIds.forEach( async(newItem) => {
                     let data = await SalesInvoice.findById(newItem);
-                    
-                    if(data.inputList.length > 0){
-                        
-                        let inputList = data.inputList;
-                        for (const newItem of inputList) {
-                            await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: newItem.qty } })
+                    if (data) {
+                        if (data.inputList && data.inputList.length > 0) {
+                            let inputList = data.inputList;
+                            for (const newItem of inputList) {
+                                await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: newItem.qty } })
+                            }
                         }
+                        else {
+                            console.log(`No inputList found for SalesInvoice with ID ${newItem}`);
+                        }
+                    }
+                    else {
+                        console.log(`SalesInvoice with ID ${newItem} not found`);
                     }
                 });
 

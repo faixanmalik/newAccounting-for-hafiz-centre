@@ -241,12 +241,14 @@ export default async function handler(req, res) {
             var products = 0;
             var amount = 0;
             var taxAmount = 0;
+            var qty = 0;
             var totalAmountPerItem = 0;
             var desc = 0;
             for (let index = 0; index < inputList.length; index++) {
                 products = inputList[index].products;
                 amount += parseInt(inputList[index].amount);
                 taxAmount += parseInt(inputList[index].taxAmount);
+                qty += parseInt(inputList[index].qty);
                 totalAmountPerItem += parseInt(inputList[index].totalAmountPerItem);
                 desc = inputList[index].desc;
             }
@@ -256,12 +258,14 @@ export default async function handler(req, res) {
             var dbProducts = 0;
             var dbAmount = 0;
             var dbTaxAmount = 0;
+            var dbQty = 0;
             var dbTotalAmountPerItem = 0;
             var dbDesc = 0;
             for (let index = 0; index < dbInputList.length; index++) {
                 dbProducts = dbInputList[index].products;
                 dbAmount += parseInt(dbInputList[index].amount);
                 dbTaxAmount += parseInt(dbInputList[index].taxAmount);
+                dbQty += parseInt(dbInputList[index].qty);
                 dbTotalAmountPerItem += parseInt(dbInputList[index].totalAmountPerItem);
                 dbDesc = dbInputList[index].desc;
             }
@@ -274,6 +278,7 @@ export default async function handler(req, res) {
                     products === dbProducts 
                     && amount === dbAmount
                     && taxAmount === dbTaxAmount
+                    && qty === dbQty
                     && totalAmountPerItem === dbTotalAmountPerItem
                     && desc === dbDesc
 
@@ -294,6 +299,23 @@ export default async function handler(req, res) {
                     res.status(400).json({ success: false, message: "Already found!" }) 
                 }
                 else{
+
+                    for (const dbItem of dbInputList) {
+                        const product = await Product.findOne({name: dbItem.products});
+                        if (product) {
+                            const oldQty = dbItem.qty;
+
+                            for (const newItem of inputList) {
+                                if (newItem.products === dbItem.products) {
+                                    const newQty = newItem.qty;
+                                    const quantityDifference = newQty - oldQty;
+                                    await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: -quantityDifference } })
+                                }
+                            }
+
+                        }
+                    }
+
                     await CreditSalesInvoice.findByIdAndUpdate(id, 
                         {   dueDate:dueDate , phoneNo:phoneNo,email:email , city:city, fullAmount:fullAmount, 
                             fullTax:fullTax, totalAmount:totalAmount,address:address,
@@ -424,11 +446,6 @@ export default async function handler(req, res) {
                 res.status(400).json({ success: false, message: "Internal server error!" }) 
             }
         }
-
-        
-
-
-
         // Debit Note Invoice
         else if (path === 'DebitNote'){
             const { id,  phoneNo, email, project, city, address, reference, accuralDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment } = req.body;
@@ -510,7 +527,6 @@ export default async function handler(req, res) {
                 res.status(400).json({ success: false, message: "Internal server error!" }) 
             }
         }
-
         // Credit Note
         else if (path === 'CreditNote'){
             const { id,  phoneNo, email, city, address, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment } = req.body;
@@ -590,8 +606,6 @@ export default async function handler(req, res) {
                 res.status(400).json({ success: false, message: "Internal server error!" }) 
             }
         }
-
-
         // Sales Invoice
         else if (path === 'SalesInvoice'){
 
@@ -605,12 +619,14 @@ export default async function handler(req, res) {
             var products = 0;
             var amount = 0;
             var taxAmount = 0;
+            var qty = 0;
             var totalAmountPerItem = 0;
             var desc = 0;
             for (let index = 0; index < inputList.length; index++) {
                 products = inputList[index].products;
                 amount += parseInt(inputList[index].amount);
                 taxAmount += parseInt(inputList[index].taxAmount);
+                qty += parseInt(inputList[index].qty);
                 totalAmountPerItem += parseInt(inputList[index].totalAmountPerItem);
                 desc = inputList[index].desc;
             }
@@ -620,12 +636,14 @@ export default async function handler(req, res) {
             var dbProducts = 0;
             var dbAmount = 0;
             var dbTaxAmount = 0;
+            var dbQty = 0;
             var dbTotalAmountPerItem = 0;
             var dbDesc = 0;
             for (let index = 0; index < dbInputList.length; index++) {
                 dbProducts = dbInputList[index].products;
                 dbAmount += parseInt(dbInputList[index].amount);
                 dbTaxAmount += parseInt(dbInputList[index].taxAmount);
+                dbQty += parseInt(dbInputList[index].qty);
                 dbTotalAmountPerItem += parseInt(dbInputList[index].totalAmountPerItem);
                 dbDesc = dbInputList[index].desc;
             }
@@ -633,11 +651,12 @@ export default async function handler(req, res) {
             if(editEntry){
                 const dbDate = moment(editEntry.journalDate).utc().format('YYYY-MM-DD')
                 const dbDueDate = moment(editEntry.dueDate).utc().format('YYYY-MM-DD')
-                if( 
+                if(
                     //Input list 
                     products === dbProducts 
                     && amount === dbAmount
                     && taxAmount === dbTaxAmount
+                    && qty === dbQty
                     && totalAmountPerItem === dbTotalAmountPerItem
                     && desc === dbDesc
 
@@ -660,6 +679,24 @@ export default async function handler(req, res) {
                     res.status(400).json({ success: false, message: "Already found!" }) 
                 }
                 else{
+
+                    for (const dbItem of dbInputList) {
+                        const product = await Product.findOne({name: dbItem.products});
+                        if (product) {
+                            const oldQty = dbItem.qty;
+
+                            for (const newItem of inputList) {
+                                if (newItem.products === dbItem.products) {
+                                    const newQty = newItem.qty;
+                                    const quantityDifference = newQty - oldQty;
+                                    await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: -quantityDifference } })
+                                }
+                            }
+
+                        }
+                    }
+
+
                     await SalesInvoice.findByIdAndUpdate(id, 
                         {   dueDate:dueDate , phoneNo:phoneNo,email:email , city:city, fullAmount:fullAmount, 
                             fullTax:fullTax, totalAmount:totalAmount,fromAccount:fromAccount,
@@ -676,9 +713,6 @@ export default async function handler(req, res) {
                 res.status(400).json({ success: false, message: "Internal server error!" }) 
             }
         }
-
-
-
         // Expenses Invoice
         else if (path === 'Expenses'){
 
@@ -786,16 +820,6 @@ export default async function handler(req, res) {
                 res.status(400).json({ success: false, message: "Internal server error!" }) 
             }
         }
-
-
-
-
-
-
-
-
-
-
         else{
             res.status(400).json({ success: false, message: "Internal server error !" }) 
         }  
