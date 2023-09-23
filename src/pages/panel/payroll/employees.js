@@ -69,6 +69,7 @@ const Employees = ({ userEmail, dbEmployee, dbRole }) => {
       return item.userEmail === userEmail;
     })
     setFilteredInvoices(filteredInvoices)
+    
   }, [userEmail]);
 
 

@@ -14,7 +14,6 @@ import { ProSidebarProvider } from 'react-pro-sidebar';
 import FullLayout from '@/panel/layouts/FullLayout';
 import Employees from 'models/Employees';
 import ReactToPrint from 'react-to-print';
-import PaymentType from 'models/PaymentType';
 import PurchaseInvoice from 'models/PurchaseInvoice';
 import PaymentMethod from 'models/PaymentMethod';
 
@@ -26,12 +25,14 @@ import PaymentMethod from 'models/PaymentMethod';
   const PaymentVoucher = ({ userEmail, dbVouchers, dbPurchaseInvoice, dbPaymentMethod, dbContacts, dbEmployees, }) => {
     
     const [open, setOpen] = useState(false)
-    const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [filteredData, setFilteredData] = useState(dbPurchaseInvoice)
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
+
     const [filteredInvoices, setFilteredInvoices] = useState([])
+    const [filteredContacts, setFilteredContacts] = useState([])
+    const [filteredPaymentMethod, setFilteredPaymentMethod] = useState([])
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -45,7 +46,6 @@ import PaymentMethod from 'models/PaymentMethod';
     }
 
     useEffect(() => {
-      setContacts(dbContacts, dbEmployees)
 
       const myUser = JSON.parse(localStorage.getItem('myUser'))
       if(myUser.department === 'Admin'){
@@ -56,6 +56,16 @@ import PaymentMethod from 'models/PaymentMethod';
         return item.userEmail === userEmail;
       })
       setFilteredInvoices(filteredInvoices)
+
+      let filteredContacts = dbContacts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredContacts(filteredContacts)
+
+      let filteredPaymentMethod = dbPaymentMethod.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredPaymentMethod(filteredPaymentMethod)
 
     }, [userEmail])
 
@@ -493,7 +503,7 @@ import PaymentMethod from 'models/PaymentMethod';
                               </label>
                               <select id="name" name="name" onChange={ handleChange } value={name} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select contacts</option>
-                                {dbContacts.map((item, index)=>{
+                                {filteredContacts.map((item, index)=>{
                                   return <option key={index} value={item.name}>{item.name} - {item.type}
                                   </option>
                                 })}
@@ -570,7 +580,7 @@ import PaymentMethod from 'models/PaymentMethod';
                               
                               <select id="paidBy" name="paidBy" onChange={ handleChange } value={paidBy} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select paid By</option>
-                                {dbPaymentMethod.map((item, index)=>{
+                                {filteredPaymentMethod.map((item, index)=>{
                                   return <option key={index} value={item.paymentType}>{item.paymentType}</option>
                                 })}
                               </select>

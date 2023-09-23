@@ -18,20 +18,24 @@ import TaxRate from 'models/TaxRate';
 import Project from 'models/Project';
 import ReactToPrint from 'react-to-print';
 import PaymentType from 'models/PaymentMethod';
+import PaymentMethod from 'models/PaymentMethod';
 
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
-  const SalesInvoice = ({ userEmail, dbVouchers, dbProducts, dbPaymentType, dbContacts, dbEmployees, dbTaxRate, dbProject }) => {
+  const SalesInvoice = ({ userEmail, dbVouchers, dbProducts, dbPaymentMethod, dbContacts, dbTaxRate, dbProject }) => {
     
     const [open, setOpen] = useState(false)
-    const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
 
     const [filteredInvoices, setFilteredInvoices] = useState([])
+    const [filteredTaxRate, setFilteredTaxRate] = useState([])
+    const [filteredProduct, setFilteredProduct] = useState([])
+    const [filteredContacts, setFilteredContacts] = useState([])
+    const [filteredPaymentMethod, setFilteredPaymentMethod] = useState([])
 
 
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
@@ -48,12 +52,31 @@ import PaymentType from 'models/PaymentMethod';
     }
 
     useEffect(() => {
-      setContacts(dbContacts, dbEmployees)
 
       let filteredInvoices = dbVouchers.filter((item)=>{
         return item.userEmail === userEmail;
       })
       setFilteredInvoices(filteredInvoices)
+
+      let filteredContacts = dbContacts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredContacts(filteredContacts)
+
+      let filteredPaymentMethod = dbPaymentMethod.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredPaymentMethod(filteredPaymentMethod)
+
+      let filteredTaxRate = dbTaxRate.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredTaxRate(filteredTaxRate)
+
+      let filteredProduct = dbProducts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredProduct(filteredProduct)
 
       const myUser = JSON.parse(localStorage.getItem('myUser'))
       if(myUser.department === 'Admin'){
@@ -550,7 +573,7 @@ import PaymentType from 'models/PaymentMethod';
                               </label>
                               <select id="name" name="name" onChange={ handleChange } value={name} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select contacts</option>
-                                {dbContacts.map((item, index)=>{
+                                {filteredContacts.map((item, index)=>{
                                   return <option key={index} value={item.name}>{item.name} - {item.type}
                                   </option>
                                 })}
@@ -626,7 +649,7 @@ import PaymentType from 'models/PaymentMethod';
                               
                               <select id="receivedBy" name="receivedBy" onChange={ handleChange } value={receivedBy} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select received By</option>
-                                {dbPaymentType.map((item, index)=>{
+                                {filteredPaymentMethod.map((item, index)=>{
                                   return <option key={index} value={item.paymentType}>{item.paymentType}</option>
                                 })}
                               </select>
@@ -687,7 +710,7 @@ import PaymentType from 'models/PaymentMethod';
                                       <td className="p-2 w-1/5">
                                         <select id="products" name="products" onChange={ e => change(e, index) } value={inputList.products} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                           <option value=''>select products</option>
-                                          {dbProducts.map((item, index)=>{
+                                          {filteredProduct.map((item, index)=>{
                                             return <option key={index} value={item.name}>{item.name}</option>
                                           })}
                                         </select>
@@ -717,7 +740,7 @@ import PaymentType from 'models/PaymentMethod';
                                       <td className="p-2 w-1/6">
                                         <select id="taxRate" name="taxRate" onChange={ e => change(e, index) } value={inputList.taxRate} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                           <option>select tax</option>
-                                          {dbTaxRate.map((item, index)=>{
+                                          {filteredTaxRate.map((item, index)=>{
                                             return <option key={index} value={item.taxRate}>{item.name}({item.taxRate}%) </option>
                                           })}
                                         </select>
@@ -893,7 +916,7 @@ export async function getServerSideProps() {
   let dbEmployees = await Employees.find()
   let dbProducts = await Product.find()
   let dbTaxRate = await TaxRate.find()
-  let dbPaymentType = await PaymentType.find()
+  let dbPaymentMethod = await PaymentMethod.find()
   let dbProject = await Project.find()
 
   // Pass data to the page via props
@@ -903,7 +926,7 @@ export async function getServerSideProps() {
       dbContacts: JSON.parse(JSON.stringify(dbContacts)), 
       dbProducts: JSON.parse(JSON.stringify(dbProducts)), 
       dbTaxRate: JSON.parse(JSON.stringify(dbTaxRate)), 
-      dbPaymentType: JSON.parse(JSON.stringify(dbPaymentType)), 
+      dbPaymentMethod: JSON.parse(JSON.stringify(dbPaymentMethod)), 
       dbEmployees: JSON.parse(JSON.stringify(dbEmployees)), 
       dbProject: JSON.parse(JSON.stringify(dbProject)), 
     }

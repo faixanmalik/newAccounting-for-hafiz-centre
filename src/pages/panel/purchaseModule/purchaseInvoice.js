@@ -24,11 +24,15 @@ import ReactToPrint from 'react-to-print';
   const PurchaseInvoice = ({ userEmail, dbVouchers, dbCharts, dbContacts, dbEmployees, dbTaxRate }) => {
     
     const [open, setOpen] = useState(false)
-    const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
+
     const [filteredInvoices, setFilteredInvoices] = useState([])
+    const [filteredCharts, setFilteredCharts] = useState([])
+    const [filteredContacts, setFilteredContacts] = useState([])
+    const [filteredTaxRate, setFilteredTaxRate] = useState([])
+
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -43,7 +47,6 @@ import ReactToPrint from 'react-to-print';
     }
 
     useEffect(() => {
-      setContacts(dbContacts, dbEmployees)
 
       const myUser = JSON.parse(localStorage.getItem('myUser'))
       if(myUser.department === 'Admin'){
@@ -55,6 +58,26 @@ import ReactToPrint from 'react-to-print';
         return item.userEmail === userEmail;
       })
       setFilteredInvoices(filteredInvoices)
+
+      let filteredCharts = dbCharts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredCharts(filteredCharts)
+
+      let filteredContacts = dbContacts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredContacts(filteredContacts)
+
+
+      let filteredTaxRate = dbTaxRate.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredTaxRate(filteredTaxRate)
+
+
+      dbTaxRate
+
     }, [userEmail])
 
 
@@ -551,7 +574,7 @@ import ReactToPrint from 'react-to-print';
                               </label>
                               <select id="name" name="name" onChange={ handleChange } value={name} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select contacts</option>
-                                {dbContacts.map((item, index)=>{
+                                {filteredContacts.map((item, index)=>{
                                   return <option key={index} value={item.name}>{item.name} - {item.type}
                                   </option>
                                 })}
@@ -689,7 +712,7 @@ import ReactToPrint from 'react-to-print';
                                       <td className="p-2 w-1/5">
                                         <select id="account" name="account" onChange={ e => change(e, index) } value={inputList.account} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                           <option value=''>select account</option>
-                                          {dbCharts.map((item, index)=>{
+                                          {filteredCharts.map((item, index)=>{
                                             return <option key={index} value={item.accountName}>{item.accountName}</option>
                                           })}
                                         </select>
@@ -719,7 +742,7 @@ import ReactToPrint from 'react-to-print';
                                       <td className="p-2 w-1/6">
                                         <select id="taxRate" name="taxRate" onChange={ e => change(e, index) } value={inputList.taxRate} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                           <option>select tax</option>
-                                          {dbTaxRate.map((item, index)=>{
+                                          {filteredTaxRate.map((item, index)=>{
                                             return <option key={index} value={item.taxRate}>{item.name}({item.taxRate}%) </option>
                                           })}
                                         </select>

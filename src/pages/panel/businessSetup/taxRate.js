@@ -31,6 +31,7 @@ const TaxRate = ({userEmail, dbTaxRate, charts}) => {
   const [selectedIds, setSelectedIds] = useState([]);
   const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
   const [filteredInvoices, setFilteredInvoices] = useState([])
+  const [filteredCharts, setFilteredCharts] = useState([])
 
   // authentications
   const [isAdmin, setIsAdmin] = useState(false)
@@ -45,6 +46,13 @@ const TaxRate = ({userEmail, dbTaxRate, charts}) => {
       return item.userEmail === userEmail;
     })
     setFilteredInvoices(filteredInvoices)
+
+    
+    let filteredCharts = charts.filter((item)=>{
+      return item.userEmail === userEmail;
+    })
+    setFilteredCharts(filteredCharts)
+
   }, [userEmail]);
 
   
@@ -403,7 +411,7 @@ const TaxRate = ({userEmail, dbTaxRate, charts}) => {
                                         className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                                       >
                                         <option>Select Charts of Accounts</option>
-                                          {charts.map((item, index)=>{
+                                          {filteredCharts.map((item, index)=>{
                                             return <option key={index} value={item.accountName}>{item.accountCode} - {item.accountName}</option>
                                           })}
                                       </select>

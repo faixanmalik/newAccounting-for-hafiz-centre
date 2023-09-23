@@ -31,6 +31,8 @@ function classNames(...classes) {
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
     const [filteredInvoices, setFilteredInvoices] = useState([])
+    const [filteredCharts, setFilteredCharts] = useState([])
+    const [filteredContacts, setFilteredContacts] = useState([])
   
 
     function handleRowCheckboxChange(e, id) {
@@ -53,6 +55,16 @@ function classNames(...classes) {
         return item.userEmail === userEmail;
       })
       setFilteredInvoices(filteredInvoices)
+
+      let filteredCharts = dbCharts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredCharts(filteredCharts)
+
+      let filteredContacts = dbContacts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredContacts(filteredContacts)
 
     }, [userEmail])
     
@@ -447,7 +459,7 @@ function classNames(...classes) {
                               </label>
                               <select id="name" name="name" onChange={ handleChange } value={name} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option>select contacts</option>
-                                {dbContacts.map((item)=>{
+                                {filteredContacts.map((item)=>{
                                   return <option key={item._id} value={item.name}>{item.name} - {item.type}
                                   </option>
                                 })}
@@ -498,7 +510,7 @@ function classNames(...classes) {
                                   <td className="p-2 w-1/2">
                                     <select id="account" name="account" onChange={ e => change(e, index) } value={inputList.account} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                       <option>select accounts</option>
-                                      {dbCharts.map((item)=>{
+                                      {filteredCharts.map((item)=>{
                                         return <option key={item._id} value={item.accountName}>{item.accountCode} - {item.accountName}</option>
                                       })}
                                     </select>

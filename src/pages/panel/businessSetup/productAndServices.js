@@ -28,6 +28,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
   const [isAdmin, setIsAdmin] = useState(false)
   const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
   const [filteredInvoices, setFilteredInvoices] = useState([])
+  const [filteredCharts, setFilteredCharts] = useState([])
 
   useEffect(() => {
     const myUser = JSON.parse(localStorage.getItem('myUser'))
@@ -38,6 +39,12 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
       return item.userEmail === userEmail;
     })
     setFilteredInvoices(filteredInvoices)
+
+    let filteredCharts = charts.filter((item)=>{
+      return item.userEmail === userEmail;
+    })
+    setFilteredCharts(filteredCharts)
+
   }, [userEmail]);
 
 
@@ -462,7 +469,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                               className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
                             >
                                 <option>Select account</option>
-                              {charts.map((item)=>{
+                              {filteredCharts.map((item)=>{
                                 return <option key={item.accountCode} value={item.accountName}>{item.accountCode} - {item.accountName}</option>
                               })}
 

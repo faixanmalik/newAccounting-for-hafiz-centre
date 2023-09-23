@@ -28,7 +28,11 @@ import Product from 'models/Product';
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
+
     const [filteredInvoices, setFilteredInvoices] = useState([])
+    const [filteredContacts, setFilteredContacts] = useState([])
+    const [filteredTaxRate, setFilteredTaxRate] = useState([])
+    const [filteredProduct, setFilteredProduct] = useState([])
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -49,6 +53,21 @@ import Product from 'models/Product';
         return item.userEmail === userEmail;
       })
       setFilteredInvoices(filteredInvoices)
+
+      let filteredContacts = dbContacts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredContacts(filteredContacts)
+
+      let filteredTaxRate = dbTaxRate.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredTaxRate(filteredTaxRate)
+
+      let filteredProduct = dbProducts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredProduct(filteredProduct)
 
       const myUser = JSON.parse(localStorage.getItem('myUser'))
       if(myUser.department === 'Admin'){
@@ -550,7 +569,7 @@ import Product from 'models/Product';
                               </label>
                               <select id="name" name="name" onChange={ handleChange } value={name} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select contacts</option>
-                                {dbContacts.map((item, index)=>{
+                                {filteredContacts.map((item, index)=>{
                                   return <option key={index} value={item.name}>{item.name} - {item.type}
                                   </option>
                                 })}
@@ -688,7 +707,7 @@ import Product from 'models/Product';
                                       <td className="p-2 w-1/5">
                                         <select id="products" name="products" onChange={ e => change(e, index) } value={inputList.products} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                           <option value=''>select products</option>
-                                          {dbProducts.map((item, index)=>{
+                                          {filteredProduct.map((item, index)=>{
                                             return <option key={index} value={item.name}>{item.name}</option>
                                           })}
                                         </select>
@@ -718,7 +737,7 @@ import Product from 'models/Product';
                                       <td className="p-2 w-1/6">
                                         <select id="taxRate" name="taxRate" onChange={ e => change(e, index) } value={inputList.taxRate} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                           <option>select tax</option>
-                                          {dbTaxRate.map((item, index)=>{
+                                          {filteredTaxRate.map((item, index)=>{
                                             return <option key={index} value={item.taxRate}>{item.name}({item.taxRate}%) </option>
                                           })}
                                         </select>

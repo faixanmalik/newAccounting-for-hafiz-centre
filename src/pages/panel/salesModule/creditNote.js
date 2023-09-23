@@ -22,14 +22,16 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
     return classes.filter(Boolean).join(' ')
   }
 
-  const CreditNote = ({ userEmail, dbVouchers, dbCreditSalesInvoice, dbPaymentMethod, dbContacts, dbEmployees, }) => {
+  const CreditNote = ({ userEmail, dbVouchers, dbCreditSalesInvoice, dbPaymentMethod, dbContacts, }) => {
     
     const [open, setOpen] = useState(false)
-    const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [filteredData, setFilteredData] = useState(dbCreditSalesInvoice)
+
     const [filteredInvoices, setFilteredInvoices] = useState([])
+    const [filteredContacts, setFilteredContacts] = useState([])
+    const [filteredPaymentMethod, setFilteredPaymentMethod] = useState([])
 
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
@@ -43,7 +45,6 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
     }
 
     useEffect(() => {
-      setContacts(dbContacts, dbEmployees)
 
       const myUser = JSON.parse(localStorage.getItem('myUser'))
       if(myUser.department === 'Admin'){
@@ -54,6 +55,16 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
         return item.userEmail === userEmail;
       })
       setFilteredInvoices(filteredInvoices)
+
+      let filteredContacts = dbContacts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredContacts(filteredContacts)
+
+      let filteredPaymentMethod = dbPaymentMethod.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredPaymentMethod(filteredPaymentMethod)
 
     }, [userEmail])
 
@@ -487,7 +498,7 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
                               </label>
                               <select id="name" name="name" onChange={ handleChange } value={name} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select contacts</option>
-                                {dbContacts.map((item, index)=>{
+                                {filteredContacts.map((item, index)=>{
                                   return <option key={index} value={item.name}>{item.name} - {item.type}
                                   </option>
                                 })}
@@ -554,7 +565,7 @@ import CreditSalesInvoice from 'models/CreditSalesInvoice';
                               
                               <select id="paidBy" name="paidBy" onChange={ handleChange } value={paidBy} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select paid By</option>
-                                {dbPaymentMethod.map((item, index)=>{
+                                {filteredPaymentMethod.map((item, index)=>{
                                   return <option key={index} value={item.paymentType}>{item.paymentType}</option>
                                 })}
                               </select>

@@ -5,21 +5,17 @@ import { Dialog, Transition } from '@headlessui/react'
 import { XMarkIcon } from '@heroicons/react/24/outline'
 import { Menu, MenuItem, SubMenu, Sidebar } from 'react-pro-sidebar';
 
-import {AiOutlineBank, AiOutlineCloseCircle, AiOutlineContacts, AiOutlineFundProjectionScreen, AiOutlineProject, AiOutlineSetting, AiOutlineShoppingCart, AiOutlineTeam, AiOutlineUser, AiOutlineUserSwitch } from 'react-icons/ai'
-import { BiFingerprint, BiHomeAlt, BiLocationPlus, BiPurchaseTagAlt, BiUserCheck, BiUserCircle } from 'react-icons/bi'
-import {MdOutlineInventory2, MdPayment, MdProductionQuantityLimits} from 'react-icons/md'
+import { AiOutlineCloseCircle, AiOutlineContacts, AiOutlineUser } from 'react-icons/ai'
+import { BiHomeAlt, BiUserCheck } from 'react-icons/bi'
+import {MdPayment, MdProductionQuantityLimits} from 'react-icons/md'
 import {IoPieChartSharp, IoBusinessOutline} from 'react-icons/io5'
 import {HiOutlineCash, HiOutlineDocumentReport, HiOutlineReceiptTax} from 'react-icons/hi'
 
-import {HiOutlineBanknotes} from 'react-icons/hi2'
 
-import {BsBank, BsChatQuote, BsShop} from 'react-icons/bs'
-import {FiShoppingBag, FiUserPlus, FiUsers} from 'react-icons/fi'
-import {FaToriiGate} from 'react-icons/fa'
-import {TbFileInvoice} from 'react-icons/tb'
-import {RiBankCardLine, RiBankLine, RiBillLine} from 'react-icons/ri'
-import {SlCalender} from 'react-icons/sl'
-import { Link } from 'react-feather';
+import {BsBank} from 'react-icons/bs'
+import {FiUserPlus, FiUsers} from 'react-icons/fi'
+import {RiBankCardLine} from 'react-icons/ri'
+import {FaUserFriends} from 'react-icons/fa'
 
 
 
@@ -184,7 +180,7 @@ const Sidebar2 = ({ showMobilemenu }) => {
             <MenuItem href="/panel/userManagment/addRole" icon={<BiUserCheck className='text-lg'/>} className={ location === '/panel/userManagment/addRole' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Add Role
             </MenuItem>
-            {isOwner === true && <MenuItem href="/panel/userManagment/clients" icon={<BiUserCheck className='text-lg'/>} className={ location === '/panel/userManagment/clients' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
+            {isOwner === true && <MenuItem href="/panel/userManagment/clients" icon={<FaUserFriends className='text-lg'/>} className={ location === '/panel/userManagment/clients' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Clients
             </MenuItem>}
           </SubMenu>

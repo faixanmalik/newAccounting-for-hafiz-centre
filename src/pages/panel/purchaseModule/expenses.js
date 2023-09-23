@@ -16,22 +16,27 @@ import Employees from 'models/Employees';
 import TaxRate from 'models/TaxRate';
 import Project from 'models/Project';
 import ReactToPrint from 'react-to-print';
-import PaymentType from 'models/PaymentType';
+import PaymentMethod from 'models/PaymentMethod';
 
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
-  const Expenses = ({ userEmail,  dbVouchers, dbAccounts, dbPaymentType, dbContacts, dbEmployees, dbTaxRate, dbProject }) => {
+  const Expenses = ({ userEmail,  dbVouchers, dbAccounts, dbPaymentMethod, dbContacts, dbTaxRate, dbProject }) => {
     
     const [open, setOpen] = useState(false)
-    const [contacts, setContacts] = useState([])
     const [id, setId] = useState('')
     const [selectedIds, setSelectedIds] = useState([]);
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
-    const [filteredInvoices, setFilteredInvoices] = useState([])
 
+    const [filteredInvoices, setFilteredInvoices] = useState([])
+    const [filteredCharts, setFilteredCharts] = useState([])
+    const [filteredContacts, setFilteredContacts] = useState([])
+    const [filteredTaxRate, setFilteredTaxRate] = useState([])
+    const [filteredPaymentMethod, setFilteredPaymentMethod] = useState([])
+
+    
     // authentications
     const [isAdmin, setIsAdmin] = useState(false)
 
@@ -44,7 +49,6 @@ import PaymentType from 'models/PaymentType';
     }
 
     useEffect(() => {
-      setContacts(dbContacts, dbEmployees)
 
       const myUser = JSON.parse(localStorage.getItem('myUser'))
       if(myUser.department === 'Admin'){
@@ -55,6 +59,28 @@ import PaymentType from 'models/PaymentType';
         return item.userEmail === userEmail;
       })
       setFilteredInvoices(filteredInvoices)
+
+      let filteredCharts = dbAccounts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredCharts(filteredCharts)
+
+      let filteredContacts = dbContacts.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredContacts(filteredContacts)
+
+      let filteredPaymentMethod = dbPaymentMethod.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredPaymentMethod(filteredPaymentMethod)
+
+      let filteredTaxRate = dbTaxRate.filter((item)=>{
+        return item.userEmail === userEmail;
+      })
+      setFilteredTaxRate(filteredTaxRate)
+
+
     }, [userEmail])
 
 
@@ -538,7 +564,7 @@ import PaymentType from 'models/PaymentType';
                               </label>
                               <select id="name" name="name" onChange={ handleChange } value={name} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select contacts</option>
-                                {dbContacts.map((item, index)=>{
+                                {filteredContacts.map((item, index)=>{
                                   return <option key={index} value={item.name}>{item.name} - {item.type}
                                   </option>
                                 })}
@@ -614,7 +640,7 @@ import PaymentType from 'models/PaymentType';
                               
                               <select id="paidBy" name="paidBy" onChange={ handleChange } value={paidBy} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option value=''>select paid By</option>
-                                {dbPaymentType.map((item, index)=>{
+                                {filteredPaymentMethod.map((item, index)=>{
                                   return <option key={index} value={item.paymentType}>{item.paymentType}</option>
                                 })}
                               </select>
@@ -689,7 +715,7 @@ import PaymentType from 'models/PaymentType';
                                       <td className="p-2 w-1/5">
                                         <select id="accounts" name="accounts" onChange={ e => change(e, index) } value={inputList.accounts} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                           <option value=''>select account</option>
-                                          {dbAccounts.map((item, index)=>{
+                                          {filteredCharts.map((item, index)=>{
                                             return <option key={index} value={item.accountName}>{item.accountName}</option>
                                           })}
                                         </select>
@@ -719,7 +745,7 @@ import PaymentType from 'models/PaymentType';
                                       <td className="p-2 w-1/6">
                                         <select id="taxRate" name="taxRate" onChange={ e => change(e, index) } value={inputList.taxRate} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                           <option>select tax</option>
-                                          {dbTaxRate.map((item, index)=>{
+                                          {filteredTaxRate.map((item, index)=>{
                                             return <option key={index} value={item.taxRate}>{item.name}({item.taxRate}%) </option>
                                           })}
                                         </select>
@@ -882,7 +908,7 @@ export async function getServerSideProps() {
   let dbEmployees = await Employees.find()
   let dbAccounts = await Charts.find()
   let dbTaxRate = await TaxRate.find()
-  let dbPaymentType = await PaymentType.find()
+  let dbPaymentMethod = await PaymentMethod.find()
   let dbProject = await Project.find()
 
   // Pass data to the page via props
@@ -892,7 +918,7 @@ export async function getServerSideProps() {
       dbContacts: JSON.parse(JSON.stringify(dbContacts)), 
       dbAccounts: JSON.parse(JSON.stringify(dbAccounts)), 
       dbTaxRate: JSON.parse(JSON.stringify(dbTaxRate)), 
-      dbPaymentType: JSON.parse(JSON.stringify(dbPaymentType)), 
+      dbPaymentMethod: JSON.parse(JSON.stringify(dbPaymentMethod)), 
       dbEmployees: JSON.parse(JSON.stringify(dbEmployees)), 
       dbProject: JSON.parse(JSON.stringify(dbProject)), 
     }
