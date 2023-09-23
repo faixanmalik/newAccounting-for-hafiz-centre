@@ -185,8 +185,8 @@ import Product from 'models/Product';
       
       inputList.forEach(item => {
         item.date = journalDate;
+        item.billNo = billNo;
       });
-
 
       // fetch the data from form to makes a file in local system
       const data = { userEmail, phoneNo, email, discount, amountPaid, amountReceived, billStatus, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path:'PurchaseInvoice' };
@@ -211,7 +211,7 @@ import Product from 'models/Product';
     // JV
     const addLines = () => {
       setInputList([...inputList,
-        {product:'', desc:'', amount:'', taxRate:'', qty: '', taxAmount:'', totalAmountPerItem:''},
+        { billNo: billNo, product:'', desc:'', amount:'', taxRate:'', qty: '', taxAmount:'', totalAmountPerItem:''},
       ])
     }
     const delLines = (indexToDelete) => {
@@ -266,6 +266,11 @@ import Product from 'models/Product';
 
     const editEntry = async(id)=>{
       setOpen(true)
+
+      inputList.forEach(item => {
+        item.date = journalDate;
+        item.billNo = billNo;
+      });
 
       const data = { id, phoneNo, email, discount, amountPaid, amountReceived, billStatus, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path:'PurchaseInvoice' };
       
