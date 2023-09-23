@@ -9,19 +9,19 @@ import 'react-toastify/dist/ReactToastify.css';
 import { AiOutlineDelete, AiOutlineEdit, AiOutlinePlusCircle, AiOutlinePrinter } from 'react-icons/ai';
 import dbPurchaseInvoice from 'models/PurchaseInvoice';
 import Contact from 'models/Contact';
-import Charts from 'models/Charts';
 import { ProSidebarProvider } from 'react-pro-sidebar';
 import FullLayout from '@/panel/layouts/FullLayout';
 import Employees from 'models/Employees';
 import TaxRate from 'models/TaxRate';
 import ReactToPrint from 'react-to-print';
+import Product from 'models/Product';
 
 
   function classNames(...classes) {
     return classes.filter(Boolean).join(' ')
   }
 
-  const PurchaseInvoice = ({ userEmail, dbVouchers, dbCharts, dbContacts, dbEmployees, dbTaxRate }) => {
+  const PurchaseInvoice = ({ userEmail, dbVouchers, dbProducts, dbContacts, dbEmployees, dbTaxRate }) => {
     
     const [open, setOpen] = useState(false)
     const [id, setId] = useState('')
@@ -29,7 +29,7 @@ import ReactToPrint from 'react-to-print';
     const [isOpenSaveChange, setIsOpenSaveChange] = useState(true)
 
     const [filteredInvoices, setFilteredInvoices] = useState([])
-    const [filteredCharts, setFilteredCharts] = useState([])
+    const [filteredProduct, setFilteredProduct] = useState([])
     const [filteredContacts, setFilteredContacts] = useState([])
     const [filteredTaxRate, setFilteredTaxRate] = useState([])
 
@@ -59,10 +59,10 @@ import ReactToPrint from 'react-to-print';
       })
       setFilteredInvoices(filteredInvoices)
 
-      let filteredCharts = dbCharts.filter((item)=>{
+      let filteredProduct = dbProducts.filter((item)=>{
         return item.userEmail === userEmail;
       })
-      setFilteredCharts(filteredCharts)
+      setFilteredProduct(filteredProduct)
 
       let filteredContacts = dbContacts.filter((item)=>{
         return item.userEmail === userEmail;
@@ -74,9 +74,6 @@ import ReactToPrint from 'react-to-print';
         return item.userEmail === userEmail;
       })
       setFilteredTaxRate(filteredTaxRate)
-
-
-      dbTaxRate
 
     }, [userEmail])
 
@@ -110,8 +107,8 @@ import ReactToPrint from 'react-to-print';
 
     // JV
     const [inputList, setInputList] = useState([
-      { billNo: '', date: journalDate, account: '', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
-      { billNo: '', date: journalDate, account: '', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
+      { billNo: '', date: journalDate, product: '', qty: '', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
+      { billNo: '', date: journalDate, product: '', qty: '', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
     ]);
 
     // JV
@@ -214,7 +211,7 @@ import ReactToPrint from 'react-to-print';
     // JV
     const addLines = () => {
       setInputList([...inputList,
-        {account:'', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:''},
+        {product:'', desc:'', amount:'', taxRate:'', qty: '', taxAmount:'', totalAmountPerItem:''},
       ])
     }
     const delLines = (indexToDelete) => {
@@ -382,9 +379,9 @@ import ReactToPrint from 'react-to-print';
 
                 setBillNo('')
                 setInputList([
-                    {
-                      billNo : billNo, date: journalDate, account:'', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:'' 
-                    },
+                  {
+                    billNo : billNo, date: journalDate, product:'', desc:'', qty: '', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:'' 
+                  },
                 ])
                 setMemo('')
                 setAttachment('')
@@ -524,8 +521,8 @@ import ReactToPrint from 'react-to-print';
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 translate-y-4 md:translate-y-0 md:scale-95" enterTo="opacity-100 translate-y-0 md:scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 translate-y-0 md:scale-100" leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95">
-              <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-5xl">
-                <div className="relative flex w-full items-center overflow-hidden bg-white px-4 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
+              <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-6xl">
+                <div className="relative flex w-full items-center overflow-hidden bg-white px-3 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
                   <button type='button' className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 sm:top-8 sm:right-6 md:top-6 md:right-6 lg:top-6 lg:right-8" onClick={() => setOpen(false)}>
                     <span className="sr-only">Close</span>
                     <XMarkIcon className="h-6 w-6" aria-hidden="true" />
@@ -563,6 +560,7 @@ import ReactToPrint from 'react-to-print';
                               onChange={ handleChange }
                               id="billNo"
                               className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              required
                               />
                             </div>
                           </div>
@@ -682,10 +680,13 @@ import ReactToPrint from 'react-to-print';
                                   <thead className="text-xs text-gray-700 uppercase bg-gray-50">
                                     <tr>
                                       <th scope="col" className="p-2">
-                                          Account
+                                          Product
                                       </th>
                                       <th scope="col" className="p-2">
                                           Description 
+                                      </th>
+                                      <th scope="col" className="p-2">
+                                          Qty
                                       </th>
                                       <th scope="col" className="p-2">
                                           Amount
@@ -710,10 +711,10 @@ import ReactToPrint from 'react-to-print';
                                     return <tr key={index} className="bg-white text-black border-b hover:bg-gray-50">
                                     
                                       <td className="p-2 w-1/5">
-                                        <select id="account" name="account" onChange={ e => change(e, index) } value={inputList.account} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                          <option value=''>select account</option>
-                                          {filteredCharts.map((item, index)=>{
-                                            return <option key={index} value={item.accountName}>{item.accountName}</option>
+                                        <select id="product" name="product" onChange={ e => change(e, index) } value={inputList.product} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
+                                          <option value=''>select product</option>
+                                          {filteredProduct.map((item, index)=>{
+                                            return <option key={index} value={item.name}>{item.name}</option>
                                           })}
                                         </select>
                                       </td>
@@ -724,6 +725,17 @@ import ReactToPrint from 'react-to-print';
                                           value={ inputList.desc }
                                           name="desc"
                                           id="desc"
+                                          className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                                        />
+                                      </td>
+
+                                      <td className="p-2">
+                                        <input
+                                          type="number"
+                                          onChange={ e=> change(e, index) }
+                                          value={ inputList.qty }
+                                          name="qty"
+                                          id="qty"
                                           className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         />
                                       </td>
@@ -920,7 +932,7 @@ export async function getServerSideProps() {
   let dbVouchers = await dbPurchaseInvoice.find()
   let dbContacts = await Contact.find()
   let dbEmployees = await Employees.find()
-  let dbCharts = await Charts.find()
+  let dbProducts = await Product.find()
   let dbTaxRate = await TaxRate.find()
 
   // Pass data to the page via props
@@ -929,7 +941,7 @@ export async function getServerSideProps() {
       dbVouchers: JSON.parse(JSON.stringify(dbVouchers)),
       dbContacts: JSON.parse(JSON.stringify(dbContacts)),  
       dbEmployees: JSON.parse(JSON.stringify(dbEmployees)),  
-      dbCharts: JSON.parse(JSON.stringify(dbCharts)),  
+      dbProducts: JSON.parse(JSON.stringify(dbProducts)),  
       dbTaxRate: JSON.parse(JSON.stringify(dbTaxRate)),  
     }
   }

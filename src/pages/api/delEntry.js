@@ -92,6 +92,26 @@ export default async function handler(req, res) {
         }
         else if (path === 'PurchaseInvoice'){
             const { selectedIds } = req.body;
+            for (const newItem of selectedIds) {
+                if(newItem){
+
+                    let data = await PurchaseInvoice.findById({ _id: newItem });
+                    if (data) {
+                        if (data.inputList && data.inputList.length > 0) {
+                            let inputList = data.inputList;
+                            for (const item of inputList) {
+                                await Product.findOneAndUpdate({name: item.product}, { $inc: { availableQty: -item.qty } })
+                            }
+                        }
+                        else {
+                            console.log(`No inputList found for SalesInvoice with ID ${newItem}`);
+                        }
+                    }
+                    else {
+                        console.log(`SalesInvoice with ID ${newItem} not found`);
+                    }
+                }
+            };
             await PurchaseInvoice.deleteMany( { _id: { $in: selectedIds } } )
             res.status(200).json({ success: true, message: "Deleted Successfully !" }) 
         }

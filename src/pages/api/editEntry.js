@@ -353,12 +353,14 @@ export default async function handler(req, res) {
             var products = 0;
             var amount = 0;
             var taxAmount = 0;
+            var qty = 0;
             var totalAmountPerItem = 0;
             var desc = 0;
             for (let index = 0; index < inputList.length; index++) {
                 products = inputList[index].products;
                 amount += parseInt(inputList[index].amount);
                 taxAmount += parseInt(inputList[index].taxAmount);
+                qty += parseInt(inputList[index].qty);
                 totalAmountPerItem += parseInt(inputList[index].totalAmountPerItem);
                 desc = inputList[index].desc;
             }
@@ -368,12 +370,14 @@ export default async function handler(req, res) {
             var dbProducts = 0;
             var dbAmount = 0;
             var dbTaxAmount = 0;
+            var dbQty = 0;
             var dbTotalAmountPerItem = 0;
             var dbDesc = 0;
             for (let index = 0; index < dbInputList.length; index++) {
                 dbProducts = dbInputList[index].products;
                 dbAmount += parseInt(dbInputList[index].amount);
                 dbTaxAmount += parseInt(dbInputList[index].taxAmount);
+                dbQty += parseInt(dbInputList[index].qty);
                 dbTotalAmountPerItem += parseInt(dbInputList[index].totalAmountPerItem);
                 dbDesc = dbInputList[index].desc;
             }
@@ -386,6 +390,7 @@ export default async function handler(req, res) {
                     products === dbProducts 
                     && amount === dbAmount
                     && taxAmount === dbTaxAmount
+                    && qty === dbQty
                     && totalAmountPerItem === dbTotalAmountPerItem
                     && desc === dbDesc
 
@@ -410,8 +415,27 @@ export default async function handler(req, res) {
                     res.status(400).json({ success: false, message: "Already found!" }) 
                 }
                 else{
+
+
+                    for (const dbItem of dbInputList) {
+                        const data = await Product.findOne({name: dbItem.product});
+                        if (data) {
+                            const oldQty = dbItem.qty;
+
+                            for (const newItem of inputList) {
+                                if (newItem.product === dbItem.product) {
+
+                                    const newQty = newItem.qty;
+                                    const quantityDifference = newQty - oldQty;
+                                    await Product.findOneAndUpdate({name: newItem.product}, { $inc: { availableQty: quantityDifference } })
+                                }
+                            }
+
+                        }
+                    }
+
                     await PurchaseInvoice.findByIdAndUpdate(id, 
-                        {   dueDate:dueDate , phoneNo:phoneNo,email:email , city:city, fullAmount:fullAmount, 
+                        {   dueDate:dueDate , phoneNo:phoneNo, email:email , city:city, fullAmount:fullAmount, 
                             fullTax:fullTax, totalAmount:totalAmount,address:address,
                             reference:reference, inputList:inputList,name:name, 
                             memo:memo,journalDate:journalDate, billNo : billNo, 

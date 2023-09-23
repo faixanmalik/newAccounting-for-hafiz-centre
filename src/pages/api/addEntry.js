@@ -130,6 +130,10 @@ export default async function handler(req, res) {
         else if( path === 'PurchaseInvoice'){
             const { userEmail, phoneNo, email, discount, billStatus, amountPaid, amountReceived, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
 
+            for (const newItem of inputList) {
+                await Product.findOneAndUpdate({name: newItem.product}, { $inc: { availableQty: newItem.qty } })
+            }
+
             let newEntry = new PurchaseInvoice( { userEmail, phoneNo, email, discount, billStatus, amountPaid, amountReceived, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
             await newEntry.save();
             res.status(200).json({ success: true, message: "Entry Added !" }) 
