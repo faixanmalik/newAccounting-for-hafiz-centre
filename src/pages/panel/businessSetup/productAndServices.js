@@ -120,7 +120,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
   const [code, setCode] = useState('')
   const [name, setName] = useState('')
   const [availableQty, setAvailableQty] = useState(0)
-  const [linkAccount, setlinkAccount] = useState('')
+  const [costPrice, setCostPrice] = useState('')
   const [desc, setdesc] = useState('')
 
 
@@ -134,8 +134,8 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
     else if(e.target.name === 'availableQty'){
       setAvailableQty(e.target.value)
     }
-    else if(e.target.name === 'linkAccount'){
-      setlinkAccount(e.target.value)
+    else if(e.target.name === 'costPrice'){
+      setCostPrice(e.target.value)
     }
     else if(e.target.name === 'desc'){
       setdesc(e.target.value)
@@ -147,7 +147,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
     e.preventDefault()
 
     // fetch the data from form to makes a file in local system
-    const data = { userEmail, code, name, availableQty, linkAccount, desc, path: 'productAndServices'  };
+    const data = { userEmail, code, name, availableQty, costPrice, desc, path: 'productAndServices'  };
 
     let res = await fetch(`/api/addEntry`, {
       method: 'POST',
@@ -185,7 +185,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
         setCode(response.product.code)
         setName(response.product.name)
         setAvailableQty(response.product.availableQty)
-        setlinkAccount(response.product.linkAccount)
+        setCostPrice(response.product.costPrice)
         setdesc(response.product.desc)
       }
       else{
@@ -217,7 +217,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
 
   const editEntry = async(id)=>{
 
-    const data = { id, code, name, availableQty, linkAccount, desc , path: 'productAndServices' };
+    const data = { id, code, name, availableQty, costPrice, desc , path: 'productAndServices' };
     let res = await fetch(`/api/editEntry`, {
       method: 'POST',
       headers: {
@@ -262,7 +262,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
               setOpen(true);
               setCode('');
               setName('');
-              setlinkAccount('');
+              setCostPrice('');
               setdesc('');
               setIsOpenSaveChange(true)
             }} 
@@ -332,7 +332,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                             Available Qty
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Linked Account
+                            Cost Price
                         </th>
                         <th scope="col" className="px-6 py-3">
                             View / Edit
@@ -341,7 +341,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                 </thead>
                 <tbody>
                     
-                    {filteredInvoices.map((item, index)=>{
+                  {filteredInvoices.map((item, index)=>{
                     return <tr key={item._id} className="bg-white border-b hover:bg-gray-50">
                     <td className="w-4 p-4">
                       <div className="flex items-center">
@@ -361,7 +361,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                       {item.availableQty}
                     </td>
                     <td className="px-6 py-3">
-                      {item.linkAccount}
+                      {item.costPrice.toLocaleString()}
                     </td>
                     <td className="flex items-center px-6 mr-5 py-4 space-x-4">
                       <button type='button' onClick={()=>{getData(item._id)}} 
@@ -398,7 +398,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                     <div className="overflow-hidden shadow sm:rounded-md">
                       <div className="bg-white px-4 py-5 sm:p-6">
                         <div className="grid grid-cols-6 gap-6">
-                          <div className="col-span-6 sm:col-span-2">
+                          <div className="col-span-6 sm:col-span-1">
                             <label htmlFor="code" className="block text-sm font-medium text-gray-700">
                               Code (required)
                             </label>
@@ -413,7 +413,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                               required
                             />
                           </div>
-                          <div className="col-span-6 sm:col-span-2">
+                          <div className="col-span-6 sm:col-span-3">
                             <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                               Name
                             </label>
@@ -444,22 +444,18 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                           </div>
                           
                           <div className="col-span-6 sm:col-span-2">
-                            <label htmlFor="linkAccount" className="block text-sm font-medium text-gray-700">
-                              Link Account
+                            <label htmlFor="costPrice" className="block text-sm font-medium text-gray-700">
+                              Cost Price
                             </label>
-                            <select
+                            <input
+                              value={costPrice}
                               onChange={handleChange}
-                              value={linkAccount}
-                              id="linkAccount"
-                              name="linkAccount"
-                              className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white px-3 shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm"
-                            >
-                              <option>Select account</option>
-                              {filteredCharts.map((item)=>{
-                                return <option key={item.accountCode} value={item.accountName}>{item.accountCode} - {item.accountName}</option>
-                              })}
-
-                            </select>
+                              type="number"
+                              name="costPrice"
+                              id="costPrice"
+                              className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+                              required
+                            />
                           </div>
                           
                           <div className="col-span-6 sm:col-span-3 lg:col-span-4">

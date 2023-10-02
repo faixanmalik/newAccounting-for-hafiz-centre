@@ -5,8 +5,9 @@ const ProductSchema = new mongoose.Schema({
     name:{type: String},
     userEmail:{type: String},
     availableQty:{type: Number},
-    linkAccount: {type: String},
+    costPrice: {type: Number},
     desc: {type: String},
+    type: {type: String, default: 'Product'},
   },{timestamps:true});
 
 mongoose.models={}
