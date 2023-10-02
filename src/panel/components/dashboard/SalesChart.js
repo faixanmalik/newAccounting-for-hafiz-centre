@@ -62,14 +62,45 @@ const SalesChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceipt
         let allVouchers = [];
         let account = element.accountName;
 
-        allVouchers = allVouchers.concat(dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher);
+        allVouchers = allVouchers.concat(dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher);
 
         // Data filter
         const dbAll = allVouchers.filter((data) => {
 
             if(data.userEmail === userEmail) {
 
-                if(data.type === 'PurchaseInvoice'){
+                if(data.type === 'Product'){
+                    let calculateDebitAmount = data.availableQty * data.costPrice;
+                    let debitAmount = calculateDebitAmount;
+                    let creditAmount = 0;
+                    let debitAccount = 'Stock';
+                    let creditAccount = '';
+
+                    if(account === debitAccount || account === creditAccount){
+                        Object.assign(data, {
+                            coaAccount: account,
+                            journalNo: data.code,
+                            product: data.name,
+                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                            debitAccount: account === debitAccount ? debitAccount : '',
+                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                            creditAccount: account === creditAccount ? creditAccount : '',
+                        });
+
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
+                                return data;
+                            }
+                        }
+                        else {
+                            return data;
+                        }
+                    }
+
+                }
+                else if(data.type === 'PurchaseInvoice'){
                     let journal = data.inputList.filter((newData)=>{
     
                         let debitAmount = newData.totalAmountPerItem;
