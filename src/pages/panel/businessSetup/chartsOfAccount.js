@@ -376,7 +376,7 @@ const ChartsOfAccounts = ({userEmail, dbAllCharts}) => {
                           <input id="checkbox-all-search" type="checkbox" className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                         </div>
                       </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-2 py-3">
                             Account code
                         </th>
                         <th scope="col" className="px-6 py-3">
@@ -385,13 +385,13 @@ const ChartsOfAccounts = ({userEmail, dbAllCharts}) => {
                         <th scope="col" className="px-6 py-3">
                             Account
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-2 py-3">
                             Sub Account
                         </th>
                         <th scope="col" className="px-6 py-3">
                             Balance
                         </th>
-                        <th scope="col" className="px-6 py-3">
+                        <th scope="col" className="px-2 py-3">
                             <span className="">View / Edit</span>
                         </th>
                     </tr>
@@ -406,7 +406,7 @@ const ChartsOfAccounts = ({userEmail, dbAllCharts}) => {
                           <input id="checkbox-table-search-1" type="checkbox" onChange={e => handleRowCheckboxChange(e, item._id)} className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 dark:focus:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                         </div>
                       </td>
-                      <td scope="row" className="px-6 py-1 font-medium text-gray-900 whitespace-nowrap">
+                      <td scope="row" className="w-32 px-6 py-1 font-medium text-gray-900 whitespace-nowrap">
                           {item.accountCode}
                       </td>
                       <td className="px-6 py-1">

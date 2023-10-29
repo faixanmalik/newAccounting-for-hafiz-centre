@@ -307,14 +307,49 @@ export default async function handler(req, res) {
         }
 
         else if( path === 'clients'){
-            const { userEmail, businessName, email, password, firstName, lastName } = req.body;
+            const { businessName, email, password, firstName, lastName } = req.body;
+
+
             
-            let newEntry = new User( { userEmail, businessName, email, password, firstName, lastName, } );
-            await newEntry.save();
-            res.status(200).json({ success: true, message: "Entry Added!" }) 
+
+            try {
+
+                let preDefiendCOA = [
+                    { userEmail: email, accountCode: 100, accountName: 'Sales', account: 'Incomes', subAccount: 'Revenue', balance: 0, desc: 'Income from any normal business activity'},
+                    { userEmail: email, accountCode: 200, accountName: 'Purchases', account: 'Expenses', subAccount: 'Cost of sales', balance: 0, desc: 'Purchase description refers to the words mentioned in solicitation in order to describe the supplies or services to be acquired and comprises terms and conditions'},
+                    { userEmail: email, accountCode: 300, accountName: 'Accounts Receivable', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'he balance of money due to a firm for goods or services delivered or used but not yet paid for by customers'},
+                    { userEmail: email, accountCode: 400, accountName: 'Accounts Payable', account: 'Liabilities', subAccount: 'Current Liability', balance: 0, desc: 'Outstanding invoices the company has received from suppliers but has not yet paid at balance date'},
+                    { userEmail: email, accountCode: 500, accountName: 'Cost of Goods Sold', account: 'Expenses', subAccount: 'Cost of sales', balance: 0, desc: 'Cost of goods sold by the business'},
+                    { userEmail: email, accountCode: 600, accountName: 'Cash', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'Cash is legal tender—currency or coins—that can be used to exchange goods, debt, or services.'},
+                    { userEmail: email, accountCode: 700, accountName: 'Bank', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'This account represents the funds you have in your bank account.'},
+                    { userEmail: email, accountCode: 800, accountName: 'Owner A Share Capital', account: 'Equity', subAccount: 'Equity', balance: 0, desc: 'The value of shares purchased by the shareholders'},
+                    { userEmail: email, accountCode: 900, accountName: 'Retained Earnings', account: 'Equity', subAccount: 'Equity', balance: 0, desc: 'Accumulated Profit'},
+                    { userEmail: email, accountCode: 1000, accountName: 'Tax Payable', account: 'Liabilities', subAccount: 'Current Liability', balance: 0, desc: 'Income tax payable" is a liability reported for financial accounting purposes that indicates the amount that an organization expects to pay in income taxes within 12 months.'},
+                ]
+
+                const userCOA = preDefiendCOA.map(item => ({
+                    userEmail: item.userEmail,
+                    accountCode: item.accountCode,
+                    accountName: item.accountName,
+                    account: item.account,
+                    subAccount: item.subAccount,
+                    balance: item.balance,
+                    desc: item.desc,
+                }));
+                await Charts.create(userCOA);
+                
+                let newEntry = new User( { businessName, email, password, firstName, lastName, } );
+                await newEntry.save();
+
+                
+                res.status(200).json({ success: true, message: "Entry Added!" }) 
+
+            } catch (error) {
+                console.log(error)
+                res.status(400).json({ success: false, message: "Internal Server Error !" }) 
+            }
         }
         
-
         else{
             res.status(400).json({ success: false, message: "Internal Server Error !" }) 
         }
