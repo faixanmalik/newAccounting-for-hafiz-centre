@@ -172,7 +172,7 @@ import PaymentMethod from 'models/PaymentMethod';
       });
 
       // fetch the data from form to makes a file in local system
-      const data = { userEmail, phoneNo, email, city, reference, fromAccount, paidBy, amount, dueDate, inputList, name,  memo, journalDate, journalNo, totalPaid, totalBalance, attachment, path:'PaymentVoucher' };
+      const data = { userEmail, phoneNo, email, city, reference, fromAccount:paidBy , paidBy, amount, dueDate, inputList, name,  memo, journalDate, journalNo, totalPaid, totalBalance, attachment, path:'PaymentVoucher' };
 
       let res = await fetch(`/api/addEntry`, {
         method: 'POST',

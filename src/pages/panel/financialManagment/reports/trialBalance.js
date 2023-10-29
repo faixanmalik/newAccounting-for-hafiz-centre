@@ -55,6 +55,8 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
             // Data filter
             const dbAll = allVouchers.filter((data) => {
 
+               
+
                 if(data.userEmail === userEmail) {
 
                     if(data.type === 'Product'){
@@ -169,6 +171,8 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
                         });
+
+                        
         
                         let linkedAccountCOA;
         
