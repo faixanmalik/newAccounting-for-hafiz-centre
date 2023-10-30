@@ -393,7 +393,7 @@ const ChartsOfAccounts = ({userEmail, dbAllCharts}) => {
                         <th scope="col" className="px-6 py-3">
                             Account
                         </th>
-                        <th scope="col" className="px-2 py-3">
+                        <th scope="col" className="w-32 px-2 py-3">
                             Sub Account
                         </th>
                         <th scope="col" className="px-6 py-3">
@@ -424,7 +424,7 @@ const ChartsOfAccounts = ({userEmail, dbAllCharts}) => {
                       <td className="px-6 py-1">
                           {item.account}
                       </td>
-                      <td className="px-6 py-1">
+                      <td className="px-2 py-1">
                           {item.subAccount}
                       </td>
                       <td className="px-6 py-1">

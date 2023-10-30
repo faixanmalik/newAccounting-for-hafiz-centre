@@ -110,9 +110,6 @@ export default async function handler(req, res) {
             res.status(200).json({ success: true, message: "Entry Added!" }) 
         }
 
-
-
-
         // Credit Sales Invoice
         else if( path === 'CreditSalesInvoice'){
             const { userEmail, phoneNo, email, discount, billStatus, amountPaid, amountReceived, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
@@ -170,11 +167,6 @@ export default async function handler(req, res) {
             res.status(200).json({ success: true, message: "Entry Added !" }) 
         }
 
-
-
-
-
-
         // Payment Voucher Invoice
         else if( path === 'PaymentVoucher'){
             const { userEmail, phoneNo, email, city, reference, fromAccount, paidBy, amount, dueDate, inputList, name,  memo, journalDate, journalNo, totalPaid, totalBalance, attachment, path, importEntries, row } = req.body;
@@ -206,7 +198,6 @@ export default async function handler(req, res) {
 
             res.status(200).json({ success: true, message: "Entry Added !" }) 
         }
-
 
         // Receipt Voucher Invoice
         else if( path === 'ReceiptVoucher'){
@@ -240,9 +231,6 @@ export default async function handler(req, res) {
             res.status(200).json({ success: true, message: "Entry Added !" }) 
         }
 
-
-
-
         // Debit Note Invoice
         else if( path === 'DebitNote'){
             const { userEmail, phoneNo, email, city, fromAccount, paidBy, amount, dueDate, inputList, name,  memo, journalDate, journalNo, totalReceived, totalBalance, attachment, path, importEntries, row } = req.body;
@@ -273,7 +261,6 @@ export default async function handler(req, res) {
 
             res.status(200).json({ success: true, message: "Entry Added !" })
         }
-
 
         // Credit Note Invoice
         else if( path === 'CreditNote'){
@@ -322,6 +309,16 @@ export default async function handler(req, res) {
                     { userEmail: email, accountCode: 800, accountName: 'Owner A Share Capital', account: 'Equity', subAccount: 'Equity', balance: 0, desc: 'The value of shares purchased by the shareholders'},
                     { userEmail: email, accountCode: 900, accountName: 'Retained Earnings', account: 'Equity', subAccount: 'Equity', balance: 0, desc: 'Accumulated Profit'},
                     { userEmail: email, accountCode: 1000, accountName: 'Tax Payable', account: 'Liabilities', subAccount: 'Current Liability', balance: 0, desc: 'Income tax payable" is a liability reported for financial accounting purposes that indicates the amount that an organization expects to pay in income taxes within 12 months.'},
+                    { userEmail: email, accountCode: 1100, accountName: 'Stock', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'A stock is a general term used to describe the ownership certificates of any company'},
+                ]
+
+                let preDefiendTaxRate = [
+                    { userEmail: email, name: 'Output Vat', taxRate: 0, chartsOfAccount: 'Tax Payable' },
+                ]
+
+                let preDefiendPaymentMethod = [
+                    { userEmail: email, paymentType: 'Cash', chartsOfAccount: 'Cash' },
+                    { userEmail: email, paymentType: 'Bank', chartsOfAccount: 'Bank' },
                 ]
 
                 const userCOA = preDefiendCOA.map(item => ({
@@ -334,10 +331,28 @@ export default async function handler(req, res) {
                     desc: item.desc,
                 }));
                 await Charts.create(userCOA);
+
+                
+                const userTaxRate = preDefiendTaxRate.map(item => ({
+                    userEmail: item.userEmail,
+                    name: item.name,
+                    taxRate: item.taxRate,
+                    chartsOfAccount: item.chartsOfAccount,
+                }));
+                await TaxRate.create(userTaxRate);
+
+
+                const userPaymentMethod = preDefiendPaymentMethod.map(item => ({
+                    userEmail: item.userEmail,
+                    paymentType: item.paymentType,
+                    chartsOfAccount: item.chartsOfAccount,
+                }));
+                await PaymentMethod.create(userPaymentMethod);
+
+
                 
                 let newEntry = new User( { businessName, email, password, firstName, lastName, } );
                 await newEntry.save();
-
                 
                 res.status(200).json({ success: true, message: "Entry Added!" }) 
 
