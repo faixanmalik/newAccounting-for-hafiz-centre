@@ -8,7 +8,8 @@ const ChartSchema = new mongoose.Schema({
     asof: {type: Date },
     desc:{type: String},
     userEmail:{type: String},
-    subAccount:{type: String}
+    subAccount:{type: String},
+    isLocked:{type: Boolean, default: false}
     
     
   },{timestamps:true});

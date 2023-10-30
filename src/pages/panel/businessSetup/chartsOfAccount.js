@@ -55,6 +55,7 @@ const ChartsOfAccounts = ({userEmail, dbAllCharts}) => {
     let filteredInvoices = allCharts.filter((item)=>{
       return item.userEmail === userEmail;
     })
+    filteredInvoices.sort((a, b) => a.accountCode - b.accountCode);
     setFilteredInvoices(filteredInvoices)
   }, [filterCharts, userEmail]);
 

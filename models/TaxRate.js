@@ -7,6 +7,7 @@ const TaxRateSchema = new mongoose.Schema({
     taxRate:{type: Number},
     accountDesc:{type: String},
     chartsOfAccount: {type: String},
+    isLocked:{type: Boolean, default: false}
 
   },{timestamps:true});
 
