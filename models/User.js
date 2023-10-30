@@ -1,9 +1,8 @@
 const mongoose = require('mongoose');
 
 const UserSchema = new mongoose.Schema({
-    firstName:{type: String, required: true},
-    userEmail:{type: String},
-    lastName:{type: String, required: true},
+    firstname:{type: String, required: true},
+    lastname:{type: String},
     name:{type: String},
     businessName:{type: String, required: true},
     country:{type: String},
@@ -13,7 +12,7 @@ const UserSchema = new mongoose.Schema({
     phoneno:{type: Number },
     email: {type: String, required: true, unique: true},
     password: {type: String, required: true},
-    streetAddress: {type: String  },
+    streetAddress: {type: String },
     state: { type: String  },
     zip: { type: Number },
 
