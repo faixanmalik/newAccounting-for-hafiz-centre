@@ -17,6 +17,7 @@ import CreditNote from 'models/CreditNote';
 import ReceiptVoucher from 'models/ReceiptVoucher';
 import PaymentVoucher from 'models/PaymentVoucher';
 import Expenses from 'models/Expenses';
+import Head from 'next/head';
 
 const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts,  dbContacts }) => {
 
@@ -89,112 +90,7 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
 
                 }
             })
-            
-            // const dbAll = allVouchers.filter((data) => {
-                
-            //     if (data.name === `${contact}`) {
-
-            //         if(data.type == 'PaymentVoucher'){
-
-            //             Object.assign(data, {
-            //                 debit: 0,
-            //                 credit: data.totalPaid,
-            //             });
-
-            //             if(fromDate && toDate){
-            //                 const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-            //                 return dbDate >= fromDate && dbDate <= toDate;
-            //             }
-            //             else{
-            //                 return data.name;
-            //             }
-            //         }
-            //         else if(data.type == 'CreditSalesInvoice' || data.type == 'SalesInvoice'){
-            //             Object.assign(data, {
-            //                 credit: data.fullAmount,
-            //                 debit: 0
-            //             });
-            //             if(fromDate && toDate){
-            //                 const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-            //                 return dbDate >= fromDate && dbDate <= toDate;
-            //             }
-            //             else{
-            //                 return data.name;
-            //             }
-            //         }
-            //         else if(data.type == 'ReceiptVoucher'){
-
-            //             Object.assign(data, {
-            //                 debit: data.totalPaid,
-            //                 credit: 0,
-            //             });
-            //             if(fromDate && toDate){
-            //                 const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-            //                 return dbDate >= fromDate && dbDate <= toDate;
-            //             }
-            //             else{
-            //                 return data.name;
-            //             }
-            //         }
-            //         else if(data.type == 'Expenses'){
-                        
-            //             Object.assign(data, {
-            //                 debit: 0,
-            //                 credit: data.fullAmount,
-            //             });
-            //             if(fromDate && toDate){
-            //                 const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-            //                 return dbDate >= fromDate && dbDate <= toDate;
-            //             }
-            //             else{
-            //                 return data.name;
-            //             }
-            //         }
-            //         else if(data.type === 'DebitNote'){
-            //             Object.assign(data, {
-            //                 debit: data.fullAmount,
-            //                 credit: 0,
-            //             });
-    
-            //             if(fromDate && toDate){
-            //                 const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-            //                 return dbDate >= fromDate && dbDate <= toDate;
-            //             }
-            //             else{
-            //                 return data.name;
-            //             }
-            //         }
-            //         else if(data.type === 'CreditNote'){
-            //             Object.assign(data, {
-            //                 debit: 0,
-            //                 credit: data.fullAmount,
-            //             });
-    
-            //             if(fromDate && toDate){
-            //                 const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-            //                 return dbDate >= fromDate && dbDate <= toDate;
-            //             }
-            //             else{
-            //                 return data.name;
-            //             }
-            //         }
-            //         else{
-            //             Object.assign(data, {
-            //                 debit: data.totalDebit,
-            //                 credit: data.totalCredit,
-            //             });
-    
-            //             if(fromDate && toDate){
-            //                 const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-            //                 return dbDate >= fromDate && dbDate <= toDate;
-            //             }
-            //             else{
-            //                 return data.name;
-            //             }
-
-            //         }
-            //     }
-            // })
+           
             dbAllEntries = dbAllEntries.concat(dbAll);
         }
         
@@ -236,6 +132,12 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
         }
       `}</style>
     <FullLayout>
+    <Head>
+      <title>{process.env.NEXT_PUBLIC_BRANDNAME}</title>
+      <meta name="description" content="Generated by erp system" />
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+      <link rel="icon" href="/favicon.ico" />
+    </Head>
 
     
     {/* React tostify */}

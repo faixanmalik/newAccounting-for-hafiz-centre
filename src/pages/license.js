@@ -5,7 +5,7 @@ function Lincense() {
   return (
     <>
       <Head>
-        <title>License_Accounting_Software</title>
+        <title>License {process.env.NEXT_PUBLIC_BRANDNAME}</title>
         <meta
           name="description"
           content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0"

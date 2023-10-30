@@ -3,15 +3,15 @@ import { React } from 'react'
 function Footer() {
   return (
     <footer className="text-gray-600 bg-white border-t-2 border-gray-50 body-font">
-  <div className="container px-5  mx-auto flex items-center sm:flex-row flex-col">
+  <div className="container mx-auto flex items-center sm:flex-row flex-col">
     <a className="flex title-font no-underline font-medium items-center md:justify-start justify-center text-gray-900">
       <svg xmlns="http://www.w3.org/2000/svg" fill="none" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" className="w-10 h-10 text-white p-2 bg-indigo-500 rounded-full" viewBox="0 0 24 24">
         <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"></path>
       </svg>
-      <span className="ml-3 text-xl">Accounting_Software</span>
+      <span className="ml-3 text-xl">{process.env.NEXT_PUBLIC_BRANDNAME}</span>
     </a>
-    <p className="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">© 2023 Accounting_Software —
-      <a href="https://twitter.com/knyttneve" className="no-underline text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">@Yousef</a>
+    <p className="text-sm text-gray-500 sm:ml-4 sm:pl-4 sm:border-l-2 sm:border-gray-200 sm:py-2 sm:mt-0 mt-4">© 2023 {process.env.NEXT_PUBLIC_BRANDNAME} —
+      <a href="https://twitter.com/knyttneve" className="no-underline text-gray-600 ml-1" rel="noopener noreferrer" target="_blank">@{process.env.NEXT_PUBLIC_BRANDOWNER}</a>
     </p>
     <span className="inline-flex sm:ml-auto sm:mt-0 mt-4 justify-center sm:justify-start">
       <a className="text-gray-500">

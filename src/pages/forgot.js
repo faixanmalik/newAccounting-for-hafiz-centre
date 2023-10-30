@@ -92,14 +92,14 @@ function ForgotPage({dbuser}) {
   return (
     <>
     <Head>
-      <title>Reset_Accounting_Software</title>
+      <title>Reset {process.env.NEXT_PUBLIC_BRANDNAME}</title>
       <meta name="description" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
    </Head>
    {/* React tostify */}
    <ToastContainer position="bottom-center" autoClose={1000} hideProgressBar={false} newestOnTop={false} closeOnClick rtl={false} pauseOnFocusLoss draggable pauseOnHover theme="light"/>
     <div className="min-h-screen bg-gray-100 flex flex-col justify-center sm:py-12">
         <div className="p-10 xs:p-0 mx-auto md:w-full md:max-w-md">
-            <h1 className="text-center text-2xl font-bold text-indigo-700 mb-5">Accounting_Software</h1>  
+            <h1 className="text-center text-2xl font-bold text-indigo-700 mb-5">{process.env.NEXT_PUBLIC_BRANDNAME}</h1>  
             <div className="bg-white shadow w-full rounded-lg divide-y divide-gray-200">
             <div className="px-3 py-7">
 
@@ -161,7 +161,7 @@ function ForgotPage({dbuser}) {
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" className="w-4 h-4 inline-block align-text-top">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 19l-7-7m0 0l7-7m-7 7h18" />
                         </svg>
-                        <span className="inline-block ml-1"><Link href={"/"}>Back to Accounting_Software</Link></span>
+                        <span className="inline-block ml-1"><Link href={"/login"}>Back to {process.env.NEXT_PUBLIC_BRANDNAME}</Link></span>
                     </button>
                 </div>
                 </div>

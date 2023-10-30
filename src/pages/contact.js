@@ -61,7 +61,7 @@ function Contact() {
 
     <>
     <Head>
-      <title>Contact_Hunting_Store</title>
+      <title>Contact {process.env.NEXT_PUBLIC_BRANDNAME}</title>
       <meta name="description" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
    </Head>
     {/* React tostify */}
