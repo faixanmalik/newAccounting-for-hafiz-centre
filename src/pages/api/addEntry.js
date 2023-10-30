@@ -309,9 +309,6 @@ export default async function handler(req, res) {
         else if( path === 'clients'){
             const { businessName, email, password, firstName, lastName } = req.body;
 
-
-            
-
             try {
 
                 let preDefiendCOA = [
