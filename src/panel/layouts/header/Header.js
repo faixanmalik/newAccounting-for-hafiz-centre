@@ -68,7 +68,7 @@ const Header = ({ showMobmenu }) => {
 
         <div>
           <h1 className="font-normal text-lg">Hey! 
-            <span className="font-semibold ml-1">
+            <span className="font-medium ml-1">
               {businessName}
             </span>
           </h1>
