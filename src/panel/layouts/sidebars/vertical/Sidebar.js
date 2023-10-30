@@ -71,10 +71,10 @@ const Sidebar2 = ({ showMobilemenu }) => {
                               Business Setup
                             </th>
                             <th scope="col" className="px-6 py-3">
-                              Vouchers
+                              Purchase Invoice
                             </th>
                             <th scope="col" className="px-6 py-3">
-                              Employees
+                              Sales Invoice
                             </th>
                             <th scope="col" className="px-6 py-3">
                               Reports
@@ -88,10 +88,10 @@ const Sidebar2 = ({ showMobilemenu }) => {
                               <a href={'/panel/businessSetup/chartsOfAccount'} className='no-underline text-gray-500 font-medium text-base'>Charts of Accounts</a>
                             </td>
                             <td className="px-6 py-2">
-                              <a href={'/panel/vouchers/journalVoucher'} className='no-underline text-gray-500 font-medium text-base'>Journal Voucher</a>
+                              <a href={'/panel/purchaseModule/purchaseInvoice'} className='no-underline text-gray-500 font-medium text-base'>Purchase Invoice</a>
                             </td>
                             <td className="px-6 py-2">
-                              <a href={'/panel/payroll/employees'} className='no-underline text-gray-500 font-medium text-base'>Employee</a>
+                              <a href={'/panel/salesModule/salesInvoice'} className='no-underline text-gray-500 font-medium text-base'>Sales Invoice</a>
                             </td>
                             <td className="px-6 py-2">
                               <a href={'/panel/financialManagment/reports/generalLedger'} className='no-underline text-gray-500 font-medium text-base'>General Ledger</a>
@@ -100,28 +100,14 @@ const Sidebar2 = ({ showMobilemenu }) => {
 
                           <tr className="bg-white border-b hover:bg-gray-50">
                             <td className="px-6 py-2">
-                              <a href={'/panel/businessSetup/contactList'} className='no-underline text-gray-500 font-medium text-base'>Contact List</a>
+                              <a href={'/panel/businessSetup/taxRate'} className='no-underline text-gray-500 font-medium text-base'>Tax Rate</a>
                             </td>
                             <td className="px-6 py-2">
-                              <a href={'/panel/vouchers/cashPaymentVoucher'} className='no-underline text-gray-500 font-medium text-base'>Cash Payment Voucher</a>
+                              <a href={'/panel/purchaseModule/paymentVoucher'} className='no-underline text-gray-500 font-medium text-base'>Payment Voucher</a>
                             </td>
                             <td className="px-6 py-2">
-                              <a href={'/panel/userManagment/addRole'} className='no-underline text-gray-500 font-medium text-base'>Role</a>
+                              <a href={'/panel/salesModule/creditSalesInvoice'} className='no-underline text-gray-500 font-medium text-base'>Credit Sales Invoice</a>
                             </td>
-                            <td className="px-6 py-2">
-                              <a href={'/panel/financialManagment/reports/contactTransactionSummary'} className='no-underline text-gray-500 font-medium text-base'>Contact Transaction</a>
-                            </td>
-                          </tr>
-
-
-                          <tr className="bg-white border-b hover:bg-gray-50">
-                            <td className="px-6 py-2">
-                              <a href={'/panel/businessSetup/productAndServices'} className='no-underline text-gray-500 font-medium text-base'>Product and Services</a>
-                            </td>
-                            <td className="px-6 py-2">
-                              <a href={'/panel/vouchers/cashReceiptVoucher'} className='no-underline text-gray-500 font-medium text-base'>Cash Receipt Voucher</a>
-                            </td>
-                            <td className="px-6 py-2"></td>
                             <td className="px-6 py-2">
                               <a href={'/panel/financialManagment/reports/trialBalance'} className='no-underline text-gray-500 font-medium text-base'>Trial Balance</a>
                             </td>
@@ -130,26 +116,54 @@ const Sidebar2 = ({ showMobilemenu }) => {
 
                           <tr className="bg-white border-b hover:bg-gray-50">
                             <td className="px-6 py-2">
-                              <a href={'/panel/businessSetup/bankAccount'} className='no-underline text-gray-500 font-medium text-base'>Bank Account</a>
+                              <a href={'/panel/businessSetup/contactList'} className='no-underline text-gray-500 font-medium text-base'>Contact List</a>
                             </td>
                             <td className="px-6 py-2">
-                              <a href={'/panel/vouchers/bankPaymentVoucher'} className='no-underline text-gray-500 font-medium text-base'>Bank Payment Voucher</a>
+                              <a href={'/panel/purchaseModule/debitNote'} className='no-underline text-gray-500 font-medium text-base'>Debit Note</a>
                             </td>
-                            <td className="px-6 py-2"></td>
+                            <td className="px-6 py-2">
+                              <a href={'/panel/salesModule/receiptVoucher'} className='no-underline text-gray-500 font-medium text-base'>Receipt Voucher</a>
+                            </td>
                             <td className="px-6 py-2">
                               <a href={'/panel/financialManagment/reports/profitAndLoss'} className='no-underline text-gray-500 font-medium text-base'>Profit and Loss</a>
                             </td>
                           </tr>
 
                           <tr className="bg-white border-b hover:bg-gray-50">
-                            <td className="px-6 py-2"></td>
                             <td className="px-6 py-2">
-                              <a href={'/panel/vouchers/bankReceiptVoucher'} className='no-underline text-gray-500 font-medium text-base'>Bank Receipt Voucher</a>
+                              <a href={'/panel/businessSetup/productAndServices'} className='no-underline text-gray-500 font-medium text-base'>Product and Services</a>
                             </td>
-                            <td className="px-6 py-2"></td>
+                            <td className="px-6 py-2">
+                              <a href={'/panel/purchaseModule/expenses'} className='no-underline text-gray-500 font-medium text-base'>Expenses</a>
+                            </td>
+                            <td className="px-6 py-2">
+                              <a href={'/panel/salesModule/creditNote'} className='no-underline text-gray-500 font-medium text-base'>Credit Note</a>
+                            </td>
                             <td className="px-6 py-2">
                               <a href={'/panel/financialManagment/reports/balanceSheet'} className='no-underline text-gray-500 font-medium text-base'>Balance Sheet</a>
                             </td>
+                          </tr>
+
+                          <tr className="bg-white border-b hover:bg-gray-50">
+                            <td className="px-6 py-2">
+                              <a href={'/panel/businessSetup/bankAccount'} className='no-underline text-gray-500 font-medium text-base'>Bank Account</a>
+                            </td>
+                            <td className="px-6 py-2"></td>
+                            <td className="px-6 py-2">
+                              <a href={'/panel/salesModule/journalVoucher'} className='no-underline text-gray-500 font-medium text-base'>Journal Voucher</a>
+                            </td>
+                            <td className="px-6 py-2">
+                              <a href={'/panel/financialManagment/reports/contactTransactionSummary'} className='no-underline text-gray-500 font-medium text-base'>Contact Transaction</a>
+                            </td>
+                          </tr>
+
+                          <tr className="bg-white border-b hover:bg-gray-50">
+                            <td className="px-6 py-2">
+                              <a href={'/panel/businessSetup/paymentMethod'} className='no-underline text-gray-500 font-medium text-base'>Payment Method</a>
+                            </td>
+                            <td className="px-6 py-2"></td>
+                            <td className="px-6 py-2"></td>
+                            <td className="px-6 py-2"></td>
                           </tr>
                         </tbody>
                       </table>
