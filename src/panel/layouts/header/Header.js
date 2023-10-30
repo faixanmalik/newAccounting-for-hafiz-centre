@@ -16,8 +16,8 @@ import {
   Button,
 } from "reactstrap";
 import LogoWhite from "../../assets/images/logos/amplelogowhite.svg";
-import user1 from "../../assets/images/users/user1.jpg";
 import { useRouter } from "next/router";
+import { Avatar } from "@material-tailwind/react";
 
 
 const Header = ({ showMobmenu }) => {
@@ -42,11 +42,11 @@ const Header = ({ showMobmenu }) => {
 
   useEffect(() => {
     const myUser = JSON.parse(localStorage.getItem('myUser'))
-    if(myUser && myUser.businessName){
+    if(myUser.businessName){
       setBusinessName(myUser.businessName)
     }
     else{
-      setBusinessName(myUser && myUser.name)
+      setBusinessName(myUser.name)
     }
   }, [])
 
@@ -58,65 +58,46 @@ const Header = ({ showMobmenu }) => {
     router.push(`/login`);
   }
 
+  let headerColor = 'bg-gray-800';
+
   return (
-    <Navbar color="secondary" dark expand="md">
-      <div className="d-flex align-items-center">
-        <NavbarBrand href="/" className="d-lg-none">
-          <Image src={LogoWhite} alt="logo" />
-        </NavbarBrand>
-        <Button color="secondary" className="d-lg-none" onClick={showMobmenu}>
-          <i className="bi bi-list"></i>
-        </Button>
-      </div>
-      <div className="hstack gap-2">
-        <Button
-          color="secondary"
-          size="sm"
-          className="d-sm-block d-md-none"
-          onClick={Handletoggle}
-        >
-          {isOpen ? (
-            <i className="bi bi-x"></i>
-          ) : (
-            <i className="bi bi-three-dots-vertical"></i>
-          )}
-        </Button>
+
+    <div className={`${headerColor} text-white px-4 py-2`}>
+
+      <div className="flex justify-between items-center">
+
+        <div>
+          <h1 className="font-normal text-lg">Hey! 
+            <span className="font-semibold ml-1">
+              {businessName}
+            </span>
+          </h1>
+        </div>
+        <div className="flex space-x-5">
+        
+          <Dropdown isOpen={dropdownOpen} toggle={toggle} >
+             <DropdownToggle color="secondary" className="p-0">
+               <div className={`${headerColor}`} style={{ lineHeight: "0px" }}>
+                  <Avatar
+                    src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60'
+                    alt="avatar"
+                    withBorder={true}
+                    className="p-0.5"
+                  />
+               </div>
+             </DropdownToggle>
+             <DropdownMenu>
+               <DropdownItem header>Info</DropdownItem>
+               <DropdownItem href="/myaccount">Edit Profile</DropdownItem>
+               <DropdownItem divider />
+               <DropdownItem onClick={logout}>Logout</DropdownItem>
+             </DropdownMenu>
+           </Dropdown>
+        </div>
+
       </div>
 
-      <Collapse navbar isOpen={isOpen}>
-        <Nav className="me-auto" navbar>
-
-          <UncontrolledDropdown inNavbar nav>
-            <DropdownToggle nav>
-              <h1 className="text-white font-normal text-lg my-auto">Hey! 
-                <span className="font-medium ml-1">
-                  {businessName}
-                </span>
-              </h1>
-            </DropdownToggle>
-          </UncontrolledDropdown>
-        </Nav>
-        <Dropdown isOpen={dropdownOpen} toggle={toggle}>
-          <DropdownToggle color="secondary">
-            <div style={{ lineHeight: "0px" }}>
-              <Image
-                src={user1}
-                alt="profile"
-                className="rounded-circle"
-                width="30"
-                height="30"
-              />
-            </div>
-          </DropdownToggle>
-          <DropdownMenu>
-            <DropdownItem header>Info</DropdownItem>
-            <DropdownItem href="/myaccount">Edit Profile</DropdownItem>
-            <DropdownItem divider />
-            <DropdownItem onClick={logout}>Logout</DropdownItem>
-          </DropdownMenu>
-        </Dropdown>
-      </Collapse>
-    </Navbar>
+    </div>
   );
 };
 export default Header;
