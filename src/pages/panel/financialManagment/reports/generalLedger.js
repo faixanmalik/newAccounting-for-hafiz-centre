@@ -34,6 +34,8 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
     const [newEntry, setNewEntry] = useState([])
 
     const [coaAccount, setCoaAccount] = useState('')
+
+    const [filteredCharts, setFilteredCharts] = useState([])
     
 
 
@@ -62,15 +64,24 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
 
 
         const checkAccount = dbCharts.filter((data) => {
-            if (data.accountName === account) {
-                return data.account;
-            }
+          if (data.accountName === account) {
+            return data.account;
+          }
         })
         if(checkAccount.length > 0) {
-            setCoaAccount(checkAccount[0].account)
+          setCoaAccount(checkAccount[0].account)
         }
 
     }, [account, dbAccount])
+
+    useEffect(() => {
+
+      let filteredCharts = dbCharts.filter((item)=>{
+      return item.userEmail === userEmail;
+      })
+      setFilteredCharts(filteredCharts)
+  
+    }, [userEmail])
 
 
 
@@ -691,7 +702,7 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                             </label>
                             <select id="account" name="account" onChange={handleChange} value={account} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option>select account</option>
-                                {dbCharts.map((item) => {
+                                {filteredCharts.map((item) => {
                                     return <option key={item._id} value={item.accountName}>{item.accountCode} - {item.accountName}</option>
                                 })}
                             </select>

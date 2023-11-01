@@ -25,6 +25,7 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
     const [fromDate, setFromDate] = useState('')
     const [toDate, setToDate] = useState('')
     const [charts, setCharts] = useState([])
+    const [filteredCharts, setFilteredCharts] = useState([])
 
     const [newBalance, setNewBalance] = useState([])
     const [debitSum, setDebitSum] = useState(0)
@@ -33,6 +34,16 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
     const [fDate, setFDate] = useState('')
     const [tDate, setTDate] = useState('')
     const [isCash, setIsCash] = useState(false)
+
+
+    useEffect(() => {
+
+        let filteredCharts = dbCharts.filter((item)=>{
+        return item.userEmail === userEmail;
+        })
+        setFilteredCharts(filteredCharts)
+    
+      }, [userEmail])
 
 
     let balance = [];
@@ -44,7 +55,7 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
             setTDate(moment(toDate).format('D MMM YYYY'))
         }
 
-        dbCharts.forEach(element => {
+        filteredCharts.forEach(element => {
 
             let dbAllEntries = [];
             let allVouchers = [];
@@ -589,7 +600,7 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
         
 
         let dbAccount = [];
-        dbCharts.forEach(element => {
+        filteredCharts.forEach(element => {
             if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
                 dbAccount.push(true)
             }
@@ -639,11 +650,13 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
         });
         setCreditSum(totalCredit)
 
-        dbCharts.forEach((element, index) => {
+        filteredCharts.forEach((element, index) => {
             Object.assign(element, {
                 pnlBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
             });
         });
+
+        console.log(balance);
         
         setNewBalance(balance)
     }
@@ -761,27 +774,27 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                             <tbody>
 
                                 {/* All Vouchers */}
-                                {charts.map((item,index) => {
+                                {filteredCharts.map((item,index) => {
 
                                     let dbAccount = [];
-                                    dbCharts.forEach(element => {
-                                        if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
-                                            if(newBalance[index][newBalance[index].length-1] > 0){
-                                                dbAccount.push(true)
-                                            }
-                                            else{
-                                                dbAccount.push(false)
-                                            }
-                                        }
-                                        else{
-                                            if(newBalance[index][newBalance[index].length-1] > 0){
-                                                dbAccount.push(false)
-                                            }
-                                            else{
-                                                dbAccount.push(true)
-                                            }
-                                        }
-                                    });
+                                    // filteredCharts.forEach(element => {
+                                    //     if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+                                    //         if(newBalance[index][newBalance[index].length-1] > 0){
+                                    //             dbAccount.push(true)
+                                    //         }
+                                    //         else{
+                                    //             dbAccount.push(false)
+                                    //         }
+                                    //     }
+                                    //     else{
+                                    //         if(newBalance[index][newBalance[index].length-1] > 0){
+                                    //             dbAccount.push(false)
+                                    //         }
+                                    //         else{
+                                    //             dbAccount.push(true)
+                                    //         }
+                                    //     }
+                                    // });
 
                                     if(item.accountName != 'Profit for the year'){
 
@@ -793,10 +806,10 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                             <div className='text-black font-semibold'>{item.subAccount}</div>
                                         </td>
                                         <td className="px-6 py-3 text-blue-700 font-bold">
-                                            {dbAccount[index] === false &&  Math.abs(item.pnlBalance).toLocaleString()}
+                                            {dbAccount[index] === false ?  Math.abs(item.pnlBalance).toLocaleString() : ''}
                                         </td>
                                         <td className="px-6 py-3 text-blue-700 font-bold">
-                                            {dbAccount[index] === true && Math.abs(item.pnlBalance).toLocaleString()}
+                                            {dbAccount[index] === true ? Math.abs(item.pnlBalance).toLocaleString() : ''}
                                         </td>
                                     </tr>
                                     }
@@ -805,11 +818,11 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                             </tbody>
 
                         </table>
-                        { charts.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
+                        { filteredCharts.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
                     </div>
 
                 
-                    {charts.length != 0  ? <div className="flex justify-around bg-slate-100 px-4 py-3 text-right sm:px-6">
+                    {filteredCharts.length != 0  ? <div className="flex justify-around bg-slate-100 px-4 py-3 text-right sm:px-6">
                         <h1 className={`text-sm ${debitSum === creditSum ? 'text-green-700' : 'text-red-700'} ml-auto mr-10`}>Total Debit: 
                             <span className={`font-bold ml-1 `}>${debitSum.toLocaleString()}</span>
                         </h1>
