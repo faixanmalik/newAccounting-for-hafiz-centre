@@ -205,15 +205,14 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
       },
       body: JSON.stringify(data),
     })
-      let response = await res.json()
-      
-      if (response.success === true) {
-        window.location.reload();
-      }
-      else {
-        toast.error(response.message , { position: "bottom-center", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
-      }
+    let response = await res.json()
     
+    if (response.success === true) {
+      window.location.reload();
+    }
+    else {
+      toast.error(response.message , { position: "bottom-center", autoClose: 1000, hideProgressBar: false, closeOnClick: true, pauseOnHover: true, draggable: true, progress: undefined, theme: "light", });
+    }
   }
 
   const editEntry = async(id)=>{
