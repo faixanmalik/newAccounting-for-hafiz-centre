@@ -354,15 +354,7 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                 }
                 else if(data.type === 'SalesInvoice'){
                     let journal = data.inputList.filter((newData)=>{
-
-                        // check product account
-                        let product = newData.products;
-                        let checkProductLinking = dbProducts.filter((item)=>{
-                            return item.name === product;
-                        });
-                        let linkedCOA = checkProductLinking[0].linkAccount;
-
-
+                        
                         let dbAccount = data.fromAccount;
                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
@@ -374,12 +366,11 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                             linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
                         }
                         
-                        
                         let debitAmount = newData.totalAmountPerItem;
                         let debitAccount = linkedAccountCOA;
                         
                         let creditAmount = newData.amount;
-                        let creditAccount = linkedCOA;
+                        let creditAccount = 'Sales';
                         
                         if(account === debitAccount || account === creditAccount){
 

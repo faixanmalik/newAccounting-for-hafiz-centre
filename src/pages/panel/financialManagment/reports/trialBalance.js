@@ -24,65 +24,1229 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
 
     const [fromDate, setFromDate] = useState('')
     const [toDate, setToDate] = useState('')
-    const [charts, setCharts] = useState([])
     const [filteredCharts, setFilteredCharts] = useState([])
 
-    const [newBalance, setNewBalance] = useState([])
     const [debitSum, setDebitSum] = useState(0)
     const [creditSum, setCreditSum] = useState(0)
 
     const [fDate, setFDate] = useState('')
     const [tDate, setTDate] = useState('')
     const [isCash, setIsCash] = useState(false)
-
-
-    useEffect(() => {
-
-        let filteredCharts = dbCharts.filter((item)=>{
-        return item.userEmail === userEmail;
-        })
-        setFilteredCharts(filteredCharts)
     
-      }, [userEmail])
 
 
     let balance = [];
     
+    // const submit = ()=>{
+
+    //     if(fromDate && toDate){
+    //         setFDate(moment(fromDate).format('D MMM YYYY'))
+    //         setTDate(moment(toDate).format('D MMM YYYY'))
+    //     }
+
+    //     filteredCharts.forEach(element => {
+
+    //         let dbAllEntries = [];
+    //         let allVouchers = [];
+
+    //         let account = element.accountName;
+
+    //         allVouchers = allVouchers.concat(dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher);
+
+    //         // Data filter
+    //         const dbAll = allVouchers.filter((data) => {             
+
+    //             if(data.userEmail === userEmail) {
+
+    //                 if(data.type === 'Product'){
+    //                     let calculateDebitAmount = data.availableQty * data.costPrice;
+    //                     let debitAmount = calculateDebitAmount;
+    //                     let creditAmount = 0;
+    //                     let debitAccount = 'Stock';
+    //                     let creditAccount = '';
+    
+    //                     if(account === debitAccount || account === creditAccount){
+    //                         Object.assign(data, {
+    //                             coaAccount: account,
+    //                             journalNo: data.code,
+    //                             product: data.name,
+    //                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                             debitAccount: account === debitAccount ? debitAccount : '',
+    //                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                             creditAccount: account === creditAccount ? creditAccount : '',
+    //                         });
+    
+    //                         if(fromDate && toDate){
+    //                             let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                             if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                 return data;
+    //                             }
+    //                         }
+    //                         else {
+    //                             return data;
+    //                         }
+    //                     }
+    
+    //                 }
+    //                 else if(data.type === 'PurchaseInvoice'){
+    //                     let journal = data.inputList.filter((newData)=>{
+                            
+    //                         let debitAmount = newData.totalAmountPerItem;
+    //                         let creditAmount = newData.amount;
+    //                         let debitAccount = 'Purchases';
+    //                         let creditAccount = 'Accounts Payable';
+        
+    //                         if(account === debitAccount || account === creditAccount){
+    //                             Object.assign(newData, {
+    //                                 coaAccount: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+        
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return newData;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return newData;
+    //                             }
+    //                         }
+    //                     })
+    //                     dbAllEntries = dbAllEntries.concat(journal);
+    //                 }
+    //                 else if(data.type === 'ReceiptVoucher'){
+                        
+    //                     let journal = data.inputList.filter((newData)=>{
+        
+    //                         let dbAccount = newData.paidBy;
+    //                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
+    //                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
+    //                         });
+        
+    //                         let linkedAccountCOA;
+        
+    //                         if (dbFromAccount.length > 0) {
+    //                             linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+    //                         }
+        
+    //                         let debitAmount = newData.paid;
+    //                         let creditAmount = newData.paid;
+    //                         let debitAccount = linkedAccountCOA;
+    //                         let creditAccount = 'Accounts Receivable';
+        
+    //                         if(account === debitAccount || account === creditAccount){
+    //                             Object.assign(newData, {
+    //                                 coaAccount: account,
+    //                                 account: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+        
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return newData;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return newData;
+    //                             }
+    //                         }
+    //                     })
+    //                     dbAllEntries = dbAllEntries.concat(journal);
+    //                 }
+    //                 else if(data.type === 'PaymentVoucher'){
+        
+    //                     let dbAccount = data.fromAccount;
+    //                     let dbFromAccount = dbPaymentMethod.filter((item)=>{
+    //                         return item.chartsOfAccount === account && item.paymentType === dbAccount;
+    //                     });
+
+                        
+        
+    //                     let linkedAccountCOA;
+        
+    //                     if (dbFromAccount.length > 0) {
+    //                         linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+    //                     }
+        
+    //                     let debitAmount = data.totalPaid;
+    //                     let debitAccount = 'Accounts Payable';
+    //                     let creditAmount = data.totalPaid;
+    //                     let creditAccount = linkedAccountCOA;
+        
+    //                     if(account === debitAccount || account === creditAccount){
+    //                         Object.assign(data, {
+    //                             coaAccount: account,
+    //                             account: account,
+    //                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                             debitAccount: account === debitAccount ? debitAccount : '',
+    //                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                             creditAccount: account === creditAccount ? creditAccount : '',
+    //                         });
+        
+    //                         if(fromDate && toDate){
+    //                             let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                             if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                 return data;
+    //                             }
+    //                         }
+    //                         else {
+    //                             return data;
+    //                         }
+    //                     }
+    //                 }
+    //                 else if(data.type === 'DebitNote'){
+                        
+    //                     let journal = data.inputList.filter((newData)=>{
+        
+    //                         let debitAmount = newData.amount;
+    //                         let creditAmount = newData.totalAmountPerItem;
+    //                         let debitAccount = 'Accounts Payable';
+    //                         let creditAccount = 'Purchase Return';
+        
+    //                         if(account === debitAccount || account === creditAccount){
+    //                             Object.assign(newData, {
+    //                                 coaAccount: account,
+    //                                 account: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+        
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return newData;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return newData;
+    //                             }
+    //                         }
+    //                     })
+    //                     dbAllEntries = dbAllEntries.concat(journal);
+                        
+    //                 }
+    //                 else if(data.type === 'CreditNote'){
+    //                     let debitAmount = data.fullAmount;
+    //                     let creditAmount = data.totalAmount;
+    //                     let debitAccount = 'Sales Return';
+    //                     let creditAccount = 'Accounts Receivable';
+        
+    //                     if(account === debitAccount || account === creditAccount){
+    //                         Object.assign(data, {
+    //                             coaAccount: account,
+    //                             account: account,
+    //                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                             debitAccount: account === debitAccount ? debitAccount : '',
+    //                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                             creditAccount: account === creditAccount ? creditAccount : '',
+    //                         });
+        
+    //                         if(fromDate && toDate){
+    //                             let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                             if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                 return data;
+    //                             }
+    //                         }
+    //                         else {
+    //                             return data;
+    //                         }
+    //                     }
+    //                 }
+    //                 else if(data.type === 'Expenses'){
+    //                     let journal = data.inputList.filter((newData)=>{
+        
+        
+    //                         let dbAccount = data.paidBy;
+    //                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
+    //                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
+    //                         });
+        
+    //                         let linkedAccountCOA;
+        
+    //                         if (dbFromAccount.length > 0) {
+    //                             linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+    //                         }
+        
+        
+        
+    //                         let debitAmount = newData.totalAmountPerItem;
+    //                         let debitAccount = newData.accounts;
+    //                         let creditAmount = newData.amount;
+    //                         let creditAccount = linkedAccountCOA;
+                            
+    //                         if(account === debitAccount || account === creditAccount){
+    //                             Object.assign(newData, {
+    //                                 coaAccount: account,
+    //                                 account: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+        
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return newData;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return newData;
+    //                             }
+    //                         }
+    //                     })
+    //                     dbAllEntries = dbAllEntries.concat(journal);
+    //                 }
+    //                 else if(data.type === 'SalesInvoice'){
+    //                     let journal = data.inputList.filter((newData)=>{
+                            
+    //                         let dbAccount = data.fromAccount;
+    //                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
+    //                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
+    //                         });
+    
+    //                         let linkedAccountCOA;
+    
+    //                         if (dbFromAccount.length > 0) {
+    //                             linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+    //                         }
+                            
+    //                         let debitAmount = newData.totalAmountPerItem;
+    //                         let debitAccount = linkedAccountCOA;
+                            
+    //                         let creditAmount = newData.amount;
+    //                         let creditAccount = 'Sales';
+                            
+    //                         if(account === debitAccount || account === creditAccount){
+    
+    //                             Object.assign(newData, {
+    //                                 coaAccount: account,
+    //                                 account: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+    
+                                
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return newData;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return newData;
+    //                             }
+    //                         }
+    //                     })
+    //                     dbAllEntries = dbAllEntries.concat(journal);
+    //                 }
+    //                 else if(data.type === 'CreditSalesInvoice'){
+    //                     let journal = data.inputList.filter((newData)=>{
+        
+    //                         let product = newData.products;
+    //                         let checkProductLinking = dbProducts.filter((item)=>{
+    //                             return item.name === product;
+    //                         });
+    //                         let linkedCOA = checkProductLinking[0].linkAccount;
+        
+    //                         let debitAmount = newData.totalAmountPerItem;
+    //                         let debitAccount = data.fromAccount;
+    //                         let creditAmount = newData.amount;
+    //                         let creditAccount = linkedCOA;
+        
+    //                         if(account === debitAccount || account === creditAccount){
+    //                             Object.assign(newData, {
+    //                                 coaAccount: account,
+    //                                 account: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+        
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return newData;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return newData;
+    //                             }
+    //                         }
+        
+    //                     });
+    //                     dbAllEntries = dbAllEntries.concat(journal);
+    //                 }
+    //                 else{
+    //                     let journal = data.inputList.filter((newData)=>{
+        
+    //                         let debitAmount = newData.debit && newData.debit;
+    //                         let debitAccount = newData.debit && newData.account;
+                            
+    //                         let creditAmount = newData.credit && newData.credit;
+    //                         let creditAccount = newData.credit && newData.account;
+        
+                            
+    //                         if(account === debitAccount || account === creditAccount){
+        
+    //                             Object.assign(newData, {
+    //                                 coaAccount: account,
+    //                                 account: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+        
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return newData;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return newData;
+    //                             }
+    //                         }
+        
+    //                     });
+    //                     dbAllEntries = dbAllEntries.concat(journal);
+    //                 }
+
+    //                 if(data.fullTax > 0){
+    //                     if(data.type === 'CreditNote' || data.type === 'DebitNote'){
+    //                         let debitAmount = data.fullTax;
+    //                         let debitAccount = 'Tax Payable';
+    //                         let creditAmount = 0;
+    //                         let creditAccount = 'Tax Payable';
+
+    //                         if(account === debitAccount || account === creditAccount){
+    //                             Object.assign(data, {
+    //                                 coaAccount: account,
+    //                                 account: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return data;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return data;
+    //                             }
+    //                         }
+    //                     }
+    //                     else if(account !== null && account !== ""){
+    //                         let debitAmount = 0;
+    //                         let debitAccount = 'Tax Payable';
+    //                         let creditAmount = data.fullTax;
+    //                         let creditAccount = 'Tax Payable';
+
+    //                         if(account === debitAccount || account === creditAccount){
+    //                             Object.assign(data, {
+    //                                 coaAccount: account,
+    //                                 account: account,
+    //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                                 debitAccount: account === debitAccount ? debitAccount : '',
+    //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                                 creditAccount: account === creditAccount ? creditAccount : '',
+    //                             });
+    //                             if(fromDate && toDate){
+    //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                     return data;
+    //                                 }
+    //                             }
+    //                             else {
+    //                                 return data;
+    //                             }
+    //                         }
+
+    //                     }
+
+    //                 }
+    //                 if(data.discount > 0){
+                        
+    //                     let debitAmount = data.discount;
+    //                     let debitAccount = 'Sales Discount';
+    //                     let creditAmount = 0;
+    //                     let creditAccount = 'Sales Discount';
+
+    //                     if(account === debitAccount || account === creditAccount){
+    //                         Object.assign(data, {
+    //                             coaAccount: account,
+    //                             account: account,
+    //                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
+    //                             debitAccount: account === debitAccount ? debitAccount : '',
+    //                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
+    //                             creditAccount: account === creditAccount ? creditAccount : '',
+    //                         });
+
+    //                         if(fromDate && toDate){
+    //                             let checkDbDate = data.journalDate? data.journalDate : data.date;
+    //                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+    //                             if (dbDate >= fromDate && dbDate <= toDate) {
+    //                                 return data;
+    //                             }
+    //                         }
+    //                         else {
+    //                             return data;
+    //                         }
+    //                     }
+    //                 }
+    //             }
+    //         })
+
+    //         dbAllEntries = dbAllEntries.concat(dbAll);
+            
+
+    //         // Date filter
+    //         dbAllEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+
+
+    //         // Balance
+    //         let result = [];
+    //         if(dbAllEntries.length > 0){
+    //             const initalCreditEntry = parseInt(dbAllEntries[0].credit);
+    //             let initialBalance = initalCreditEntry;
+                
+    //             for (let index = 0; index < dbAllEntries.length; index++) {
+
+    //                 const currentCreditEntry = parseInt(dbAllEntries[index].credit);
+    //                 const currentDebitEntry = parseInt(dbAllEntries[index].debit);
+                    
+    //                 if(index <= 0){
+    //                     let totalBalance;
+
+    //                     if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+    //                         totalBalance = currentCreditEntry - currentDebitEntry;
+    //                     }
+    //                     else{
+    //                         totalBalance = currentDebitEntry - currentCreditEntry;
+    //                     }
+
+    //                     initialBalance = totalBalance;
+    //                     result.push(totalBalance)
+    //                 }
+    //                 else{
+    //                     let totalBalance;
+    //                     if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+    //                         totalBalance = initialBalance + currentCreditEntry - currentDebitEntry;
+    //                     }
+    //                     else{
+    //                         totalBalance = initialBalance + currentDebitEntry - currentCreditEntry;
+    //                     }
+                        
+    //                     initialBalance = totalBalance;
+    //                     result.push(totalBalance);
+    //                 }
+    //             }
+    //         }
+
+    //         balance.push(result);
+    //     });
+
+
+        
+
+    //     filteredCharts.forEach((element, index) => {
+    //       if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+    //         Object.assign(element, {
+    //           debitBalance: 0,
+    //           creditBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
+    //         });
+    //       }
+    //       else{
+    //         Object.assign(element, {
+    //           debitBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
+    //           creditBalance: 0,
+    //         });
+    //       }
+    //     });
+
+
+    //     let totalDebit = 0;
+    //     let totalCredit = 0;
+
+    //     for (let i = 0; i < filteredCharts.length; i++) {
+    //       totalDebit += filteredCharts[i].debitBalance;
+    //       totalCredit += filteredCharts[i].creditBalance;
+    //     }
+    //     setDebitSum(totalDebit)
+    //     setCreditSum(totalCredit)
+    // }
+
+
+
+
+    // const submit = ()=>{
+
+      //     if(fromDate && toDate){
+      //         setFDate(moment(fromDate).format('D MMM YYYY'))
+      //         setTDate(moment(toDate).format('D MMM YYYY'))
+      //     }
+  
+      //     filteredCharts.forEach(element => {
+  
+      //         let dbAllEntries = [];
+      //         let allVouchers = [];
+  
+      //         let account = element.accountName;
+  
+      //         allVouchers = allVouchers.concat(dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher);
+  
+      //         // Data filter
+      //         const dbAll = allVouchers.filter((data) => {             
+  
+      //             if(data.userEmail === userEmail) {
+  
+      //                 if(data.type === 'Product'){
+      //                     let calculateDebitAmount = data.availableQty * data.costPrice;
+      //                     let debitAmount = calculateDebitAmount;
+      //                     let creditAmount = 0;
+      //                     let debitAccount = 'Stock';
+      //                     let creditAccount = '';
+      
+      //                     if(account === debitAccount || account === creditAccount){
+      //                         Object.assign(data, {
+      //                             coaAccount: account,
+      //                             journalNo: data.code,
+      //                             product: data.name,
+      //                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                             debitAccount: account === debitAccount ? debitAccount : '',
+      //                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                             creditAccount: account === creditAccount ? creditAccount : '',
+      //                         });
+      
+      //                         if(fromDate && toDate){
+      //                             let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                             if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                 return data;
+      //                             }
+      //                         }
+      //                         else {
+      //                             return data;
+      //                         }
+      //                     }
+      
+      //                 }
+      //                 else if(data.type === 'PurchaseInvoice'){
+      //                     let journal = data.inputList.filter((newData)=>{
+                              
+      //                         let debitAmount = newData.totalAmountPerItem;
+      //                         let creditAmount = newData.amount;
+      //                         let debitAccount = 'Purchases';
+      //                         let creditAccount = 'Accounts Payable';
+          
+      //                         if(account === debitAccount || account === creditAccount){
+      //                             Object.assign(newData, {
+      //                                 coaAccount: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+          
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return newData;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return newData;
+      //                             }
+      //                         }
+      //                     })
+      //                     dbAllEntries = dbAllEntries.concat(journal);
+      //                 }
+      //                 else if(data.type === 'ReceiptVoucher'){
+                          
+      //                     let journal = data.inputList.filter((newData)=>{
+          
+      //                         let dbAccount = newData.paidBy;
+      //                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
+      //                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
+      //                         });
+          
+      //                         let linkedAccountCOA;
+          
+      //                         if (dbFromAccount.length > 0) {
+      //                             linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+      //                         }
+          
+      //                         let debitAmount = newData.paid;
+      //                         let creditAmount = newData.paid;
+      //                         let debitAccount = linkedAccountCOA;
+      //                         let creditAccount = 'Accounts Receivable';
+          
+      //                         if(account === debitAccount || account === creditAccount){
+      //                             Object.assign(newData, {
+      //                                 coaAccount: account,
+      //                                 account: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+          
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return newData;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return newData;
+      //                             }
+      //                         }
+      //                     })
+      //                     dbAllEntries = dbAllEntries.concat(journal);
+      //                 }
+      //                 else if(data.type === 'PaymentVoucher'){
+          
+      //                     let dbAccount = data.fromAccount;
+      //                     let dbFromAccount = dbPaymentMethod.filter((item)=>{
+      //                         return item.chartsOfAccount === account && item.paymentType === dbAccount;
+      //                     });
+  
+                          
+          
+      //                     let linkedAccountCOA;
+          
+      //                     if (dbFromAccount.length > 0) {
+      //                         linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+      //                     }
+          
+      //                     let debitAmount = data.totalPaid;
+      //                     let debitAccount = 'Accounts Payable';
+      //                     let creditAmount = data.totalPaid;
+      //                     let creditAccount = linkedAccountCOA;
+          
+      //                     if(account === debitAccount || account === creditAccount){
+      //                         Object.assign(data, {
+      //                             coaAccount: account,
+      //                             account: account,
+      //                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                             debitAccount: account === debitAccount ? debitAccount : '',
+      //                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                             creditAccount: account === creditAccount ? creditAccount : '',
+      //                         });
+          
+      //                         if(fromDate && toDate){
+      //                             let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                             if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                 return data;
+      //                             }
+      //                         }
+      //                         else {
+      //                             return data;
+      //                         }
+      //                     }
+      //                 }
+      //                 else if(data.type === 'DebitNote'){
+                          
+      //                     let journal = data.inputList.filter((newData)=>{
+          
+      //                         let debitAmount = newData.amount;
+      //                         let creditAmount = newData.totalAmountPerItem;
+      //                         let debitAccount = 'Accounts Payable';
+      //                         let creditAccount = 'Purchase Return';
+          
+      //                         if(account === debitAccount || account === creditAccount){
+      //                             Object.assign(newData, {
+      //                                 coaAccount: account,
+      //                                 account: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+          
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return newData;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return newData;
+      //                             }
+      //                         }
+      //                     })
+      //                     dbAllEntries = dbAllEntries.concat(journal);
+                          
+      //                 }
+      //                 else if(data.type === 'CreditNote'){
+      //                     let debitAmount = data.fullAmount;
+      //                     let creditAmount = data.totalAmount;
+      //                     let debitAccount = 'Sales Return';
+      //                     let creditAccount = 'Accounts Receivable';
+          
+      //                     if(account === debitAccount || account === creditAccount){
+      //                         Object.assign(data, {
+      //                             coaAccount: account,
+      //                             account: account,
+      //                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                             debitAccount: account === debitAccount ? debitAccount : '',
+      //                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                             creditAccount: account === creditAccount ? creditAccount : '',
+      //                         });
+          
+      //                         if(fromDate && toDate){
+      //                             let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                             if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                 return data;
+      //                             }
+      //                         }
+      //                         else {
+      //                             return data;
+      //                         }
+      //                     }
+      //                 }
+      //                 else if(data.type === 'Expenses'){
+      //                     let journal = data.inputList.filter((newData)=>{
+          
+          
+      //                         let dbAccount = data.paidBy;
+      //                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
+      //                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
+      //                         });
+          
+      //                         let linkedAccountCOA;
+          
+      //                         if (dbFromAccount.length > 0) {
+      //                             linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+      //                         }
+          
+          
+          
+      //                         let debitAmount = newData.totalAmountPerItem;
+      //                         let debitAccount = newData.accounts;
+      //                         let creditAmount = newData.amount;
+      //                         let creditAccount = linkedAccountCOA;
+                              
+      //                         if(account === debitAccount || account === creditAccount){
+      //                             Object.assign(newData, {
+      //                                 coaAccount: account,
+      //                                 account: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+          
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return newData;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return newData;
+      //                             }
+      //                         }
+      //                     })
+      //                     dbAllEntries = dbAllEntries.concat(journal);
+      //                 }
+      //                 else if(data.type === 'SalesInvoice'){
+      //                     let journal = data.inputList.filter((newData)=>{
+                              
+      //                         let dbAccount = data.fromAccount;
+      //                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
+      //                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
+      //                         });
+      
+      //                         let linkedAccountCOA;
+      
+      //                         if (dbFromAccount.length > 0) {
+      //                             linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+      //                         }
+                              
+      //                         let debitAmount = newData.totalAmountPerItem;
+      //                         let debitAccount = linkedAccountCOA;
+                              
+      //                         let creditAmount = newData.amount;
+      //                         let creditAccount = 'Sales';
+                              
+      //                         if(account === debitAccount || account === creditAccount){
+      
+      //                             Object.assign(newData, {
+      //                                 coaAccount: account,
+      //                                 account: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+      
+                                  
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return newData;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return newData;
+      //                             }
+      //                         }
+      //                     })
+      //                     dbAllEntries = dbAllEntries.concat(journal);
+      //                 }
+      //                 else if(data.type === 'CreditSalesInvoice'){
+      //                     let journal = data.inputList.filter((newData)=>{
+          
+      //                         let product = newData.products;
+      //                         let checkProductLinking = dbProducts.filter((item)=>{
+      //                             return item.name === product;
+      //                         });
+      //                         let linkedCOA = checkProductLinking[0].linkAccount;
+          
+      //                         let debitAmount = newData.totalAmountPerItem;
+      //                         let debitAccount = data.fromAccount;
+      //                         let creditAmount = newData.amount;
+      //                         let creditAccount = linkedCOA;
+          
+      //                         if(account === debitAccount || account === creditAccount){
+      //                             Object.assign(newData, {
+      //                                 coaAccount: account,
+      //                                 account: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+          
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return newData;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return newData;
+      //                             }
+      //                         }
+          
+      //                     });
+      //                     dbAllEntries = dbAllEntries.concat(journal);
+      //                 }
+      //                 else{
+      //                     let journal = data.inputList.filter((newData)=>{
+          
+      //                         let debitAmount = newData.debit && newData.debit;
+      //                         let debitAccount = newData.debit && newData.account;
+                              
+      //                         let creditAmount = newData.credit && newData.credit;
+      //                         let creditAccount = newData.credit && newData.account;
+          
+                              
+      //                         if(account === debitAccount || account === creditAccount){
+          
+      //                             Object.assign(newData, {
+      //                                 coaAccount: account,
+      //                                 account: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+          
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return newData;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return newData;
+      //                             }
+      //                         }
+          
+      //                     });
+      //                     dbAllEntries = dbAllEntries.concat(journal);
+      //                 }
+  
+      //                 if(data.fullTax > 0){
+      //                     if(data.type === 'CreditNote' || data.type === 'DebitNote'){
+      //                         let debitAmount = data.fullTax;
+      //                         let debitAccount = 'Tax Payable';
+      //                         let creditAmount = 0;
+      //                         let creditAccount = 'Tax Payable';
+  
+      //                         if(account === debitAccount || account === creditAccount){
+      //                             Object.assign(data, {
+      //                                 coaAccount: account,
+      //                                 account: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+  
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return data;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return data;
+      //                             }
+      //                         }
+      //                     }
+      //                     else if(account !== null && account !== ""){
+      //                         let debitAmount = 0;
+      //                         let debitAccount = 'Tax Payable';
+      //                         let creditAmount = data.fullTax;
+      //                         let creditAccount = 'Tax Payable';
+  
+      //                         if(account === debitAccount || account === creditAccount){
+      //                             Object.assign(data, {
+      //                                 coaAccount: account,
+      //                                 account: account,
+      //                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                                 debitAccount: account === debitAccount ? debitAccount : '',
+      //                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                                 creditAccount: account === creditAccount ? creditAccount : '',
+      //                             });
+      //                             if(fromDate && toDate){
+      //                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                                 if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                     return data;
+      //                                 }
+      //                             }
+      //                             else {
+      //                                 return data;
+      //                             }
+      //                         }
+  
+      //                     }
+  
+      //                 }
+      //                 if(data.discount > 0){
+                          
+      //                     let debitAmount = data.discount;
+      //                     let debitAccount = 'Sales Discount';
+      //                     let creditAmount = 0;
+      //                     let creditAccount = 'Sales Discount';
+  
+      //                     if(account === debitAccount || account === creditAccount){
+      //                         Object.assign(data, {
+      //                             coaAccount: account,
+      //                             account: account,
+      //                             debit: account === debitAccount ? parseInt(debitAmount) : 0,
+      //                             debitAccount: account === debitAccount ? debitAccount : '',
+      //                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
+      //                             creditAccount: account === creditAccount ? creditAccount : '',
+      //                         });
+  
+      //                         if(fromDate && toDate){
+      //                             let checkDbDate = data.journalDate? data.journalDate : data.date;
+      //                             const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+      //                             if (dbDate >= fromDate && dbDate <= toDate) {
+      //                                 return data;
+      //                             }
+      //                         }
+      //                         else {
+      //                             return data;
+      //                         }
+      //                     }
+      //                 }
+      //             }
+      //         })
+  
+      //         dbAllEntries = dbAllEntries.concat(dbAll);
+              
+  
+      //         // Date filter
+      //         dbAllEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+  
+  
+      //         // Balance
+      //         let result = [];
+      //         if(dbAllEntries.length > 0){
+      //             const initalCreditEntry = parseInt(dbAllEntries[0].credit);
+      //             let initialBalance = initalCreditEntry;
+                  
+      //             for (let index = 0; index < dbAllEntries.length; index++) {
+  
+      //                 const currentCreditEntry = parseInt(dbAllEntries[index].credit);
+      //                 const currentDebitEntry = parseInt(dbAllEntries[index].debit);
+                      
+      //                 if(index <= 0){
+      //                     let totalBalance;
+  
+      //                     if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+      //                         totalBalance = currentCreditEntry - currentDebitEntry;
+      //                     }
+      //                     else{
+      //                         totalBalance = currentDebitEntry - currentCreditEntry;
+      //                     }
+  
+      //                     initialBalance = totalBalance;
+      //                     result.push(totalBalance)
+      //                 }
+      //                 else{
+      //                     let totalBalance;
+      //                     if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+      //                         totalBalance = initialBalance + currentCreditEntry - currentDebitEntry;
+      //                     }
+      //                     else{
+      //                         totalBalance = initialBalance + currentDebitEntry - currentCreditEntry;
+      //                     }
+                          
+      //                     initialBalance = totalBalance;
+      //                     result.push(totalBalance);
+      //                 }
+      //             }
+      //         }
+  
+      //         balance.push(result);
+      //     });
+  
+  
+          
+  
+      //     filteredCharts.forEach((element, index) => {
+      //       if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+      //         Object.assign(element, {
+      //           debitBalance: 0,
+      //           creditBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
+      //         });
+      //       }
+      //       else{
+      //         Object.assign(element, {
+      //           debitBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
+      //           creditBalance: 0,
+      //         });
+      //       }
+      //     });
+  
+  
+      //     let totalDebit = 0;
+      //     let totalCredit = 0;
+  
+      //     for (let i = 0; i < filteredCharts.length; i++) {
+      //       totalDebit += filteredCharts[i].debitBalance;
+      //       totalCredit += filteredCharts[i].creditBalance;
+      //     }
+      //     setDebitSum(totalDebit)
+      //     setCreditSum(totalCredit)
+    // }
+
     const submit = ()=>{
 
-        if(fromDate && toDate){
-            setFDate(moment(fromDate).format('D MMM YYYY'))
-            setTDate(moment(toDate).format('D MMM YYYY'))
-        }
 
-        filteredCharts.forEach(element => {
+      let filteredCharts = dbCharts.filter((item)=>{
+      return item.userEmail === userEmail;
+      })
+      setFilteredCharts(filteredCharts)
 
-            let dbAllEntries = [];
-            let allVouchers = [];
+      if(fromDate && toDate){
+        setFDate(moment(fromDate).format('D MMM YYYY'))
+        setTDate(moment(toDate).format('D MMM YYYY'))
+      }
 
-            let account = element.accountName;
+      filteredCharts.forEach(element => {
 
-            allVouchers = allVouchers.concat(dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher);
+        let dbAllEntries = [];
+        let allVouchers = [];
 
-            // Data filter
-            const dbAll = allVouchers.filter((data) => {
+        let account = element.accountName;
 
-               
+        allVouchers = allVouchers.concat(dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher);
 
-                if(data.userEmail === userEmail) {
+        // Data filter
+        const dbAll = allVouchers.filter((data) => {             
 
-                    if(data.type === 'Product'){
-                        let calculateDebitAmount = data.availableQty * data.costPrice;
-                        let debitAmount = calculateDebitAmount;
-                        let creditAmount = 0;
-                        let debitAccount = 'Stock';
-                        let creditAccount = '';
+            if(data.userEmail === userEmail) {
+
+                if(data.type === 'Product'){
+                    let calculateDebitAmount = data.availableQty * data.costPrice;
+                    let debitAmount = calculateDebitAmount;
+                    let creditAmount = 0;
+                    let debitAccount = 'Stock';
+                    let creditAccount = '';
+
+                    if(account === debitAccount || account === creditAccount){
+                        Object.assign(data, {
+                            coaAccount: account,
+                            journalNo: data.code,
+                            product: data.name,
+                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                            debitAccount: account === debitAccount ? debitAccount : '',
+                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                            creditAccount: account === creditAccount ? creditAccount : '',
+                        });
+
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
+                                return data;
+                            }
+                        }
+                        else {
+                            return data;
+                        }
+                    }
+
+                }
+                else if(data.type === 'PurchaseInvoice'){
+                    let journal = data.inputList.filter((newData)=>{
+                        
+                        let debitAmount = newData.totalAmountPerItem;
+                        let creditAmount = newData.amount;
+                        let debitAccount = 'Purchases';
+                        let creditAccount = 'Accounts Payable';
     
                         if(account === debitAccount || account === creditAccount){
-                            Object.assign(data, {
+                            Object.assign(newData, {
                                 coaAccount: account,
-                                journalNo: data.code,
-                                product: data.name,
                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
                                 debitAccount: account === debitAccount ? debitAccount : '',
                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
@@ -93,112 +1257,233 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                 if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return data;
+                                    return newData;
                                 }
                             }
                             else {
+                                return newData;
+                            }
+                        }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else if(data.type === 'ReceiptVoucher'){
+                    
+                    let journal = data.inputList.filter((newData)=>{
+    
+                        let dbAccount = newData.paidBy;
+                        let dbFromAccount = dbPaymentMethod.filter((item)=>{
+                            return item.chartsOfAccount === account && item.paymentType === dbAccount;
+                        });
+    
+                        let linkedAccountCOA;
+    
+                        if (dbFromAccount.length > 0) {
+                            linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+                        }
+    
+                        let debitAmount = newData.paid;
+                        let creditAmount = newData.paid;
+                        let debitAccount = linkedAccountCOA;
+                        let creditAccount = 'Accounts Receivable';
+    
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+    
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
+                                return newData;
+                            }
+                        }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else if(data.type === 'PaymentVoucher'){
+    
+                    let dbAccount = data.fromAccount;
+                    let dbFromAccount = dbPaymentMethod.filter((item)=>{
+                        return item.chartsOfAccount === account && item.paymentType === dbAccount;
+                    });
+
+                    
+    
+                    let linkedAccountCOA;
+    
+                    if (dbFromAccount.length > 0) {
+                        linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+                    }
+    
+                    let debitAmount = data.totalPaid;
+                    let debitAccount = 'Accounts Payable';
+                    let creditAmount = data.totalPaid;
+                    let creditAccount = linkedAccountCOA;
+    
+                    if(account === debitAccount || account === creditAccount){
+                        Object.assign(data, {
+                            coaAccount: account,
+                            account: account,
+                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                            debitAccount: account === debitAccount ? debitAccount : '',
+                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                            creditAccount: account === creditAccount ? creditAccount : '',
+                        });
+    
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
                                 return data;
                             }
                         }
+                        else {
+                            return data;
+                        }
+                    }
+                }
+                else if(data.type === 'DebitNote'){
+                    
+                    let journal = data.inputList.filter((newData)=>{
     
-                    }
-                    else if(data.type === 'PurchaseInvoice'){
-                        let journal = data.inputList.filter((newData)=>{
-                            
-                            let debitAmount = newData.totalAmountPerItem;
-                            let creditAmount = newData.amount;
-                            let debitAccount = 'Purchases';
-                            let creditAccount = 'Accounts Payable';
-        
-                            if(account === debitAccount || account === creditAccount){
-                                Object.assign(newData, {
-                                    coaAccount: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-        
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return newData;
-                                    }
-                                }
-                                else {
-                                    return newData;
-                                }
-                            }
-                        })
-                        dbAllEntries = dbAllEntries.concat(journal);
-                    }
-                    else if(data.type === 'ReceiptVoucher'){
-                        
-                        let journal = data.inputList.filter((newData)=>{
-        
-                            let dbAccount = newData.paidBy;
-                            let dbFromAccount = dbPaymentMethod.filter((item)=>{
-                                return item.chartsOfAccount === account && item.paymentType === dbAccount;
+                        let debitAmount = newData.amount;
+                        let creditAmount = newData.totalAmountPerItem;
+                        let debitAccount = 'Accounts Payable';
+                        let creditAccount = 'Purchase Return';
+    
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
                             });
-        
-                            let linkedAccountCOA;
-        
-                            if (dbFromAccount.length > 0) {
-                                linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
-                            }
-        
-                            let debitAmount = newData.paid;
-                            let creditAmount = newData.paid;
-                            let debitAccount = linkedAccountCOA;
-                            let creditAccount = 'Accounts Receivable';
-        
-                            if(account === debitAccount || account === creditAccount){
-                                Object.assign(newData, {
-                                    coaAccount: account,
-                                    account: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-        
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return newData;
-                                    }
-                                }
-                                else {
+    
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
                                     return newData;
                                 }
                             }
-                        })
-                        dbAllEntries = dbAllEntries.concat(journal);
+                            else {
+                                return newData;
+                            }
+                        }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                    
+                }
+                else if(data.type === 'CreditNote'){
+                    let debitAmount = data.fullAmount;
+                    let creditAmount = data.totalAmount;
+                    let debitAccount = 'Sales Return';
+                    let creditAccount = 'Accounts Receivable';
+    
+                    if(account === debitAccount || account === creditAccount){
+                        Object.assign(data, {
+                            coaAccount: account,
+                            account: account,
+                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                            debitAccount: account === debitAccount ? debitAccount : '',
+                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                            creditAccount: account === creditAccount ? creditAccount : '',
+                        });
+    
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
+                                return data;
+                            }
+                        }
+                        else {
+                            return data;
+                        }
                     }
-                    else if(data.type === 'PaymentVoucher'){
-        
+                }
+                else if(data.type === 'Expenses'){
+                    let journal = data.inputList.filter((newData)=>{
+    
+    
+                        let dbAccount = data.paidBy;
+                        let dbFromAccount = dbPaymentMethod.filter((item)=>{
+                            return item.chartsOfAccount === account && item.paymentType === dbAccount;
+                        });
+    
+                        let linkedAccountCOA;
+    
+                        if (dbFromAccount.length > 0) {
+                            linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+                        }
+    
+    
+    
+                        let debitAmount = newData.totalAmountPerItem;
+                        let debitAccount = newData.accounts;
+                        let creditAmount = newData.amount;
+                        let creditAccount = linkedAccountCOA;
+                        
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+    
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
+                                return newData;
+                            }
+                        }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else if(data.type === 'SalesInvoice'){
+                    let journal = data.inputList.filter((newData)=>{
+                        
                         let dbAccount = data.fromAccount;
                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
                         });
 
-                        
-        
                         let linkedAccountCOA;
-        
+
                         if (dbFromAccount.length > 0) {
                             linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
                         }
-        
-                        let debitAmount = data.totalPaid;
-                        let debitAccount = 'Accounts Payable';
-                        let creditAmount = data.totalPaid;
-                        let creditAccount = linkedAccountCOA;
-        
+                        
+                        let debitAmount = newData.totalAmountPerItem;
+                        let debitAccount = linkedAccountCOA;
+                        
+                        let creditAmount = newData.amount;
+                        let creditAccount = 'Sales';
+                        
                         if(account === debitAccount || account === creditAccount){
-                            Object.assign(data, {
+
+                            Object.assign(newData, {
                                 coaAccount: account,
                                 account: account,
                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
@@ -206,61 +1491,38 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
                                 creditAccount: account === creditAccount ? creditAccount : '',
                             });
-        
+
+                            
                             if(fromDate && toDate){
                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                 if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return data;
-                                }
-                            }
-                            else {
-                                return data;
-                            }
-                        }
-                    }
-                    else if(data.type === 'DebitNote'){
-                        
-                        let journal = data.inputList.filter((newData)=>{
-        
-                            let debitAmount = newData.amount;
-                            let creditAmount = newData.totalAmountPerItem;
-                            let debitAccount = 'Accounts Payable';
-                            let creditAccount = 'Purchase Return';
-        
-                            if(account === debitAccount || account === creditAccount){
-                                Object.assign(newData, {
-                                    coaAccount: account,
-                                    account: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-        
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return newData;
-                                    }
-                                }
-                                else {
                                     return newData;
                                 }
                             }
-                        })
-                        dbAllEntries = dbAllEntries.concat(journal);
-                        
-                    }
-                    else if(data.type === 'CreditNote'){
-                        let debitAmount = data.fullAmount;
-                        let creditAmount = data.totalAmount;
-                        let debitAccount = 'Sales Return';
-                        let creditAccount = 'Accounts Receivable';
-        
+                            else {
+                                return newData;
+                            }
+                        }
+                    })
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else if(data.type === 'CreditSalesInvoice'){
+                    let journal = data.inputList.filter((newData)=>{
+    
+                        let product = newData.products;
+                        let checkProductLinking = dbProducts.filter((item)=>{
+                            return item.name === product;
+                        });
+                        let linkedCOA = checkProductLinking[0].linkAccount;
+    
+                        let debitAmount = newData.totalAmountPerItem;
+                        let debitAccount = data.fromAccount;
+                        let creditAmount = newData.amount;
+                        let creditAccount = linkedCOA;
+    
                         if(account === debitAccount || account === creditAccount){
-                            Object.assign(data, {
+                            Object.assign(newData, {
                                 coaAccount: account,
                                 account: account,
                                 debit: account === debitAccount ? parseInt(debitAmount) : 0,
@@ -268,260 +1530,65 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
                                 creditAccount: account === creditAccount ? creditAccount : '',
                             });
-        
+    
                             if(fromDate && toDate){
                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                 if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return data;
+                                    return newData;
                                 }
                             }
                             else {
-                                return data;
+                                return newData;
                             }
                         }
-                    }
-                    else if(data.type === 'Expenses'){
-                        let journal = data.inputList.filter((newData)=>{
-        
-        
-                            let dbAccount = data.paidBy;
-                            let dbFromAccount = dbPaymentMethod.filter((item)=>{
-                                return item.chartsOfAccount === account && item.paymentType === dbAccount;
-                            });
-        
-                            let linkedAccountCOA;
-        
-                            if (dbFromAccount.length > 0) {
-                                linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
-                            }
-        
-        
-        
-                            let debitAmount = newData.totalAmountPerItem;
-                            let debitAccount = newData.accounts;
-                            let creditAmount = newData.amount;
-                            let creditAccount = linkedAccountCOA;
-                            
-                            if(account === debitAccount || account === creditAccount){
-                                Object.assign(newData, {
-                                    coaAccount: account,
-                                    account: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-        
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return newData;
-                                    }
-                                }
-                                else {
-                                    return newData;
-                                }
-                            }
-                        })
-                        dbAllEntries = dbAllEntries.concat(journal);
-                    }
-                    else if(data.type === 'SalesInvoice'){
-                        let journal = data.inputList.filter((newData)=>{
-        
-                            // check product account
-                            let product = newData.products;
-                            let checkProductLinking = dbProducts.filter((item)=>{
-                                return item.name === product;
-                            });
-                            let linkedCOA = checkProductLinking[0].linkAccount;
-        
-        
-                            let dbAccount = data.fromAccount;
-                            let dbFromAccount = dbPaymentMethod.filter((item)=>{
-                                return item.chartsOfAccount === account && item.paymentType === dbAccount;
-                            });
-        
-                            let linkedAccountCOA;
-        
-                            if (dbFromAccount.length > 0) {
-                                linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
-                            }
-                            
-                            
-                            let debitAmount = newData.totalAmountPerItem;
-                            let debitAccount = linkedAccountCOA;
-                            
-                            let creditAmount = newData.amount;
-                            let creditAccount = linkedCOA;
-                            
-                            if(account === debitAccount || account === creditAccount){
-        
-                                Object.assign(newData, {
-                                    coaAccount: account,
-                                    account: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-        
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return newData;
-                                    }
-                                }
-                                else {
-                                    return newData;
-                                }
-                            }
-                        })
-                        dbAllEntries = dbAllEntries.concat(journal);
-                    }
-                    else if(data.type === 'CreditSalesInvoice'){
-                        let journal = data.inputList.filter((newData)=>{
-        
-                            let product = newData.products;
-                            let checkProductLinking = dbProducts.filter((item)=>{
-                                return item.name === product;
-                            });
-                            let linkedCOA = checkProductLinking[0].linkAccount;
-        
-                            let debitAmount = newData.totalAmountPerItem;
-                            let debitAccount = data.fromAccount;
-                            let creditAmount = newData.amount;
-                            let creditAccount = linkedCOA;
-        
-                            if(account === debitAccount || account === creditAccount){
-                                Object.assign(newData, {
-                                    coaAccount: account,
-                                    account: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-        
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return newData;
-                                    }
-                                }
-                                else {
-                                    return newData;
-                                }
-                            }
-        
-                        });
-                        dbAllEntries = dbAllEntries.concat(journal);
-                    }
-                    else{
-                        let journal = data.inputList.filter((newData)=>{
-        
-                            let debitAmount = newData.debit && newData.debit;
-                            let debitAccount = newData.debit && newData.account;
-                            
-                            let creditAmount = newData.credit && newData.credit;
-                            let creditAccount = newData.credit && newData.account;
-        
-                            
-                            if(account === debitAccount || account === creditAccount){
-        
-                                Object.assign(newData, {
-                                    coaAccount: account,
-                                    account: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-        
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return newData;
-                                    }
-                                }
-                                else {
-                                    return newData;
-                                }
-                            }
-        
-                        });
-                        dbAllEntries = dbAllEntries.concat(journal);
-                    }
-
-                    if(data.fullTax > 0){
-                        if(data.type === 'CreditNote' || data.type === 'DebitNote'){
-                            let debitAmount = data.fullTax;
-                            let debitAccount = 'Tax Payable';
-                            let creditAmount = 0;
-                            let creditAccount = 'Tax Payable';
-
-                            if(account === debitAccount || account === creditAccount){
-                                Object.assign(data, {
-                                    coaAccount: account,
-                                    account: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return data;
-                                    }
-                                }
-                                else {
-                                    return data;
-                                }
-                            }
-                        }
-                        else if(account !== null && account !== ""){
-                            let debitAmount = 0;
-                            let debitAccount = 'Tax Payable';
-                            let creditAmount = data.fullTax;
-                            let creditAccount = 'Tax Payable';
-
-                            if(account === debitAccount || account === creditAccount){
-                                Object.assign(data, {
-                                    coaAccount: account,
-                                    account: account,
-                                    debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                                    debitAccount: account === debitAccount ? debitAccount : '',
-                                    credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                                    creditAccount: account === creditAccount ? creditAccount : '',
-                                });
-                                if(fromDate && toDate){
-                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                    if (dbDate >= fromDate && dbDate <= toDate) {
-                                        return data;
-                                    }
-                                }
-                                else {
-                                    return data;
-                                }
-                            }
-
-                        }
-
-                    }
-                    if(data.discount > 0){
+    
+                    });
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+                else{
+                    let journal = data.inputList.filter((newData)=>{
+    
+                        let debitAmount = newData.debit && newData.debit;
+                        let debitAccount = newData.debit && newData.account;
                         
-                        let debitAmount = data.discount;
-                        let debitAccount = 'Sales Discount';
+                        let creditAmount = newData.credit && newData.credit;
+                        let creditAccount = newData.credit && newData.account;
+    
+                        
+                        if(account === debitAccount || account === creditAccount){
+    
+                            Object.assign(newData, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+    
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return newData;
+                                }
+                            }
+                            else {
+                                return newData;
+                            }
+                        }
+    
+                    });
+                    dbAllEntries = dbAllEntries.concat(journal);
+                }
+
+                if(data.fullTax > 0){
+                    if(data.type === 'CreditNote' || data.type === 'DebitNote'){
+                        let debitAmount = data.fullTax;
+                        let debitAccount = 'Tax Payable';
                         let creditAmount = 0;
-                        let creditAccount = 'Sales Discount';
+                        let creditAccount = 'Tax Payable';
 
                         if(account === debitAccount || account === creditAccount){
                             Object.assign(data, {
@@ -545,125 +1612,162 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                             }
                         }
                     }
+                    else if(account !== null && account !== ""){
+                        let debitAmount = 0;
+                        let debitAccount = 'Tax Payable';
+                        let creditAmount = data.fullTax;
+                        let creditAccount = 'Tax Payable';
+
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(data, {
+                                coaAccount: account,
+                                account: account,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return data;
+                                }
+                            }
+                            else {
+                                return data;
+                            }
+                        }
+
+                    }
+
                 }
-            })
-
-            dbAllEntries = dbAllEntries.concat(dbAll);
-            
-
-            // Date filter
-            dbAllEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-
-            // Balance
-            let result = [];
-            if(dbAllEntries.length > 0){
-                const initalCreditEntry = parseInt(dbAllEntries[0].credit);
-                let initialBalance = initalCreditEntry;
-                
-                for (let index = 0; index < dbAllEntries.length; index++) {
-
-                    const currentCreditEntry = parseInt(dbAllEntries[index].credit);
-                    const currentDebitEntry = parseInt(dbAllEntries[index].debit);
+                if(data.discount > 0){
                     
-                    if(index <= 0){
-                        let totalBalance;
+                    let debitAmount = data.discount;
+                    let debitAccount = 'Sales Discount';
+                    let creditAmount = 0;
+                    let creditAccount = 'Sales Discount';
 
-                        if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
-                            totalBalance = currentCreditEntry - currentDebitEntry;
-                        }
-                        else{
-                            totalBalance = currentDebitEntry - currentCreditEntry;
-                        }
+                    if(account === debitAccount || account === creditAccount){
+                        Object.assign(data, {
+                            coaAccount: account,
+                            account: account,
+                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                            debitAccount: account === debitAccount ? debitAccount : '',
+                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                            creditAccount: account === creditAccount ? creditAccount : '',
+                        });
 
-                        initialBalance = totalBalance;
-                        result.push(totalBalance)
-                    }
-                    else{
-                        let totalBalance;
-                        if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
-                            totalBalance = initialBalance + currentCreditEntry - currentDebitEntry;
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
+                                return data;
+                            }
                         }
-                        else{
-                            totalBalance = initialBalance + currentDebitEntry - currentCreditEntry;
+                        else {
+                            return data;
                         }
-                        
-                        initialBalance = totalBalance;
-                        result.push(totalBalance);
                     }
                 }
             }
-            balance.push(result);
-            setCharts(dbCharts)
-        });
-        
-        
+        })
 
-        let dbAccount = [];
-        filteredCharts.forEach(element => {
-            if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
-                dbAccount.push(true)
-            }
-            else{
-                dbAccount.push(false)
-            }
-        });
+        dbAllEntries = dbAllEntries.concat(dbAll);
 
-        let debitEntry = [];
-        let creditEntry = [];
-        for (let index = 0; index < dbAccount.length; index++) {
-            const element = dbAccount[index];
-            if(element === false){
-                let debitSide = balance[index][balance[index].length-1]
-                if(debitSide){
-                    if(debitSide > 0){
-                        debitEntry.push(debitSide);
+        
+        // Date filter
+        dbAllEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
+          
+
+        // Balance
+        let result = [];
+        if(dbAllEntries.length > 0){
+            const initalCreditEntry = parseInt(dbAllEntries[0].credit);
+            let initialBalance = initalCreditEntry;
+            
+            for (let index = 0; index < dbAllEntries.length; index++) {
+
+                const currentCreditEntry = parseInt(dbAllEntries[index].credit);
+                const currentDebitEntry = parseInt(dbAllEntries[index].debit);
+                
+                if(index <= 0){
+                    let totalBalance;
+
+                    if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+                        totalBalance = currentCreditEntry - currentDebitEntry;
                     }
                     else{
-                        creditEntry.push(debitSide);
+                        totalBalance = currentDebitEntry - currentCreditEntry;
                     }
+
+                    initialBalance = totalBalance;
+                    result.push(totalBalance)
                 }
-            }
-            else{
-                let creditSide = balance[index][balance[index].length-1]
-                if(creditSide){
-                    if(creditSide > 0){
-                        creditEntry.push(creditSide);
+                else{
+                    let totalBalance;
+                    if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+                        totalBalance = initialBalance + currentCreditEntry - currentDebitEntry;
                     }
                     else{
-                        debitEntry.push(creditSide);
+                        totalBalance = initialBalance + currentDebitEntry - currentCreditEntry;
                     }
+                    
+                    initialBalance = totalBalance;
+                    result.push(totalBalance);
                 }
             }
         }
 
-        let totalDebit = 0;
-        debitEntry.forEach(element => {
-            totalDebit += Math.abs(element);
-        });
-        setDebitSum(totalDebit)
+        balance.push(result);
+      });
+
+
+      filteredCharts.forEach((element, index) => {
+
         
 
-        let totalCredit = 0;
-        creditEntry.forEach(element => {
-            totalCredit += Math.abs(element);
-        });
-        setCreditSum(totalCredit)
+        if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
+          Object.assign(element, {
+            debitBalance: 0,
+            creditBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
+          });
+        }
+        else{
+          Object.assign(element, {
+            debitBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
+            creditBalance: 0,
+          });
+        }
+      });
 
-        filteredCharts.forEach((element, index) => {
-            Object.assign(element, {
-                pnlBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
-            });
-        });
-
-        console.log(balance);
-        
-        setNewBalance(balance)
     }
+
+    useEffect(() => {
+
+      let totalDebit = 0;
+      let totalCredit = 0;
+      
+      for (let i = 0; i < filteredCharts.length; i++) {
+        totalDebit += filteredCharts[i].debitBalance;
+        totalCredit += filteredCharts[i].creditBalance;
+      }
+      
+      setDebitSum(totalDebit);
+      setCreditSum(totalCredit);
+
+    }, [filteredCharts]);
+
+
     
 
 
 
+
+    
+
+    
 
     const handleChange = (e) => {
         if (e.target.name === 'fromDate') {
@@ -674,7 +1778,6 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
         }
     }
 
-    
 
 
     return (
@@ -776,26 +1879,6 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                 {/* All Vouchers */}
                                 {filteredCharts.map((item,index) => {
 
-                                    let dbAccount = [];
-                                    // filteredCharts.forEach(element => {
-                                    //     if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
-                                    //         if(newBalance[index][newBalance[index].length-1] > 0){
-                                    //             dbAccount.push(true)
-                                    //         }
-                                    //         else{
-                                    //             dbAccount.push(false)
-                                    //         }
-                                    //     }
-                                    //     else{
-                                    //         if(newBalance[index][newBalance[index].length-1] > 0){
-                                    //             dbAccount.push(false)
-                                    //         }
-                                    //         else{
-                                    //             dbAccount.push(true)
-                                    //         }
-                                    //     }
-                                    // });
-
                                     if(item.accountName != 'Profit for the year'){
 
                                     return <tr key={index} className="bg-white border-b hover:bg-gray-50">
@@ -806,10 +1889,10 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                             <div className='text-black font-semibold'>{item.subAccount}</div>
                                         </td>
                                         <td className="px-6 py-3 text-blue-700 font-bold">
-                                            {dbAccount[index] === false ?  Math.abs(item.pnlBalance).toLocaleString() : ''}
+                                            { item.debitBalance ? Math.abs(item.debitBalance).toLocaleString() : 0}
                                         </td>
                                         <td className="px-6 py-3 text-blue-700 font-bold">
-                                            {dbAccount[index] === true ? Math.abs(item.pnlBalance).toLocaleString() : ''}
+                                            { item.creditBalance ? Math.abs(item.creditBalance).toLocaleString() : 0}
                                         </td>
                                     </tr>
                                     }

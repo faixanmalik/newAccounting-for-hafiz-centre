@@ -34,12 +34,22 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
     const [tDate, setTDate] = useState('')
 
     const [isCash, setIsCash] = useState(false)
+    const [filteredCharts, setFilteredCharts] = useState([])
     const [sortedDbCharts, setSortedDbCharts] = useState([])
     
 
     useEffect(() => {
         submit()
     }, [])
+
+    useEffect(() => {
+
+        let filteredCharts = dbCharts.filter((item)=>{
+        return item.userEmail === userEmail;
+        })
+        setFilteredCharts(filteredCharts)
+    
+    }, [userEmail])
     
 
     let balance = [];
@@ -51,19 +61,20 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
         }
 
 
-        dbCharts.forEach(element => {
+        filteredCharts.forEach(element => {
 
             let dbAllEntries = [];
             let allVouchers = [];
+    
             let account = element.accountName;
-            
+    
             allVouchers = allVouchers.concat(dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher);
-
+    
             // Data filter
-            const dbAll = allVouchers.filter((data) => {
-
+            const dbAll = allVouchers.filter((data) => {             
+    
                 if(data.userEmail === userEmail) {
-
+    
                     if(data.type === 'Product'){
                         let calculateDebitAmount = data.availableQty * data.costPrice;
                         let debitAmount = calculateDebitAmount;
@@ -97,7 +108,7 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                     }
                     else if(data.type === 'PurchaseInvoice'){
                         let journal = data.inputList.filter((newData)=>{
-        
+                            
                             let debitAmount = newData.totalAmountPerItem;
                             let creditAmount = newData.amount;
                             let debitAccount = 'Purchases';
@@ -176,6 +187,8 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
                         });
+    
+                        
         
                         let linkedAccountCOA;
         
@@ -199,7 +212,8 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                             });
         
                             if(fromDate && toDate){
-                                const dbDate = moment(data.date).format('YYYY-MM-DD')
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                 if (dbDate >= fromDate && dbDate <= toDate) {
                                     return data;
                                 }
@@ -260,7 +274,8 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                             });
         
                             if(fromDate && toDate){
-                                const dbDate = moment(data.date).format('YYYY-MM-DD')
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                 if (dbDate >= fromDate && dbDate <= toDate) {
                                     return data;
                                 }
@@ -318,35 +333,26 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                     }
                     else if(data.type === 'SalesInvoice'){
                         let journal = data.inputList.filter((newData)=>{
-        
-                            // check product account
-                            let product = newData.products;
-                            let checkProductLinking = dbProducts.filter((item)=>{
-                                return item.name === product;
-                            });
-                            let linkedCOA = checkProductLinking[0].linkAccount;
-        
-        
+                            
                             let dbAccount = data.fromAccount;
                             let dbFromAccount = dbPaymentMethod.filter((item)=>{
                                 return item.chartsOfAccount === account && item.paymentType === dbAccount;
                             });
-        
+    
                             let linkedAccountCOA;
-        
+    
                             if (dbFromAccount.length > 0) {
                                 linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
                             }
-                            
                             
                             let debitAmount = newData.totalAmountPerItem;
                             let debitAccount = linkedAccountCOA;
                             
                             let creditAmount = newData.amount;
-                            let creditAccount = linkedCOA;
+                            let creditAccount = 'Sales';
                             
                             if(account === debitAccount || account === creditAccount){
-        
+    
                                 Object.assign(newData, {
                                     coaAccount: account,
                                     account: account,
@@ -355,7 +361,8 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                     credit: account === creditAccount ? parseInt(creditAmount) : 0,
                                     creditAccount: account === creditAccount ? creditAccount : '',
                                 });
-        
+    
+                                
                                 if(fromDate && toDate){
                                     let checkDbDate = data.journalDate? data.journalDate : data.date;
                                     const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
@@ -363,7 +370,6 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                         return newData;
                                     }
                                 }
-                                
                                 else {
                                     return newData;
                                 }
@@ -379,7 +385,6 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                 return item.name === product;
                             });
                             let linkedCOA = checkProductLinking[0].linkAccount;
-        
         
                             let debitAmount = newData.totalAmountPerItem;
                             let debitAccount = data.fromAccount;
@@ -449,7 +454,7 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                     }
     
                     if(data.fullTax > 0){
-                        if(data.type === 'CreditNote'){
+                        if(data.type === 'CreditNote' || data.type === 'DebitNote'){
                             let debitAmount = data.fullTax;
                             let debitAccount = 'Tax Payable';
                             let creditAmount = 0;
@@ -466,7 +471,8 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                 });
     
                                 if(fromDate && toDate){
-                                    const dbDate = moment(data.date).format('YYYY-MM-DD')
+                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                     if (dbDate >= fromDate && dbDate <= toDate) {
                                         return data;
                                     }
@@ -491,9 +497,9 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                     credit: account === creditAccount ? parseInt(creditAmount) : 0,
                                     creditAccount: account === creditAccount ? creditAccount : '',
                                 });
-    
                                 if(fromDate && toDate){
-                                    const dbDate = moment(data.date).format('YYYY-MM-DD')
+                                    let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                    const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                     if (dbDate >= fromDate && dbDate <= toDate) {
                                         return data;
                                     }
@@ -524,7 +530,8 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                             });
     
                             if(fromDate && toDate){
-                                const dbDate = moment(data.date).format('YYYY-MM-DD')
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                 if (dbDate >= fromDate && dbDate <= toDate) {
                                     return data;
                                 }
@@ -534,18 +541,16 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                             }
                         }
                     }
-
                 }
-
-                
             })
-
+    
             dbAllEntries = dbAllEntries.concat(dbAll);
-
+    
+            
             // Date filter
             dbAllEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
-
-
+              
+    
             // Balance
             let result = [];
             if(dbAllEntries.length > 0){
@@ -553,20 +558,20 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                 let initialBalance = initalCreditEntry;
                 
                 for (let index = 0; index < dbAllEntries.length; index++) {
-
+    
                     const currentCreditEntry = parseInt(dbAllEntries[index].credit);
                     const currentDebitEntry = parseInt(dbAllEntries[index].debit);
                     
                     if(index <= 0){
                         let totalBalance;
-
+    
                         if(element.account === 'Incomes' || element.account === 'Equity' || element.account === 'Liabilities'){
                             totalBalance = currentCreditEntry - currentDebitEntry;
                         }
                         else{
                             totalBalance = currentDebitEntry - currentCreditEntry;
                         }
-
+    
                         initialBalance = totalBalance;
                         result.push(totalBalance)
                     }
@@ -584,15 +589,15 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                     }
                 }
             }
+    
             balance.push(result);
-            setNewBalance(balance)
         });
 
         
         
         ProfitLossBalance()
         
-        dbCharts.forEach((element, index) => {
+        filteredCharts.forEach((element, index) => {
             if(element.accountName === 'Sales Return' || element.accountName === 'Sales Discount' || element.accountName === 'Purchase Return'){
                 let number = balance[index][balance[index].length-1]
                 if(number){
@@ -616,10 +621,11 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
         });
 
         const nameOrder = ['Revenue', 'Other Income', 'Discount', 'Cost of sales', 'Administration Expenses', 'Distribution Expenses', 'Finance Cost'];
-        const sortedAndFilteredDbCharts = dbCharts
+        const sortedAndFilteredDbCharts = filteredCharts
         .filter(item => nameOrder.includes(item.subAccount))
         .sort((a, b) => nameOrder.indexOf(a.subAccount) - nameOrder.indexOf(b.subAccount));
 
+        console.log(filteredCharts)
         setSortedDbCharts(sortedAndFilteredDbCharts)
     }
 
@@ -633,7 +639,7 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
         let distributionExpensesArray = [];
         let financeCostArray = [];
 
-        {dbCharts.map((item,index) => {
+        {filteredCharts.map((item,index) => {
             if(item.subAccount === 'Revenue' || item.subAccount === 'Other Income'){
                 let sales = balance[index] && balance[index][balance[index].length-1]
                 if(sales){
