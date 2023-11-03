@@ -357,7 +357,6 @@ export default async function handler(req, res) {
                 }));
                 await PaymentMethod.create(userPaymentMethod);
 
-
                 
                 let newEntry = new User( { businessName, email, password, firstName, lastName, } );
                 await newEntry.save();
