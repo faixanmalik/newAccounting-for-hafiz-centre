@@ -5,16 +5,25 @@ import moment from 'moment/moment';
 
 const Chart = dynamic(() => import("react-apexcharts"), { ssr: false });
 
-const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts}) => {
+const AssetsChart = ({ dbProducts, dbPaymentMethod, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts}) => {
 
     const [monthlyAssets, setMonthlyAssets] = useState([])
     const [monthlyLiabilities, setMonthlyLiabilities] = useState([])
     const [isCash, setIsCash] = useState(false)
     const [userEmail, setUserEmail] = useState('')
 
+    const [filteredCharts, setFilteredCharts] = useState([])
+
     useEffect(() => {
         let getUser = JSON.parse(localStorage.getItem("myUser"));
         setUserEmail(getUser.email)
+
+        let filteredCharts = dbCharts.filter((item)=>{
+        return item.userEmail === getUser.email;
+        })
+        setFilteredCharts(filteredCharts)
+
+
         callFunctions();
     }, [userEmail]);
 
@@ -53,7 +62,7 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
   const submit = (fromDate, toDate)=>{
     let balance = [];
     
-    dbCharts.forEach(element => {
+    filteredCharts.forEach(element => {
 
       let dbAllEntries = [];
       let allVouchers = [];
@@ -64,7 +73,7 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
       // Data filter
       const dbAll = allVouchers.filter((data) => {
           
-          if(data.userEmail === userEmail) {
+        if(data.userEmail === userEmail) {
 
             if(data.type === 'Product'){
                 let calculateDebitAmount = data.availableQty * data.costPrice;
@@ -99,7 +108,7 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
             }
             else if(data.type === 'PurchaseInvoice'){
                 let journal = data.inputList.filter((newData)=>{
-
+                    
                     let debitAmount = newData.totalAmountPerItem;
                     let creditAmount = newData.amount;
                     let debitAccount = 'Purchases';
@@ -115,12 +124,12 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                         });
 
                         if(fromDate && toDate){
-                                let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return newData;
-                                }
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
+                                return newData;
                             }
+                        }
                         else {
                             return newData;
                         }
@@ -132,9 +141,20 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                 
                 let journal = data.inputList.filter((newData)=>{
 
+                    let dbAccount = newData.paidBy;
+                    let dbFromAccount = dbPaymentMethod.filter((item)=>{
+                        return item.chartsOfAccount === account && item.paymentType === dbAccount;
+                    });
+
+                    let linkedAccountCOA;
+
+                    if (dbFromAccount.length > 0) {
+                        linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+                    }
+
                     let debitAmount = newData.paid;
                     let creditAmount = newData.paid;
-                    let debitAccount = newData.paidBy;
+                    let debitAccount = linkedAccountCOA;
                     let creditAccount = 'Accounts Receivable';
 
                     if(account === debitAccount || account === creditAccount){
@@ -162,10 +182,24 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                 dbAllEntries = dbAllEntries.concat(journal);
             }
             else if(data.type === 'PaymentVoucher'){
+
+                let dbAccount = data.fromAccount;
+                let dbFromAccount = dbPaymentMethod.filter((item)=>{
+                    return item.chartsOfAccount === account && item.paymentType === dbAccount;
+                });
+
+                
+
+                let linkedAccountCOA;
+
+                if (dbFromAccount.length > 0) {
+                    linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+                }
+
                 let debitAmount = data.totalPaid;
                 let debitAccount = 'Accounts Payable';
                 let creditAmount = data.totalPaid;
-                let creditAccount = data.fromAccount;
+                let creditAccount = linkedAccountCOA;
 
                 if(account === debitAccount || account === creditAccount){
                     Object.assign(data, {
@@ -177,16 +211,16 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                         creditAccount: account === creditAccount ? creditAccount : '',
                     });
 
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
-                                return data;
-                            }
-                        }
-                        else {
+                    if(fromDate && toDate){
+                        let checkDbDate = data.journalDate? data.journalDate : data.date;
+                        const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                        if (dbDate >= fromDate && dbDate <= toDate) {
                             return data;
                         }
+                    }
+                    else {
+                        return data;
+                    }
                 }
             }
             else if(data.type === 'DebitNote'){
@@ -208,16 +242,16 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                             creditAccount: account === creditAccount ? creditAccount : '',
                         });
 
-                            if(fromDate && toDate){
-                                let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return newData;
-                                }
-                            }
-                            else {
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
                                 return newData;
                             }
+                        }
+                        else {
+                            return newData;
+                        }
                     }
                 })
                 dbAllEntries = dbAllEntries.concat(journal);
@@ -239,24 +273,39 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                         creditAccount: account === creditAccount ? creditAccount : '',
                     });
 
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
-                                return data;
-                            }
-                        }
-                        else {
+                    if(fromDate && toDate){
+                        let checkDbDate = data.journalDate? data.journalDate : data.date;
+                        const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                        if (dbDate >= fromDate && dbDate <= toDate) {
                             return data;
                         }
+                    }
+                    else {
+                        return data;
+                    }
                 }
             }
             else if(data.type === 'Expenses'){
                 let journal = data.inputList.filter((newData)=>{
+
+
+                    let dbAccount = data.paidBy;
+                    let dbFromAccount = dbPaymentMethod.filter((item)=>{
+                        return item.chartsOfAccount === account && item.paymentType === dbAccount;
+                    });
+
+                    let linkedAccountCOA;
+
+                    if (dbFromAccount.length > 0) {
+                        linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+                    }
+
+
+
                     let debitAmount = newData.totalAmountPerItem;
                     let debitAccount = newData.accounts;
                     let creditAmount = newData.amount;
-                    let creditAccount = data.paidBy;
+                    let creditAccount = linkedAccountCOA;
                     
                     if(account === debitAccount || account === creditAccount){
                         Object.assign(newData, {
@@ -268,37 +317,42 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                             creditAccount: account === creditAccount ? creditAccount : '',
                         });
 
-                            if(fromDate && toDate){
-                                let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return newData;
-                                }
-                            }
-                            else {
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
                                 return newData;
                             }
+                        }
+                        else {
+                            return newData;
+                        }
                     }
                 })
                 dbAllEntries = dbAllEntries.concat(journal);
             }
             else if(data.type === 'SalesInvoice'){
                 let journal = data.inputList.filter((newData)=>{
-
-                    // check product account
-                    let product = newData.products;
-                    let checkProductLinking = dbProducts.filter((item)=>{
-                        return item.name === product;
+                    
+                    let dbAccount = data.fromAccount;
+                    let dbFromAccount = dbPaymentMethod.filter((item)=>{
+                        return item.chartsOfAccount === account && item.paymentType === dbAccount;
                     });
-                    let linkedCOA = checkProductLinking[0].linkAccount;
 
+                    let linkedAccountCOA;
 
+                    if (dbFromAccount.length > 0) {
+                        linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
+                    }
+                    
                     let debitAmount = newData.totalAmountPerItem;
-                    let debitAccount = data.fromAccount;
+                    let debitAccount = linkedAccountCOA;
+                    
                     let creditAmount = newData.amount;
-                    let creditAccount = linkedCOA;
-
+                    let creditAccount = 'Sales';
+                    
                     if(account === debitAccount || account === creditAccount){
+
                         Object.assign(newData, {
                             coaAccount: account,
                             account: account,
@@ -308,16 +362,17 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                             creditAccount: account === creditAccount ? creditAccount : '',
                         });
 
-                            if(fromDate && toDate){
-                                let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return newData;
-                                }
-                            }
-                            else {
+                        
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
                                 return newData;
                             }
+                        }
+                        else {
+                            return newData;
+                        }
                     }
                 })
                 dbAllEntries = dbAllEntries.concat(journal);
@@ -331,7 +386,6 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                     });
                     let linkedCOA = checkProductLinking[0].linkAccount;
 
-
                     let debitAmount = newData.totalAmountPerItem;
                     let debitAccount = data.fromAccount;
                     let creditAmount = newData.amount;
@@ -347,16 +401,16 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                             creditAccount: account === creditAccount ? creditAccount : '',
                         });
 
-                            if(fromDate && toDate){
-                                let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return newData;
-                                }
-                            }
-                            else {
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
                                 return newData;
                             }
+                        }
+                        else {
+                            return newData;
+                        }
                     }
 
                 });
@@ -400,7 +454,7 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
             }
 
             if(data.fullTax > 0){
-                if(data.type === 'CreditNote'){
+                if(data.type === 'CreditNote' || data.type === 'DebitNote'){
                     let debitAmount = data.fullTax;
                     let debitAccount = 'Tax Payable';
                     let creditAmount = 0;
@@ -416,16 +470,16 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                             creditAccount: account === creditAccount ? creditAccount : '',
                         });
 
-                            if(fromDate && toDate){
-                                let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return data;
-                                }
-                            }
-                            else {
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
                                 return data;
                             }
+                        }
+                        else {
+                            return data;
+                        }
                     }
                 }
                 else if(account !== null && account !== ""){
@@ -443,17 +497,16 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                             credit: account === creditAccount ? parseInt(creditAmount) : 0,
                             creditAccount: account === creditAccount ? creditAccount : '',
                         });
-
-                            if(fromDate && toDate){
-                                let checkDbDate = data.journalDate? data.journalDate : data.date;
-                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                                if (dbDate >= fromDate && dbDate <= toDate) {
-                                    return data;
-                                }
-                            }
-                            else {
+                        if(fromDate && toDate){
+                            let checkDbDate = data.journalDate? data.journalDate : data.date;
+                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                            if (dbDate >= fromDate && dbDate <= toDate) {
                                 return data;
                             }
+                        }
+                        else {
+                            return data;
+                        }
                     }
 
                 }
@@ -476,16 +529,16 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
                         creditAccount: account === creditAccount ? creditAccount : '',
                     });
 
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
-                                return data;
-                            }
-                        }
-                        else {
+                    if(fromDate && toDate){
+                        let checkDbDate = data.journalDate? data.journalDate : data.date;
+                        const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                        if (dbDate >= fromDate && dbDate <= toDate) {
                             return data;
                         }
+                    }
+                    else {
+                        return data;
+                    }
                 }
             }
         }
@@ -544,7 +597,7 @@ const AssetsChart = ({ dbProducts, dbExpensesVoucher, dbPaymentVoucher, dbReceip
     let currentAssetsArray = [];
     let currentLiabilitiesArray = [];
     
-    {dbCharts.map((item,index) => {
+    {filteredCharts.map((item,index) => {
         if(item.subAccount === 'Current Assets'){
           let currentAssets = balance[index] && balance[index][balance[index].length-1]
           if(currentAssets){

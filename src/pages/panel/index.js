@@ -21,9 +21,10 @@ import ReceiptVoucher from 'models/ReceiptVoucher';
 import PaymentVoucher from 'models/PaymentVoucher';
 import Expenses from 'models/Expenses';
 import { useEffect, useState } from "react";
+import PaymentMethod from "models/PaymentMethod";
 
 
-export default function Home({customer, dbProducts, supplier, employees, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts }) {
+export default function Home({ dbPaymentMethod, customer, dbProducts, supplier, employees, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts }) {
 
   const noOfCustomers = customer.length;
   const noOfProducts = dbProducts.length;
@@ -109,13 +110,13 @@ export default function Home({customer, dbProducts, supplier, employees, dbExpen
         {/***Sales & Feed***/}
         <Row>
           <Col sm="12" lg="12">
-            <SalesChart userEmail={userEmail} dbProducts={dbProducts} dbCharts={dbCharts} dbJournalVoucher={dbJournalVoucher} dbExpensesVoucher={dbExpensesVoucher} dbPaymentVoucher={dbPaymentVoucher} dbReceiptVoucher={dbReceiptVoucher} dbDebitNote={dbDebitNote} dbCreditNote={dbCreditNote} dbPurchaseInvoice={dbPurchaseInvoice} dbSalesInvoice={dbSalesInvoice} dbCreditSalesInvoice={dbCreditSalesInvoice}/>
+            <SalesChart dbPaymentMethod={dbPaymentMethod} userEmail={userEmail} dbProducts={dbProducts} dbCharts={dbCharts} dbJournalVoucher={dbJournalVoucher} dbExpensesVoucher={dbExpensesVoucher} dbPaymentVoucher={dbPaymentVoucher} dbReceiptVoucher={dbReceiptVoucher} dbDebitNote={dbDebitNote} dbCreditNote={dbCreditNote} dbPurchaseInvoice={dbPurchaseInvoice} dbSalesInvoice={dbSalesInvoice} dbCreditSalesInvoice={dbCreditSalesInvoice}/>
           </Col>
         </Row>
 
         <Row>
           <Col sm="12" lg="12">
-            <AssetsChart userEmail={userEmail} dbProducts={dbProducts} dbCharts={dbCharts} dbJournalVoucher={dbJournalVoucher} dbExpensesVoucher={dbExpensesVoucher} dbPaymentVoucher={dbPaymentVoucher} dbReceiptVoucher={dbReceiptVoucher} dbDebitNote={dbDebitNote} dbCreditNote={dbCreditNote} dbPurchaseInvoice={dbPurchaseInvoice} dbSalesInvoice={dbSalesInvoice} dbCreditSalesInvoice={dbCreditSalesInvoice}/>
+            <AssetsChart dbPaymentMethod={dbPaymentMethod} userEmail={userEmail} dbProducts={dbProducts} dbCharts={dbCharts} dbJournalVoucher={dbJournalVoucher} dbExpensesVoucher={dbExpensesVoucher} dbPaymentVoucher={dbPaymentVoucher} dbReceiptVoucher={dbReceiptVoucher} dbDebitNote={dbDebitNote} dbCreditNote={dbCreditNote} dbPurchaseInvoice={dbPurchaseInvoice} dbSalesInvoice={dbSalesInvoice} dbCreditSalesInvoice={dbCreditSalesInvoice}/>
           </Col>
         </Row>
       </main>
@@ -146,6 +147,7 @@ export async function getServerSideProps() {
   let dbReceiptVoucher = await ReceiptVoucher.find()
   let dbPaymentVoucher = await PaymentVoucher.find()
   let dbExpensesVoucher = await Expenses.find()
+  let dbPaymentMethod = await PaymentMethod.find()
    
   // Pass data to the page via props
   return {
@@ -165,6 +167,7 @@ export async function getServerSideProps() {
       dbReceiptVoucher: JSON.parse(JSON.stringify(dbReceiptVoucher)),
       dbPaymentVoucher: JSON.parse(JSON.stringify(dbPaymentVoucher)),
       dbExpensesVoucher: JSON.parse(JSON.stringify(dbExpensesVoucher)),
+      dbPaymentMethod: JSON.parse(JSON.stringify(dbPaymentMethod)),
     }
   }
 }
