@@ -21,8 +21,8 @@ import { FaFacebookF } from 'react-icons/fa';
 function Login() {
   const router = useRouter()
 
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const [email, setEmail] = useState('johndoe@gmail.com')
+  const [password, setPassword] = useState('12')
   
 
   const submit = async (e) => {
