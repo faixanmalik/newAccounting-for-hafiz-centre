@@ -29,6 +29,16 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
     const [dbAccount, setDbAccount] = useState(false)
     const [newEntry, setNewEntry] = useState([])
 
+    const [filteredContacts, setFilteredContacts] = useState([])
+
+    useEffect(() => {
+        let filteredContacts = dbContacts.filter((item)=>{
+            return item.userEmail === userEmail;
+        })
+        setFilteredContacts(filteredContacts)
+    }, [userEmail])
+    
+
 
 
     let dbAllEntries = [];
@@ -180,7 +190,7 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
                             </label>
                             <select id="contact" name="contact" onChange={handleChange} value={contact} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
                                 <option>select contact</option>
-                                {dbContacts.map((item) => {
+                                {filteredContacts.map((item) => {
                                     return <option key={item._id} value={item.name}>{item.name}</option>
                                 })}
                             </select>

@@ -26,10 +26,18 @@ import PaymentMethod from "models/PaymentMethod";
 
 export default function Home({ dbPaymentMethod, customer, dbProducts, supplier, employees, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts }) {
 
-  const noOfCustomers = customer.length;
-  const noOfProducts = dbProducts.length;
-  const noOfSuppliers = supplier.length;
-  const noOfEmployees = employees.length;
+
+
+  const [filteredCustomer, setFilteredCustomer] = useState([])
+  const [filteredSupplier, setFilteredSupplier] = useState([])
+  const [filteredEmployees, setFilteredEmployees] = useState([])
+  const [filteredProducts, setFilteredProducts] = useState([])
+  
+
+  const noOfCustomers = filteredCustomer.length;
+  const noOfProducts = filteredProducts.length;
+  const noOfSuppliers = filteredSupplier.length;
+  const noOfEmployees = filteredEmployees.length;
 
   const [userEmail, setUserEmail] = useState('')
 
@@ -40,7 +48,31 @@ export default function Home({ dbPaymentMethod, customer, dbProducts, supplier, 
     if(getUser){
       setUserEmail(getUser)
     }
+
+    let filteredCustomer = customer.filter((item)=>{
+      return item.userEmail === getUser.email;
+    })
+    setFilteredCustomer(filteredCustomer)
+    
+    let filteredSupplier = supplier.filter((item)=>{
+      return item.userEmail === getUser.email;
+    })
+    setFilteredSupplier(filteredSupplier)
+
+
+    let filteredEmployees = employees.filter((item)=>{
+      return item.userEmail === getUser.email;
+    })
+    setFilteredEmployees(filteredEmployees)
+
+    let filteredProducts = dbProducts.filter((item)=>{
+      return item.userEmail === getUser.email;
+    })
+    setFilteredProducts(filteredProducts)
+
+
   }, [])
+  
   
 
 
