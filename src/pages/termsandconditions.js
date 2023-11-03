@@ -5,7 +5,7 @@ function TermsAndConditions() {
   return (
     <>
     <Head>
-      <title>Terms {process.env.NEXT_PUBLIC_BRANDNAME}</title>
+      <title>{`Terms ${process.env.NEXT_PUBLIC_BRANDNAME}`}</title>
       <meta name="description" content="width=device-width, height=device-height, initial-scale=1.0, maximum-scale=1.0" />
    </Head>
 
