@@ -38,11 +38,22 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
     
     const [fDate, setFDate] = useState('')
     const [tDate, setTDate] = useState('')
+
+    const [filteredCharts, setFilteredCharts] = useState([])
     
 
     useEffect(() => {
       submit()
     }, [])
+
+    useEffect(() => {
+
+        let filteredCharts = dbCharts.filter((item)=>{
+        return item.userEmail === userEmail;
+        })
+        setFilteredCharts(filteredCharts)
+    
+    }, [userEmail])
     
 
 
@@ -54,7 +65,7 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
         }
 
 
-        dbCharts.forEach(element => {
+        filteredCharts.forEach(element => {
 
             let dbAllEntries = [];
             let allVouchers = [];
@@ -100,7 +111,7 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                     }
                     else if(data.type === 'PurchaseInvoice'){
                         let journal = data.inputList.filter((newData)=>{
-        
+                            
                             let debitAmount = newData.totalAmountPerItem;
                             let creditAmount = newData.amount;
                             let debitAccount = 'Purchases';
@@ -179,6 +190,8 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                         let dbFromAccount = dbPaymentMethod.filter((item)=>{
                             return item.chartsOfAccount === account && item.paymentType === dbAccount;
                         });
+    
+                        
         
                         let linkedAccountCOA;
         
@@ -202,7 +215,8 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                             });
         
                             if(fromDate && toDate){
-                                const dbDate = moment(data.date).format('YYYY-MM-DD')
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                 if (dbDate >= fromDate && dbDate <= toDate) {
                                     return data;
                                 }
@@ -263,7 +277,8 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                             });
         
                             if(fromDate && toDate){
-                                const dbDate = moment(data.date).format('YYYY-MM-DD')
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
                                 if (dbDate >= fromDate && dbDate <= toDate) {
                                     return data;
                                 }
@@ -321,35 +336,26 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                     }
                     else if(data.type === 'SalesInvoice'){
                         let journal = data.inputList.filter((newData)=>{
-        
-                            // check product account
-                            let product = newData.products;
-                            let checkProductLinking = dbProducts.filter((item)=>{
-                                return item.name === product;
-                            });
-                            let linkedCOA = checkProductLinking[0].linkAccount;
-        
-        
+                            
                             let dbAccount = data.fromAccount;
                             let dbFromAccount = dbPaymentMethod.filter((item)=>{
                                 return item.chartsOfAccount === account && item.paymentType === dbAccount;
                             });
-        
+    
                             let linkedAccountCOA;
-        
+    
                             if (dbFromAccount.length > 0) {
                                 linkedAccountCOA = dbFromAccount[0].chartsOfAccount;
                             }
-                            
                             
                             let debitAmount = newData.totalAmountPerItem;
                             let debitAccount = linkedAccountCOA;
                             
                             let creditAmount = newData.amount;
-                            let creditAccount = linkedCOA;
+                            let creditAccount = 'Sales';
                             
                             if(account === debitAccount || account === creditAccount){
-        
+    
                                 Object.assign(newData, {
                                     coaAccount: account,
                                     account: account,
@@ -358,7 +364,8 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                     credit: account === creditAccount ? parseInt(creditAmount) : 0,
                                     creditAccount: account === creditAccount ? creditAccount : '',
                                 });
-        
+    
+                                
                                 if(fromDate && toDate){
                                     let checkDbDate = data.journalDate? data.journalDate : data.date;
                                     const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
@@ -450,7 +457,7 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                     }
     
                     if(data.fullTax > 0){
-                        if(data.type === 'CreditNote'){
+                        if(data.type === 'CreditNote' || data.type === 'DebitNote'){
                             let debitAmount = data.fullTax;
                             let debitAccount = 'Tax Payable';
                             let creditAmount = 0;
@@ -493,7 +500,6 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                     credit: account === creditAccount ? parseInt(creditAmount) : 0,
                                     creditAccount: account === creditAccount ? creditAccount : '',
                                 });
-    
                                 if(fromDate && toDate){
                                     let checkDbDate = data.journalDate? data.journalDate : data.date;
                                     const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
@@ -539,9 +545,6 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                         }
                     }
                 }
-                
-
-                
             })
 
             dbAllEntries = dbAllEntries.concat(dbAll);
@@ -595,14 +598,14 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
         setNewBalance(balance)
         ProfitLossBalance()
 
-        dbCharts.forEach((element, index) => {
+        filteredCharts.forEach((element, index) => {
             Object.assign(element, {
                 pnlBalance: balance[index][balance[index].length-1] ? balance[index][balance[index].length-1] : 0,
             });
         });
 
         const nameOrder = ['Fixed Assets', 'Current Assets', 'Equity', 'Non-Current Liability', 'Current Liability']; 
-        const sortedAndFilteredDbCharts = dbCharts
+        const sortedAndFilteredDbCharts = filteredCharts
         .filter(item => nameOrder.includes(item.subAccount))
         .sort((a, b) => nameOrder.indexOf(a.subAccount) - nameOrder.indexOf(b.subAccount));
 
@@ -644,7 +647,7 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
 
 
 
-        {dbCharts.map((item,index) => {
+        {filteredCharts.map((item,index) => {
             // thats for calculating cureent balance sheet balance
             if(item.subAccount === 'Fixed Assets'){
                 let fixedAssets = balance[index] && balance[index][balance[index].length-1]
