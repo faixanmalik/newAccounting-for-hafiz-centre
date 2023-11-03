@@ -286,10 +286,10 @@ function classNames(...classes) {
               setOpen(true)
               setId('')
               setJournalDate(today)
-              setJournalNo(`JV-${dbVouchers.length + 1}`)
+              setJournalNo(`JV-${filteredInvoices.length + 1}`)
               setInputList([
-                {journalNo : `JV-${dbVouchers.length + 1}`, journalDate: journalDate, account: '', credit: 0, debit: 0},
-                {journalNo : `JV-${dbVouchers.length + 1}`, journalDate: journalDate, account: '', credit: 0, debit: 0},
+                {journalNo : `JV-${filteredInvoices.length + 1}`, journalDate: journalDate, account: '', credit: 0, debit: 0},
+                {journalNo : `JV-${filteredInvoices.length + 1}`, journalDate: journalDate, account: '', credit: 0, debit: 0},
               ])
               setMemo('')
               setTotalDebit(0)

@@ -376,15 +376,15 @@ import Head from 'next/head';
                 setId('')
                 setJournalDate(today)
 
-                setBillNo(`Inv-${dbVouchers.length === 0 || !dbVouchers[dbVouchers.length - 1].journalNo
-                  ? dbVouchers.length + 1
-                  : parseInt(dbVouchers[dbVouchers.length - 1].journalNo.slice(4)) + 1}`)
+                setBillNo(`Inv-${filteredInvoices.length === 0 || !filteredInvoices[filteredInvoices.length - 1].journalNo
+                  ? filteredInvoices.length + 1
+                  : parseInt(filteredInvoices[filteredInvoices.length - 1].journalNo.slice(4)) + 1}`)
 
 
                 setInputList([
-                    { billNo : `Inv-${dbVouchers.length === 0 || !dbVouchers[dbVouchers.length - 1].journalNo
-                    ? dbVouchers.length + 1
-                    : parseInt(dbVouchers[dbVouchers.length - 1].journalNo.slice(4)) + 1}`,
+                    { billNo : `Inv-${filteredInvoices.length === 0 || !filteredInvoices[filteredInvoices.length - 1].journalNo
+                    ? filteredInvoices.length + 1
+                    : parseInt(filteredInvoices[filteredInvoices.length - 1].journalNo.slice(4)) + 1}`,
                   
                       date: journalDate, products:'', desc:'', qty: '', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:'' 
                     },

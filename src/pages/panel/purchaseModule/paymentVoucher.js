@@ -290,9 +290,9 @@ import Head from 'next/head';
       setId('')
       setJournalDate(today)
 
-      setJournalNo(`PV-${dbVouchers.length === 0 || !dbVouchers[dbVouchers.length - 1].journalNo
-        ? dbVouchers.length + 1
-        : parseInt(dbVouchers[dbVouchers.length - 1].journalNo.slice(3)) + 1}`)
+      setJournalNo(`PV-${filteredInvoices.length === 0 || !filteredInvoices[filteredInvoices.length - 1].journalNo
+        ? filteredInvoices.length + 1
+        : parseInt(filteredInvoices[filteredInvoices.length - 1].journalNo.slice(3)) + 1}`)
       
       setMemo('')
       setFilteredData([])

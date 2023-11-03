@@ -378,14 +378,14 @@ import Head from 'next/head';
                 setId('')
                 setJournalDate(today)
 
-                setJournalNo(`Exp-${dbVouchers.length === 0 || !dbVouchers[dbVouchers.length - 1].journalNo
-                  ? dbVouchers.length + 1
-                  : parseInt(dbVouchers[dbVouchers.length - 1].journalNo.slice(4)) + 1}`)
+                setJournalNo(`Exp-${filteredInvoices.length === 0 || !filteredInvoices[filteredInvoices.length - 1].journalNo
+                  ? filteredInvoices.length + 1
+                  : parseInt(filteredInvoices[filteredInvoices.length - 1].journalNo.slice(4)) + 1}`)
 
                 setInputList([
-                  {journalNo : `Exp-${dbVouchers.length === 0 || !dbVouchers[dbVouchers.length - 1].journalNo
-                    ? dbVouchers.length + 1
-                    : parseInt(dbVouchers[dbVouchers.length - 1].journalNo.slice(4)) + 1}`, 
+                  {journalNo : `Exp-${filteredInvoices.length === 0 || !filteredInvoices[filteredInvoices.length - 1].journalNo
+                    ? filteredInvoices.length + 1
+                    : parseInt(filteredInvoices[filteredInvoices.length - 1].journalNo.slice(4)) + 1}`, 
                     
                   date: journalDate, accounts:'', desc:'', amount:'', taxRate:'', taxAmount:'', totalAmountPerItem:'' },
                 ])

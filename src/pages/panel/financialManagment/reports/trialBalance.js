@@ -1212,28 +1212,28 @@ const TrialBalance = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                     let debitAccount = 'Stock';
                     let creditAccount = '';
 
-                    if(account === debitAccount || account === creditAccount){
-                        Object.assign(data, {
-                            coaAccount: account,
-                            journalNo: data.code,
-                            product: data.name,
-                            debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                            debitAccount: account === debitAccount ? debitAccount : '',
-                            credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                            creditAccount: account === creditAccount ? creditAccount : '',
-                        });
+                    // if(account === debitAccount || account === creditAccount){
+                    //     Object.assign(data, {
+                    //         coaAccount: account,
+                    //         journalNo: data.code,
+                    //         product: data.name,
+                    //         debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                    //         debitAccount: account === debitAccount ? debitAccount : '',
+                    //         credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                    //         creditAccount: account === creditAccount ? creditAccount : '',
+                    //     });
 
-                        if(fromDate && toDate){
-                            let checkDbDate = data.journalDate? data.journalDate : data.date;
-                            const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                            if (dbDate >= fromDate && dbDate <= toDate) {
-                                return data;
-                            }
-                        }
-                        else {
-                            return data;
-                        }
-                    }
+                    //     if(fromDate && toDate){
+                    //         let checkDbDate = data.journalDate? data.journalDate : data.date;
+                    //         const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                    //         if (dbDate >= fromDate && dbDate <= toDate) {
+                    //             return data;
+                    //         }
+                    //     }
+                    //     else {
+                    //         return data;
+                    //     }
+                    // }
 
                 }
                 else if(data.type === 'PurchaseInvoice'){
