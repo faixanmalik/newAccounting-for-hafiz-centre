@@ -399,20 +399,12 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                 }
                 else if(data.type === 'CreditSalesInvoice'){
                     let journal = data.inputList.filter((newData)=>{
-                        
-
-                        let product = newData.products;
-                        let checkProductLinking = dbProducts.filter((item)=>{
-                            return item.name === product;
-                        });
-                        let linkedCOA = checkProductLinking[0].linkAccount;
-
-                    
+    
                         let debitAmount = newData.totalAmountPerItem;
                         let debitAccount = data.fromAccount;
                         let creditAmount = newData.amount;
-                        let creditAccount = linkedCOA;
-
+                        let creditAccount = 'Sales';
+    
                         if(account === debitAccount || account === creditAccount){
                             Object.assign(newData, {
                                 coaAccount: account,
@@ -422,7 +414,7 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                 credit: account === creditAccount ? parseInt(creditAmount) : 0,
                                 creditAccount: account === creditAccount ? creditAccount : '',
                             });
-
+    
                             if(fromDate && toDate){
                                 let checkDbDate = data.journalDate? data.journalDate : data.date;
                                 const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
@@ -434,7 +426,7 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                 return newData;
                             }
                         }
-
+    
                     });
                     dbAllEntries = dbAllEntries.concat(journal);
                 }

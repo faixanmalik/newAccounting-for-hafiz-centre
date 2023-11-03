@@ -380,16 +380,10 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                     else if(data.type === 'CreditSalesInvoice'){
                         let journal = data.inputList.filter((newData)=>{
         
-                            let product = newData.products;
-                            let checkProductLinking = dbProducts.filter((item)=>{
-                                return item.name === product;
-                            });
-                            let linkedCOA = checkProductLinking[0].linkAccount;
-        
                             let debitAmount = newData.totalAmountPerItem;
                             let debitAccount = data.fromAccount;
                             let creditAmount = newData.amount;
-                            let creditAccount = linkedCOA;
+                            let creditAccount = 'Sales';
         
                             if(account === debitAccount || account === creditAccount){
                                 Object.assign(newData, {

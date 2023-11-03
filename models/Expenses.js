@@ -10,7 +10,7 @@ const ExpensesInvoiceSchema = new mongoose.Schema({
     phoneNo:{ type: Number },
     email:{type: String},
     fromAccount:{type: String},
-    receivedBy:{type: String},
+    paidBy:{type: String},
     memo:{type: String},
     project:{type: String},
     address:{type: String},
