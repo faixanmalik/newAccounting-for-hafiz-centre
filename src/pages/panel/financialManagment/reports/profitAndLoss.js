@@ -625,7 +625,6 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
         .filter(item => nameOrder.includes(item.subAccount))
         .sort((a, b) => nameOrder.indexOf(a.subAccount) - nameOrder.indexOf(b.subAccount));
 
-        console.log(filteredCharts)
         setSortedDbCharts(sortedAndFilteredDbCharts)
     }
 
@@ -911,7 +910,7 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
 
                         </table>
 
-                        { newBalance.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
+                        { sortedDbCharts.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
                     </div>
 
                 </div>

@@ -299,26 +299,34 @@ export default async function handler(req, res) {
             try {
 
                 let preDefiendCOA = [
-                    { isLocked: true, userEmail: email, accountCode: 100, accountName: 'Sales', account: 'Incomes', subAccount: 'Revenue', balance: 0, desc: 'Income from any normal business activity'},
-                    { isLocked: true, userEmail: email, accountCode: 200, accountName: 'Purchases', account: 'Expenses', subAccount: 'Cost of sales', balance: 0, desc: 'Purchase description refers to the words mentioned in solicitation in order to describe the supplies or services to be acquired and comprises terms and conditions'},
-                    { isLocked: true, userEmail: email, accountCode: 300, accountName: 'Accounts Receivable', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'he balance of money due to a firm for goods or services delivered or used but not yet paid for by customers'},
-                    { isLocked: true, userEmail: email, accountCode: 400, accountName: 'Accounts Payable', account: 'Liabilities', subAccount: 'Current Liability', balance: 0, desc: 'Outstanding invoices the company has received from suppliers but has not yet paid at balance date'},
-                    { isLocked: true, userEmail: email, accountCode: 500, accountName: 'Cost of Goods Sold', account: 'Expenses', subAccount: 'Cost of sales', balance: 0, desc: 'Cost of goods sold by the business'},
-                    { isLocked: true, userEmail: email, accountCode: 600, accountName: 'Cash', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'Cash is legal tender—currency or coins—that can be used to exchange goods, debt, or services.'},
-                    { isLocked: true, userEmail: email, accountCode: 700, accountName: 'Bank', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'This account represents the funds you have in your bank account.'},
-                    { isLocked: true, userEmail: email, accountCode: 800, accountName: 'Owner A Share Capital', account: 'Equity', subAccount: 'Equity', balance: 0, desc: 'The value of shares purchased by the shareholders'},
-                    { isLocked: true, userEmail: email, accountCode: 900, accountName: 'Retained Earnings', account: 'Equity', subAccount: 'Equity', balance: 0, desc: 'Accumulated Profit'},
-                    { isLocked: true, userEmail: email, accountCode: 1000, accountName: 'Tax Payable', account: 'Liabilities', subAccount: 'Current Liability', balance: 0, desc: 'Income tax payable" is a liability reported for financial accounting purposes that indicates the amount that an organization expects to pay in income taxes within 12 months.'},
-                    { isLocked: true, userEmail: email, accountCode: 1100, accountName: 'Stock', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'A stock is a general term used to describe the ownership certificates of any company'},
+                  { isLocked: true, userEmail: email, accountCode: 100, accountName: 'Sales', account: 'Incomes', subAccount: 'Revenue', balance: 0, desc: 'Income from any normal business activity'},
+                  { isLocked: true, userEmail: email, accountCode: 200, accountName: 'Purchases', account: 'Expenses', subAccount: 'Cost of sales', balance: 0, desc: 'Purchase description refers to the words mentioned in solicitation in order to describe the supplies or services to be acquired and comprises terms and conditions'},
+                  { isLocked: true, userEmail: email, accountCode: 300, accountName: 'Accounts Receivable', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'he balance of money due to a firm for goods or services delivered or used but not yet paid for by customers'},
+                  { isLocked: true, userEmail: email, accountCode: 400, accountName: 'Accounts Payable', account: 'Liabilities', subAccount: 'Current Liability', balance: 0, desc: 'Outstanding invoices the company has received from suppliers but has not yet paid at balance date'},
+                  { isLocked: true, userEmail: email, accountCode: 500, accountName: 'Cost of Goods Sold', account: 'Expenses', subAccount: 'Cost of sales', balance: 0, desc: 'Cost of goods sold by the business'},
+                  { isLocked: true, userEmail: email, accountCode: 600, accountName: 'Cash', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'Cash is legal tender—currency or coins—that can be used to exchange goods, debt, or services.'},
+                  { isLocked: true, userEmail: email, accountCode: 700, accountName: 'Bank', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'This account represents the funds you have in your bank account.'},
+                  { isLocked: true, userEmail: email, accountCode: 800, accountName: 'Owner A Share Capital', account: 'Equity', subAccount: 'Equity', balance: 0, desc: 'The value of shares purchased by the shareholders'},
+                  { isLocked: true, userEmail: email, accountCode: 900, accountName: 'Retained Earnings', account: 'Equity', subAccount: 'Equity', balance: 0, desc: 'Accumulated Profit'},
+                  { isLocked: true, userEmail: email, accountCode: 1000, accountName: 'Tax Payable', account: 'Liabilities', subAccount: 'Current Liability', balance: 0, desc: 'Income tax payable" is a liability reported for financial accounting purposes that indicates the amount that an organization expects to pay in income taxes within 12 months.'},
+                  { isLocked: true, userEmail: email, accountCode: 1100, accountName: 'Stock', account: 'Assets', subAccount: 'Current Assets', balance: 0, desc: 'A stock is a general term used to describe the ownership certificates of any company' },
+                  { isLocked: true, userEmail: email, accountCode: 1200, accountName: 'Sales Return', account: 'Incomes', subAccount: 'Revenue', balance: 0, desc: 'A sales return is a commodity or good that a customer returns to a seller for a full refund.' },
+                  { isLocked: true, userEmail: email, accountCode: 1300, accountName: 'Sales Discount', account: 'Expenses', subAccount: 'Discount', balance: 0, desc: 'The sales discounts account appears in the income statement and is a contra revenue account, which means that it offsets gross sales, resulting in a smaller net sales figure' },
+                  { isLocked: true, userEmail: email, accountCode: 1400, accountName: 'Purchase Return', account: 'Expenses', subAccount: 'Cost of sales', balance: 0, desc: 'when the buyer of merchandise, inventory, fixed assets, or other items sends these goods back to the seller' },
+                  { isLocked: true, userEmail: email, accountCode: 1500, accountName: 'Office Expenses', account: 'Expenses', subAccount: 'Administration Expenses', balance: 0, desc: 'General expenses related to the running of the business office.' },
+                  { isLocked: true, userEmail: email, accountCode: 1600, accountName: 'Wages and Salaries', account: 'Expenses', subAccount: 'Administration Expenses', balance: 0, desc: 'Payment to employees in exchange for their resources' },
+                  { isLocked: true, userEmail: email, accountCode: 1700, accountName: 'Rent', account: 'Expenses', subAccount: 'Administration Expenses', balance: 0, desc: 'The payment to lease a building or area.' },
+                  { isLocked: true, userEmail: email, accountCode: 1800, accountName: 'Finance Cost', account: 'Expenses', subAccount: 'Finance Cost', balance: 0, desc: 'the cost, interest, and other charges involved in the borrowing of money to build or purchase assets' },
+                  { isLocked: true, userEmail: email, accountCode: 1900, accountName: 'Office Equipment', account: 'Assets', subAccount: 'Fixed Assets', balance: 0, desc: 'Office equipment that is owned and controlled by the business' },
                 ]
 
                 let preDefiendTaxRate = [
-                    { isLocked: true, userEmail: email, name: 'Output Vat', taxRate: 0, chartsOfAccount: 'Tax Payable' },
+                  { isLocked: true, userEmail: email, name: 'Output Vat', taxRate: 0, chartsOfAccount: 'Tax Payable' },
                 ]
 
                 let preDefiendPaymentMethod = [
-                    { isLocked: true, userEmail: email, paymentType: 'Cash', chartsOfAccount: 'Cash' },
-                    { isLocked: true, userEmail: email, paymentType: 'Bank', chartsOfAccount: 'Bank' },
+                  { isLocked: true, userEmail: email, paymentType: 'Cash', chartsOfAccount: 'Cash' },
+                  { isLocked: true, userEmail: email, paymentType: 'Bank', chartsOfAccount: 'Bank' },
                 ]
 
                 const userCOA = preDefiendCOA.map(item => ({
