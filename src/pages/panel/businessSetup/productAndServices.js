@@ -152,7 +152,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
 
     let res = await fetch(`/api/addEntry`, {
       method: 'POST',
-      headers: { 
+      headers: {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify(data),

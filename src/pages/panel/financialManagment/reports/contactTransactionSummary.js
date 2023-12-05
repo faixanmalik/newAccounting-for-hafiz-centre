@@ -19,15 +19,13 @@ import PaymentVoucher from 'models/PaymentVoucher';
 import Expenses from 'models/Expenses';
 import Head from 'next/head';
 
-const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts,  dbContacts }) => {
+const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVoucher, dbReceipts, dbDebitNote, dbCreditNotes, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoices, dbJournalVoucher, dbCharts,  dbContacts }) => {
 
     // Cash Receipt
     const [fromDate, setFromDate] = useState('')
-    const [toDate, setToDate] = useState('') 
-    const [sortBy, setsortBy] = useState('')
+    const [toDate, setToDate] = useState('')
     const [contact, setContact] = useState('')
-    const [dbAccount, setDbAccount] = useState(false)
-    const [newEntry, setNewEntry] = useState([])
+    const [filteredTrx, setFilteredTrx] = useState([])
 
     const [filteredContacts, setFilteredContacts] = useState([])
 
@@ -40,73 +38,64 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
     
 
 
-
-    let dbAllEntries = [];
     const submit = ()=>{
 
-        let allVouchers = [];
+      if(contact){
+        let filteredTrx = []
 
-        if(contact){
-            allVouchers = allVouchers.concat(dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher);
+        // Credit Sales Invoice
+        dbCreditSalesInvoices = dbCreditSalesInvoices
+        .filter((item) => item.name === `${contact}`)
+        .map((item) => ({
+          ...item,
+          journalNo: item.billNo,
+          trxTotalDebit: parseInt(item.totalAmount, 10),
+          trxTotalCredit: 0,
+          balance: 0,
+        }));
 
-            // Data filter
-            const dbAll = allVouchers.filter((data) => {
-                if(data.userEmail === userEmail) {
+        // Credit Note Invoice
+        dbCreditNotes = dbCreditNotes
+        .filter((item) => item.name === `${contact}`)
+        .map((item) => ({
+          ...item,
+          trxTotalDebit: 0,
+          trxTotalCredit: parseInt(item.totalAmount, 10),
+          balance: 0,
+        }));
 
-                    if (data.name === `${contact}`) {
 
-                        if(data.type == 'PaymentVoucher' || data.type == 'ReceiptVoucher'){
+        // Payment Voucher
+        dbPaymentVoucher = dbPaymentVoucher
+        .filter((item) => item.name === `${contact}`)
+        .map((item) => ({
+          ...item,
+          trxTotalDebit: parseInt(item.totalPaid, 10),
+          trxTotalCredit: 0,
+          balance: 0,
+        }));
 
-                            Object.assign(data, {
-                                transactionAmount: data.totalPaid,
-                            });
+        // Receipts Voucher
+        dbReceipts = dbReceipts
+        .filter((receipt) => receipt.name === `${contact}`)
+        .map((receipt) => {
+          const filteredInputList = receipt.inputList;
+          const totalAmount = filteredInputList.reduce((total, item) => total + parseInt(item.paid), 0);
 
-                            if(fromDate && toDate){
-                                const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-                                return dbDate >= fromDate && dbDate <= toDate;
-                            }
-                            else{
-                                return data.name;
-                            }
-                        }
-                        else if( data.type == 'PurchaseInvoice' || data.type == 'CreditSalesInvoice' || data.type == 'SalesInvoice' || data.type == 'Expenses' || data.type === 'DebitNote' || data.type === 'CreditNote'){
-                            Object.assign(data, {
-                                transactionAmount: data.fullAmount,
-                            });
-        
-                            if(fromDate && toDate){
-                                const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-                                return dbDate >= fromDate && dbDate <= toDate;
-                            }
-                            else{
-                                return data.name;
-                            }
-                        }
-                        else{
-                            Object.assign(data, {
-                                transactionAmount: data.totalDebit,
-                            });
-        
-                            if(fromDate && toDate){
-                                const dbDate = moment(data.journalDate).format('YYYY-MM-DD')
-                                return dbDate >= fromDate && dbDate <= toDate;
-                            }
-                            else{
-                                return data.name;
-                            }
+          if (filteredInputList.length > 0) {
+            return {
+              ...receipt,
+              trxTotalDebit: 0,
+              trxTotalCredit: parseInt(totalAmount, 10),
+              balance: 0,
+            };
+          }
+        });
 
-                        }
-                    }
-
-                }
-            })
-           
-            dbAllEntries = dbAllEntries.concat(dbAll);
-        }
-        
-        // Date filter
-        dbAllEntries.sort((a, b) => new Date(a.date) - new Date(b.date));
-        setNewEntry(dbAllEntries)
+      
+        filteredTrx = filteredTrx.concat( dbCreditSalesInvoices, dbReceipts, dbCreditNotes, dbPaymentVoucher);
+        setFilteredTrx(filteredTrx);
+      }
     }
 
 
@@ -209,58 +198,75 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
             </div>
         </div>
         <div className="md:col-span-2">
-            <form method="POST">
-                <div className="overflow-hidden shadow sm:rounded-md">
+          <form method="POST">
+            <div className="overflow-hidden shadow sm:rounded-md">
 
-                    <div className="overflow-x-auto shadow-sm">
-                        <table className="w-full text-sm text-left text-gray-500 ">
-                            <thead className="text-xs text-gray-700 uppercase bg-gray-50">
-                                <tr>
-                                    <th scope="col" className="px-6 py-3">
-                                        Voucher No
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Name
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Date
-                                    </th>
-                                    <th scope="col" className="px-6 py-3">
-                                        Amount
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
+              <div className="overflow-x-auto shadow-sm">
+                <table className="w-full text-sm text-left text-gray-500 ">
+                  <thead className="text-xs text-gray-700 uppercase bg-gray-50">
+                    <tr>
+                      <th scope="col" className="px-6 py-3">
+                          Voucher No
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                          Name
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                          Date
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                          Debit
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                          Credit
+                      </th>
+                      <th scope="col" className="px-6 py-3">
+                          Balance
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
 
-                                {/* All Vouchers */}
-                                {newEntry.map((item, index) => {
+                    {/* All Vouchers */}
+                    {filteredTrx.map((item, index) => {
 
-                                    return <tr key={index} className="bg-white border-b hover:bg-gray-50">
-                                        <td className="px-6 py-3">
-                                            {item.journalNo ? item.journalNo: item.billNo}
-                                        </td>
-                                        <td className="px-6 py-3 text-blue-700 font-bold">
-                                            {item.name}
-                                        </td>
-                                        
-                                        <td className="px-6 py-3">
-                                            {item.date 
-                                                ? moment(item.date).utc().format('DD-MM-YYYY')
-                                                : moment(item.journalDate).utc().format('DD-MM-YYYY')
-                                            }
-                                        </td>
-                                        <td className="px-6 py-3">
-                                            {parseInt(item.transactionAmount).toLocaleString()}
-                                        </td>
-                                        
-                                    </tr>
-                                })}
-                            </tbody>
-                        </table>
-                        { newEntry.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
-                    </div>
-                </div>
-            </form>
+                        let previousBalance = 0;
+                        filteredTrx.forEach((item) => {
+                          item.balance = previousBalance + item.trxTotalDebit - item.trxTotalCredit;
+                          previousBalance = item.balance;
+                        });
+
+                        return <tr key={index} className="bg-white border-b hover:bg-gray-50">
+                          <td className="px-6 py-3">
+                              {item.journalNo ? item.journalNo: item.billNo}
+                          </td>
+                          <td className="px-6 py-3 text-blue-700 font-bold">
+                              {item.name}
+                          </td>
+                          
+                          <td className="px-6 py-3">
+                            {item.date 
+                              ? moment(item.date).utc().format('DD-MM-YYYY')
+                              : moment(item.journalDate).utc().format('DD-MM-YYYY')
+                            }
+                          </td>
+                          <td className="px-6 py-3">
+                            {parseInt(item.trxTotalDebit).toLocaleString()}
+                          </td>
+                          <td className="px-6 py-3">
+                            {parseInt(item.trxTotalCredit).toLocaleString()}
+                          </td>
+                          <td className="px-6 py-3">
+                            {parseInt(item.balance).toLocaleString()}
+                          </td>
+                        </tr>
+                    })}
+                  </tbody>
+                </table>
+                { filteredTrx.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
+              </div>
+            </div>
+          </form>
         </div>
     </div>
 
@@ -272,39 +278,39 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
 }
 
 export async function getServerSideProps() {
-    if (!mongoose.connections[0].readyState) {
-        mongoose.set("strictQuery", false);
-        await mongoose.connect(process.env.MONGO_URI)
+  if (!mongoose.connections[0].readyState) {
+    mongoose.set("strictQuery", false);
+    await mongoose.connect(process.env.MONGO_URI)
+  }
+  let dbJournalVoucher = await JournalVoucher.find()
+  let dbContacts = await Contact.find()
+
+  let dbCreditSalesInvoice = await CreditSalesInvoice.find()
+  let dbSalesInvoice = await SalesInvoice.find()
+  let dbPurchaseInvoice = await PurchaseInvoice.find()
+  let dbDebitNote = await DebitNote.find()
+  let dbCreditNote = await CreditNote.find()
+  let dbReceipts = await ReceiptVoucher.find()
+  let dbPaymentVoucher = await PaymentVoucher.find()
+  let dbExpensesVoucher = await Expenses.find()
+
+
+  // Pass data to the page via props
+  return {
+    props: {
+      dbJournalVoucher: JSON.parse(JSON.stringify(dbJournalVoucher)),
+      dbContacts: JSON.parse(JSON.stringify(dbContacts)),
+
+      dbCreditSalesInvoices: JSON.parse(JSON.stringify(dbCreditSalesInvoice)),
+      dbSalesInvoice: JSON.parse(JSON.stringify(dbSalesInvoice)),
+      dbPurchaseInvoice: JSON.parse(JSON.stringify(dbPurchaseInvoice)),
+      dbDebitNote: JSON.parse(JSON.stringify(dbDebitNote)),
+      dbCreditNotes: JSON.parse(JSON.stringify(dbCreditNote)),
+      dbReceipts: JSON.parse(JSON.stringify(dbReceipts)),
+      dbPaymentVoucher: JSON.parse(JSON.stringify(dbPaymentVoucher)),
+      dbExpensesVoucher: JSON.parse(JSON.stringify(dbExpensesVoucher)),
     }
-    let dbJournalVoucher = await JournalVoucher.find()
-    let dbContacts = await Contact.find()
-
-    let dbCreditSalesInvoice = await CreditSalesInvoice.find()
-    let dbSalesInvoice = await SalesInvoice.find()
-    let dbPurchaseInvoice = await PurchaseInvoice.find()
-    let dbDebitNote = await DebitNote.find()
-    let dbCreditNote = await CreditNote.find()
-    let dbReceiptVoucher = await ReceiptVoucher.find()
-    let dbPaymentVoucher = await PaymentVoucher.find()
-    let dbExpensesVoucher = await Expenses.find()
-
-
-    // Pass data to the page via props
-    return {
-        props: {
-            dbJournalVoucher: JSON.parse(JSON.stringify(dbJournalVoucher)),
-            dbContacts: JSON.parse(JSON.stringify(dbContacts)),
-
-            dbCreditSalesInvoice: JSON.parse(JSON.stringify(dbCreditSalesInvoice)),
-            dbSalesInvoice: JSON.parse(JSON.stringify(dbSalesInvoice)),
-            dbPurchaseInvoice: JSON.parse(JSON.stringify(dbPurchaseInvoice)),
-            dbDebitNote: JSON.parse(JSON.stringify(dbDebitNote)),
-            dbCreditNote: JSON.parse(JSON.stringify(dbCreditNote)),
-            dbReceiptVoucher: JSON.parse(JSON.stringify(dbReceiptVoucher)),
-            dbPaymentVoucher: JSON.parse(JSON.stringify(dbPaymentVoucher)),
-            dbExpensesVoucher: JSON.parse(JSON.stringify(dbExpensesVoucher)),
-        }
-    }
+  }
 }
 
 export default ContactTransactionSummary
