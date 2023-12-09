@@ -24,7 +24,6 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
 
     const [fromDate, setFromDate] = useState('')
     const [toDate, setToDate] = useState('')
-    const [newBalance, setNewBalance] = useState([])
 
     const [grossProfit, setGrossProfit] = useState(0);
     const [profitFromOperations, setProfitFromOperations] = useState(0)
@@ -33,7 +32,6 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
     const [fDate, setFDate] = useState('')
     const [tDate, setTDate] = useState('')
 
-    const [isCash, setIsCash] = useState(false)
     const [filteredCharts, setFilteredCharts] = useState([])
     const [sortedDbCharts, setSortedDbCharts] = useState([])
     

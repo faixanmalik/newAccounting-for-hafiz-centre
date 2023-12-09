@@ -19,7 +19,7 @@ import PaymentVoucher from 'models/PaymentVoucher';
 import Expenses from 'models/Expenses';
 import Head from 'next/head';
 
-const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVoucher, dbReceipts, dbDebitNote, dbCreditNotes, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoices, dbJournalVoucher, dbCharts,  dbContacts }) => {
+const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVoucher, dbReceipts, dbDebitNote, dbCreditNotes, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoices,  dbContacts }) => {
 
     // Cash Receipt
     const [fromDate, setFromDate] = useState('')
@@ -31,7 +31,7 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
 
     useEffect(() => {
         let filteredContacts = dbContacts.filter((item)=>{
-            return item.userEmail === userEmail;
+          return item.userEmail === userEmail;
         })
         setFilteredContacts(filteredContacts)
     }, [userEmail])
@@ -45,7 +45,7 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
 
         // Credit Sales Invoice
         dbCreditSalesInvoices = dbCreditSalesInvoices
-        .filter((item) => item.name === `${contact}`)
+        .filter((item) => item.name === `${contact}` && item.userEmail === userEmail )
         .map((item) => ({
           ...item,
           journalNo: item.billNo,
@@ -56,7 +56,7 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
 
         // Credit Note Invoice
         dbCreditNotes = dbCreditNotes
-        .filter((item) => item.name === `${contact}`)
+        .filter((item) => item.name === `${contact}` && item.userEmail === userEmail)
         .map((item) => ({
           ...item,
           trxTotalDebit: 0,
@@ -67,7 +67,7 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
 
         // Payment Voucher
         dbPaymentVoucher = dbPaymentVoucher
-        .filter((item) => item.name === `${contact}`)
+        .filter((item) => item.name === `${contact}` && item.userEmail === userEmail)
         .map((item) => ({
           ...item,
           trxTotalDebit: parseInt(item.totalPaid, 10),
@@ -77,7 +77,7 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
 
         // Receipts Voucher
         dbReceipts = dbReceipts
-        .filter((receipt) => receipt.name === `${contact}`)
+        .filter((receipt) => receipt.name === `${contact}` && item.userEmail === userEmail)
         .map((receipt) => {
           const filteredInputList = receipt.inputList;
           const totalAmount = filteredInputList.reduce((total, item) => total + parseInt(item.paid), 0);
@@ -98,12 +98,6 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
       }
     }
 
-
-
-
-
-
-
     const handleChange = (e) => {
         if (e.target.name === 'contact') {
             setContact(e.target.value)
@@ -116,8 +110,6 @@ const ContactTransactionSummary = ({ userEmail, dbExpensesVoucher, dbPaymentVouc
         }
     }
     
-
-
 
     return (
     <>

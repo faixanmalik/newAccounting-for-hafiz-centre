@@ -24,7 +24,7 @@ import Head from 'next/head';
     return classes.filter(Boolean).join(' ')
   }
 
-  const Expenses = ({ userEmail,  dbVouchers, dbAccounts, dbPaymentMethod, dbContacts, dbTaxRate, dbProject }) => {
+  const Expenses = ({ userEmail, dbVouchers, dbAccounts, dbPaymentMethod, dbContacts, dbTaxRate, dbProject }) => {
     
     const [open, setOpen] = useState(false)
     const [id, setId] = useState('')
