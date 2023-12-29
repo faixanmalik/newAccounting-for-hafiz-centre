@@ -76,32 +76,32 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                     if(data.type === 'Product'){
                         let calculateDebitAmount = data.availableQty * data.costPrice;
                         let debitAmount = calculateDebitAmount;
-                        let creditAmount = 0;
+                        let creditAmount = calculateDebitAmount;
                         let debitAccount = 'Stock';
-                        let creditAccount = '';
+                        let creditAccount = 'Retained Earnings';
     
-                        // if(account === debitAccount || account === creditAccount){
-                        //     Object.assign(data, {
-                        //         coaAccount: account,
-                        //         journalNo: data.code,
-                        //         product: data.name,
-                        //         debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                        //         debitAccount: account === debitAccount ? debitAccount : '',
-                        //         credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                        //         creditAccount: account === creditAccount ? creditAccount : '',
-                        //     });
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(data, {
+                                coaAccount: account,
+                                journalNo: data.code,
+                                product: data.name,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
     
-                        //     if(fromDate && toDate){
-                        //         let checkDbDate = data.journalDate? data.journalDate : data.date;
-                        //         const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                        //         if (dbDate >= fromDate && dbDate <= toDate) {
-                        //             return data;
-                        //         }
-                        //     }
-                        //     else {
-                        //         return data;
-                        //     }
-                        // }
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return data;
+                                }
+                            }
+                            else {
+                                return data;
+                            }
+                        }
     
                     }
                     else if(data.type === 'PurchaseInvoice'){
@@ -843,18 +843,6 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                             {/* All Vouchers */}
                             {sortedDbCharts.map((item,index) => {
 
-                                const administrationIndex = sortedDbCharts.findIndex((obj) => obj.subAccount === 'Administration Expenses');
-                                const financeIndex = sortedDbCharts.findIndex((obj) => obj.subAccount === 'Finance Cost');
-
-                                let lastIndex = -1;
-
-                                for (let i = sortedDbCharts.length - 1; i >= 0; i--) {
-                                    if (sortedDbCharts[i].subAccount === 'Finance Cost') {
-                                        lastIndex = i;
-                                        break;
-                                    }
-                                }
-                                
                             return <tbody key={index}>
                                 <tr className="bg-white border-b hover:bg-gray-50">
                                     <td className="px-6 py-3 font-semibold">
@@ -873,34 +861,28 @@ const ProfitAndLoss = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
                                     }
                                 </tr>
 
-                            
-                                {index === administrationIndex - 1
-                                ? <tr className="flex float-right -mr-96 bg-slate-100 px-4 py-3 sm:px-6">
-                                    <td className={`text-sm font-bold ${grossProfit > 0 ? 'text-green-700' : 'text-red-700' } -mr-32`}>Gross {grossProfit > 0 ? 'Profit' : 'loss'}:
-                                        <span className='font-bold ml-1'>${ grossProfit.toLocaleString() }</span>
-                                    </td>
-                                </tr>: ''}
-
-
-                                {index === financeIndex - 1
-                                ? <tr className="flex float-right -mr-96 bg-slate-100 px-4 py-3 sm:px-6">
-                                    <td className={`text-sm font-bold ${profitFromOperations > 0 ? 'text-green-700' : 'text-red-700' } -mr-32`}>{profitFromOperations > 0 ? 'Profit' : 'loss'} From Operations:
-                                        <span className='font-bold ml-1'>${ profitFromOperations.toLocaleString() }</span>
-                                    </td>
-                                </tr>: ''}
-
-
-                                {index === lastIndex
-                                ? <tr className="flex float-right -mr-96 bg-slate-100 px-4 py-3 sm:px-6">
-                                    <td className={`text-sm font-bold ${profitBeforeTax > 0 ? 'text-green-700' : 'text-red-700'  } -mr-32`}>Net {profitBeforeTax > 0 ? 'Profit' : 'loss'}:
-                                        <span className='font-bold ml-1'>${ profitBeforeTax.toLocaleString() }</span>
-                                    </td>
-                                </tr>: ''}
-
                             </tbody>
                             })}
 
                         </table>
+
+                        <div className='w-11/12 py-4 space-y-3'>
+
+                          <div className={`text-sm border-b-2 border-gray-700 text-end font-bold ${grossProfit > 0 ? 'text-green-700' : 'text-red-700'}`}>
+                            Gross {grossProfit > 0 ? 'Profit' : 'Loss'}:
+                            <span className='font-bold ml-1'>${grossProfit.toLocaleString()}</span>
+                          </div>
+
+                          <div className={`text-sm border-b-2 border-gray-700 text-end font-bold ${profitFromOperations > 0 ? 'text-green-700' : 'text-red-700'}`}>
+                            {profitFromOperations > 0 ? 'Profit' : 'Loss'} From Operations:
+                             <span className='font-bold ml-1'>${profitFromOperations.toLocaleString()}</span>
+                          </div>
+
+                          <div className={`text-sm border-b-2 border-gray-700 text-end font-bold ${profitBeforeTax > 0 ? 'text-green-700' : 'text-red-700'}`}>
+                            Net {profitBeforeTax > 0 ? 'Profit' : 'Loss'}:
+                            <span className='font-bold ml-1'>${profitBeforeTax.toLocaleString()}</span>
+                          </div>
+                        </div>
 
                         { sortedDbCharts.length === 0  ? <h1 className='text-red-600 text-center text-base my-3'>No data found!</h1> : ''}
                     </div>

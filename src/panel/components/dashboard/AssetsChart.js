@@ -9,9 +9,7 @@ const AssetsChart = ({ dbProducts, dbPaymentMethod, dbExpensesVoucher, dbPayment
 
     const [monthlyAssets, setMonthlyAssets] = useState([])
     const [monthlyLiabilities, setMonthlyLiabilities] = useState([])
-    const [isCash, setIsCash] = useState(false)
     const [userEmail, setUserEmail] = useState('')
-
     const [filteredCharts, setFilteredCharts] = useState([])
 
     useEffect(() => {

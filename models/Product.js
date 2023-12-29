@@ -8,6 +8,8 @@ const ProductSchema = new mongoose.Schema({
     costPrice: {type: Number},
     desc: {type: String},
     type: {type: String, default: 'Product'},
+    isLocked:{type: Boolean, default: false}
+    
   },{timestamps:true});
 
 mongoose.models={}

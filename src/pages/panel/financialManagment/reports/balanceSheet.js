@@ -81,32 +81,32 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                     if(data.type === 'Product'){
                         let calculateDebitAmount = data.availableQty * data.costPrice;
                         let debitAmount = calculateDebitAmount;
-                        let creditAmount = 0;
+                        let creditAmount = calculateDebitAmount;
                         let debitAccount = 'Stock';
-                        let creditAccount = '';
+                        let creditAccount = 'Retained Earnings';
     
-                        // if(account === debitAccount || account === creditAccount){
-                        //     Object.assign(data, {
-                        //         coaAccount: account,
-                        //         journalNo: data.code,
-                        //         product: data.name,
-                        //         debit: account === debitAccount ? parseInt(debitAmount) : 0,
-                        //         debitAccount: account === debitAccount ? debitAccount : '',
-                        //         credit: account === creditAccount ? parseInt(creditAmount) : 0,
-                        //         creditAccount: account === creditAccount ? creditAccount : '',
-                        //     });
+                        if(account === debitAccount || account === creditAccount){
+                            Object.assign(data, {
+                                coaAccount: account,
+                                journalNo: data.code,
+                                product: data.name,
+                                debit: account === debitAccount ? parseInt(debitAmount) : 0,
+                                debitAccount: account === debitAccount ? debitAccount : '',
+                                credit: account === creditAccount ? parseInt(creditAmount) : 0,
+                                creditAccount: account === creditAccount ? creditAccount : '',
+                            });
     
-                        //     if(fromDate && toDate){
-                        //         let checkDbDate = data.journalDate? data.journalDate : data.date;
-                        //         const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
-                        //         if (dbDate >= fromDate && dbDate <= toDate) {
-                        //             return data;
-                        //         }
-                        //     }
-                        //     else {
-                        //         return data;
-                        //     }
-                        // }
+                            if(fromDate && toDate){
+                                let checkDbDate = data.journalDate? data.journalDate : data.date;
+                                const dbDate = moment(checkDbDate).format('YYYY-MM-DD')
+                                if (dbDate >= fromDate && dbDate <= toDate) {
+                                    return data;
+                                }
+                            }
+                            else {
+                                return data;
+                            }
+                        }
     
                     }
                     else if(data.type === 'PurchaseInvoice'){
@@ -950,20 +950,6 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                             {/* All Vouchers */}
                             {sortedDbCharts.map((item,index) => {
 
-                                
-                                const equityIndex = sortedDbCharts.findIndex((obj) => obj.subAccount === 'Equity');
-                                const nonCurrentLiabilitiesIndex = sortedDbCharts.findIndex((obj) => obj.subAccount === 'Non-Current Liability');
-                                  
-
-                                let lastIndex = -1;
-
-                                for (let i = sortedDbCharts.length - 1; i >= 0; i--) {
-                                    if (sortedDbCharts[i].subAccount === 'Current Liability') {
-                                        lastIndex = i;
-                                        break;
-                                    }
-                                }
-
 
                             return <tbody key={index}>
                                 <tr className="bg-white border-b hover:bg-gray-50">
@@ -974,47 +960,22 @@ const BalanceSheet = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouche
                                         {item.subAccount}
                                     </td>
                                     <td className="px-6 py-3 text-blue-700 font-bold">
-                                        {item.accountName === 'Retained Earnings'
-                                            ? profitAfterTax.toLocaleString()
-                                            : (
-                                                item.pnlBalance > 0 
-                                                    ? <span className="text-blue-700 font-bold">{item.pnlBalance.toLocaleString()}</span>
-                                                    : <span className="text-red-700 font-bold">{item.pnlBalance.toLocaleString()}</span>
-                                            )
+                                        {
+                                        item.pnlBalance > 0 
+                                            ? <span className="text-blue-700 font-bold">{item.pnlBalance.toLocaleString()}</span>
+                                            : <span className="text-red-700 font-bold">{item.pnlBalance.toLocaleString()}</span>
                                         }
+                                        
                                     </td>
 
                                 </tr>
-
-                            
-                                {index === equityIndex - 1
-                                ? <tr className="flex float-right -mr-96 bg-slate-100 px-4 py-3 sm:px-6">
-                                    <td className={`text-sm ${totalAssets > 0 ? 'text-green-700' : 'text-red-700' } -mr-32 font-bold`}>Total Assets:
-                                        <span className='font-bold ml-1'>${ totalAssets.toLocaleString() }</span>
-                                    </td>
-                                </tr>: ''}
-
-                                {index === nonCurrentLiabilitiesIndex - 1
-                                ? <tr className="flex float-right -mr-96 bg-slate-100 px-4 py-3 sm:px-6">
-                                    <td className={`text-sm ${totalEquity > 0 ? 'text-green-700' : 'text-red-700' } -mr-32 font-bold`}>Total Equity:
-                                        <span className='font-bold ml-1'>${ totalEquity.toLocaleString() }</span>
-                                    </td>
-                                </tr>: ''}
-
-                                {index === lastIndex
-                                ? <tr className="flex float-right -mr-96 bg-slate-100 px-4 py-3 sm:px-6">
-                                    <td className={`text-sm ${totalLiabilities > 0 ? 'text-red-700' : 'text-green-700' } -mr-32 font-bold`}>Total Liabilities:
-                                        <span className='font-bold ml-1'>${ totalLiabilities.toLocaleString() }</span>
-                                    </td>
-                                </tr>: ''}
-
 
                             </tbody>
                             })}
                         </table>
 
 
-                            {sortedDbCharts.length != 0 ? <div className="flex justify-around border-t-2 border-slate-200 pt-5 bg-slate-100 p-4 text-right sm:px-6">
+                            {sortedDbCharts.length != 0 ? <div className="flex justify-around border-t-2 border-slate-200 bg-slate-100 p-3 text-right sm:px-6">
                                 <h1 className={`text-sm ${totalAssets === totalEquityAndLiabilities ? 'text-green-700' : 'text-red-700'} ml-auto mr-32`}>Total Assets: 
                                     <span className={`font-bold ml-1 `}>${totalAssets.toLocaleString()}</span>
                                 </h1>
