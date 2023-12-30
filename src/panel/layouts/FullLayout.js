@@ -30,7 +30,7 @@ const FullLayout = ({ children }) => {
           <Header showMobmenu={() => showMobilemenu()} />
 
           {/********Middle Content**********/}
-          <Container className="p-4 wrapper" fluid>
+          <Container className="pt-3 wrapper" fluid>
             <div>{children}</div>
           </Container>
         </div>
