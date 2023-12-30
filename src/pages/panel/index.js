@@ -22,6 +22,8 @@ import PaymentVoucher from 'models/PaymentVoucher';
 import Expenses from 'models/Expenses';
 import { useEffect, useState } from "react";
 import PaymentMethod from "models/PaymentMethod";
+import SalesGraph from "@/panel/components/dashboard/SalesGraph";
+import AssetsGraph from "@/panel/components/dashboard/AssetsGraph";
 
 
 export default function Home({ dbPaymentMethod, customer, dbProducts, supplier, employees, dbExpensesVoucher, dbPaymentVoucher, dbReceiptVoucher, dbDebitNote, dbCreditNote, dbPurchaseInvoice, dbSalesInvoice, dbCreditSalesInvoice, dbJournalVoucher, dbCharts }) {
@@ -139,6 +141,19 @@ export default function Home({ dbPaymentMethod, customer, dbProducts, supplier, 
             />
           </Col>
         </Row>
+
+
+
+        {/* <Row>
+          <Col sm="6" lg="6">
+            <AssetsGraph userEmail={userEmail} />
+          </Col> 
+          <Col sm="6" lg="6">
+            <SalesGraph userEmail={userEmail} />
+          </Col>
+        </Row> */}
+
+
         {/***Sales & Feed***/}
         <Row>
           <Col sm="12" lg="12">

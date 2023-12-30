@@ -177,11 +177,11 @@ const Sidebar2 = ({ showMobilemenu }) => {
         </Dialog>
       </Transition.Root>
 
-      <div className="pt-4 mt-2">
+      <div className="pt-1 mt-2">
 
       <Sidebar width='250px'>
       <Menu className='bg-white'>
-        <div className='justify-center flex mb-3'>
+        <div className='justify-center flex mb-2'>
           <button onClick={() => { setOpen(true) }} className='bg-blue-800 hover:bg-blue-900 mb-2 font-medium text-white px-24 py-2 rounded-lg'>New</button>
         </div>
         
