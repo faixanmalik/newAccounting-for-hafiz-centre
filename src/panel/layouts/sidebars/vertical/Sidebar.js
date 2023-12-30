@@ -38,9 +38,9 @@ const Sidebar2 = ({ showMobilemenu }) => {
   
 
   return (
-    <div className="p-3">
-      <div className="d-flex align-items-center">
-        <Logo />
+    <div className="w-full">
+      <div className="py-[17px] flex justify-center">
+        <Logo className/>
         <button className="text-2xl ml-6 items-center lg:hidden" onClick={showMobilemenu} >
           <AiOutlineCloseCircle />
         </button>
@@ -179,7 +179,7 @@ const Sidebar2 = ({ showMobilemenu }) => {
 
       <div className="pt-4 mt-2">
 
-      <Sidebar width='255px' className='-ml-3'>
+      <Sidebar width='250px'>
       <Menu className='bg-white'>
         <div className='justify-center flex mb-3'>
           <button onClick={() => { setOpen(true) }} className='bg-blue-800 hover:bg-blue-900 mb-2 font-medium text-white px-24 py-2 rounded-lg'>New</button>

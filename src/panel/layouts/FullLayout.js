@@ -25,7 +25,7 @@ const FullLayout = ({ children }) => {
         </aside>
         {/********Content Area**********/}
 
-        <div className="contentArea bg-slate-100">
+        <div className="contentArea bg-[#f2f4f5]">
           {/********header**********/}
           <Header showMobmenu={() => showMobilemenu()} />
 

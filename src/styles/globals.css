@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+input {
+  color: black; /* Set text color to white */
+  background-color: white; /* Set background color to black */
+  /* Add any additional styles you need */
+}
+
+textarea{
+  color: black; /* Set text color to white */
+  background-color: white; /* Set background color to black */
+}

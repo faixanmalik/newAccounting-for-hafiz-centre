@@ -1,44 +1,19 @@
 import React from "react";
-import Link from "next/link";
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import {
-  Navbar,
-  Collapse,
-  Nav,
-  NavItem,
-  NavbarBrand,
-  UncontrolledDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
-  Dropdown,
-  Button,
-} from "reactstrap";
-import LogoWhite from "../../assets/images/logos/amplelogowhite.svg";
 import { useRouter } from "next/router";
-import { Avatar } from "@material-tailwind/react";
+import { Avatar, Menu, MenuHandler, MenuItem, MenuList } from "@material-tailwind/react";
+import useTranslation from "next-translate/useTranslation";
 
 
 const Header = ({ showMobmenu }) => {
 
 
-  const [isOpen, setIsOpen] = React.useState(false);
-  const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [user, setUser] = useState({value: null})
+  const { t } = useTranslation('panel');
   
-
-  const toggle = () => setDropdownOpen((prevState) => !prevState);
-  const Handletoggle = () => {
-    setIsOpen(!isOpen);
-  };
-
-
-
   const [businessName, setBusinessName] = useState('')
-
   const router = useRouter()
-
 
   useEffect(() => {
     const myUser = JSON.parse(localStorage.getItem('myUser'))
@@ -58,45 +33,32 @@ const Header = ({ showMobmenu }) => {
     router.push(`/login`);
   }
 
-  let headerColor = 'bg-gray-800';
-
   return (
 
-    <div className={`${headerColor} text-white px-4 py-2`}>
-
+    <div className={` bg-gradient-to-r from-gray-50 to-white shadow-inner border-b-2 border-gray-300 text-black px-4 py-2`}>
       <div className="flex justify-between items-center">
-
-        <div>
-          <h1 className="font-normal text-lg">Hey! 
-            <span className="font-medium ml-1">
-              {businessName}
-            </span>
-          </h1>
-        </div>
+        <h1 className="font-bold mt-2 text-lg">{businessName}</h1>
         <div className="flex space-x-5">
-        
-          <Dropdown isOpen={dropdownOpen} toggle={toggle} >
-             <DropdownToggle color="secondary" className="p-0">
-               <div className={`${headerColor}`} style={{ lineHeight: "0px" }}>
-                  <Avatar
-                    src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60'
-                    alt="avatar"
-                    withBorder={true}
-                    className="p-0.5"
-                  />
-               </div>
-             </DropdownToggle>
-             <DropdownMenu>
-               <DropdownItem header>Info</DropdownItem>
-               <DropdownItem href="/myaccount">Edit Profile</DropdownItem>
-               <DropdownItem divider />
-               <DropdownItem onClick={logout}>Logout</DropdownItem>
-             </DropdownMenu>
-           </Dropdown>
+
+          <Menu>
+            <MenuHandler>
+              <Avatar
+                src='https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fGF2YXRhcnxlbnwwfHwwfHx8MA%3D%3D&auto=format&fit=crop&w=600&q=60'
+                alt="avatar"
+                withBorder={true}
+                className="p-0.5 cursor-pointer"
+              />
+            </MenuHandler>
+            <MenuList className="px-1 py-2">
+              <MenuItem>{t('info')}</MenuItem>
+              <MenuItem href="/myaccount">{t('editProfile')}</MenuItem>
+              <hr className="my-1" />
+              <MenuItem onClick={logout}>{t('logout')}</MenuItem>
+            </MenuList>
+          </Menu>
+          
         </div>
-
       </div>
-
     </div>
   );
 };
