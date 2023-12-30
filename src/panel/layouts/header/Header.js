@@ -3,14 +3,12 @@ import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import { Avatar, Menu, MenuHandler, MenuItem, MenuList } from "@material-tailwind/react";
-import useTranslation from "next-translate/useTranslation";
 
 
 const Header = ({ showMobmenu }) => {
 
 
   const [user, setUser] = useState({value: null})
-  const { t } = useTranslation('panel');
   
   const [businessName, setBusinessName] = useState('')
   const router = useRouter()
@@ -50,10 +48,10 @@ const Header = ({ showMobmenu }) => {
               />
             </MenuHandler>
             <MenuList className="px-1 py-2">
-              <MenuItem>{t('info')}</MenuItem>
-              <MenuItem href="/myaccount">{t('editProfile')}</MenuItem>
+              <MenuItem>Info</MenuItem>
+              <MenuItem href="/myaccount">Edit Profile</MenuItem>
               <hr className="my-1" />
-              <MenuItem onClick={logout}>{t('logout')}</MenuItem>
+              <MenuItem onClick={logout}>Logout</MenuItem>
             </MenuList>
           </Menu>
           
