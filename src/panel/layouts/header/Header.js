@@ -33,7 +33,7 @@ const Header = ({ showMobmenu }) => {
 
   return (
 
-    <div className={` bg-gradient-to-r from-gray-50 to-white shadow-inner border-b-2 border-gray-300 text-black px-4 py-2`}>
+    <div className={` bg-gradient-to-r from-gray-50 to-white shadow-inner overflow-hidden border-b-2 border-gray-300 text-black px-4 py-2`}>
       <div className="flex justify-between items-center">
         <h1 className="font-bold mt-2 text-lg">{businessName}</h1>
         <div className="flex space-x-5">
