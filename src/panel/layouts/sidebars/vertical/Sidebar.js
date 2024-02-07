@@ -7,7 +7,7 @@ import { Menu, MenuItem, SubMenu, Sidebar } from 'react-pro-sidebar';
 
 import { AiOutlineCloseCircle, AiOutlineContacts, AiOutlineUser } from 'react-icons/ai'
 import { BiHomeAlt, BiUserCheck } from 'react-icons/bi'
-import {MdPayment, MdProductionQuantityLimits} from 'react-icons/md'
+import { MdOutlineInventory2, MdPayment, MdProductionQuantityLimits} from 'react-icons/md'
 import {IoPieChartSharp, IoBusinessOutline} from 'react-icons/io5'
 import {HiOutlineCash, HiOutlineDocumentReport, HiOutlineReceiptTax} from 'react-icons/hi'
 
@@ -209,15 +209,20 @@ const Sidebar2 = ({ showMobilemenu }) => {
             <MenuItem href="/panel/businessSetup/contactList" icon={<AiOutlineContacts className='text-lg'/>} className={ location === '/panel/businessSetup/contactList' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Contact List
             </MenuItem>
-            <MenuItem href="/panel/businessSetup/productAndServices" icon={<MdProductionQuantityLimits className='text-lg'/>} className={ location === '/panel/businessSetup/productAndServices' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
-              Product and Services
-            </MenuItem>
             <MenuItem href="/panel/businessSetup/bankAccount" icon={<BsBank className='text-lg'/>} className={ location === '/panel/businessSetup/bankAccounts' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Bank Accounts
             </MenuItem>
             <MenuItem href="/panel/businessSetup/paymentMethod" icon={<MdPayment className='text-lg'/>} className={ location === '/panel/businessSetup/paymentMethod' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Payment Method
             </MenuItem>
+          </SubMenu>
+
+          <SubMenu label="Inventory Module" icon={<MdOutlineInventory2 className='text-lg'/>}>
+            
+            <MenuItem href="/panel/inventoryModule/productAndServices" icon={<MdProductionQuantityLimits className='text-lg'/>} className={ location === '/panel/businessSetup/productAndServices' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
+              Products
+            </MenuItem>
+            
           </SubMenu>
 
 

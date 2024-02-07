@@ -338,9 +338,6 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                             Available Qty
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Cost Price
-                        </th>
-                        <th scope="col" className="px-6 py-3">
                             View / Edit
                         </th>
                     </tr>
@@ -365,9 +362,6 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                     </td>
                     <td className="px-6 py-3">
                       {item.availableQty}
-                    </td>
-                    <td className="px-6 py-3">
-                      {item.costPrice.toLocaleString()}
                     </td>
                     <td className="flex items-center px-6 mr-5 py-4 space-x-4">
                       <button type='button' onClick={()=>{getData(item._id)}} 
