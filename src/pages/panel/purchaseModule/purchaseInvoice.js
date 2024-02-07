@@ -98,7 +98,6 @@ import Head from 'next/head';
     const [reference, setReference] = useState('')
     const [dueDate, setDueDate] = useState('')
     const [fullAmount, setFullAmount] = useState(0)
-    const [fullTax, setFullTax] = useState(0)
     const [totalAmount, setTotalAmount] = useState(0)
     const [discount, setDiscount] = useState('')
     const [billStatus, setBillStatus] = useState('unpaid')
@@ -166,12 +165,9 @@ import Head from 'next/head';
       else if(e.target.name === 'fullAmount'){
         setFullAmount(e.target.value)
       }
-      else if(e.target.name === 'fullTax'){
-        setFullTax(e.target.value)
-      }
       else if(e.target.name === 'discount'){
         setDiscount(e.target.value)
-        setTotalAmount((fullAmount + fullTax) - e.target.value)
+        setTotalAmount((fullAmount) - e.target.value)
       }
       else if(e.target.name === 'totalAmount'){
         setTotalAmount(e.target.value)
@@ -190,7 +186,7 @@ import Head from 'next/head';
       });
 
       // fetch the data from form to makes a file in local system
-      const data = { userEmail, phoneNo, email, discount, amountPaid, amountReceived, billStatus, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path:'PurchaseInvoice' };
+      const data = { userEmail, phoneNo, email, discount, amountPaid, amountReceived, billStatus, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, totalAmount, attachment, path:'PurchaseInvoice' };
 
       let res = await fetch(`/api/addEntry`, {
         method: 'POST',
@@ -221,10 +217,6 @@ import Head from 'next/head';
         setInputList(updatedInputList);
     };
 
-    function calculateTax(percentage, whole) {
-      return (percentage / 100) * whole;
-    }
-
     // JV
     const change = (e, index) => {
       const values = [...inputList];
@@ -232,12 +224,9 @@ import Head from 'next/head';
 
       if (e.target.name === 'amount' || e.target.name === 'taxRate') {
         const amount = parseFloat(e.target.name === 'amount' ? e.target.value : values[index].amount);
-        const tax = parseFloat(e.target.name === 'taxRate' ? e.target.value : values[index].taxRate);
-        const taxRate = calculateTax(amount, tax);
+        const qty = parseFloat(e.target.name === 'qty' ? e.target.value : values[index].qty);
         
-        const totalAmount = amount + taxRate;
-
-        values[index].taxAmount = isNaN(taxRate) ? 0 : taxRate;
+        const totalAmount = amount * qty;
         values[index].totalAmountPerItem = isNaN(totalAmount) ? 0 : totalAmount;
         setInputList(values);
       } else {
@@ -248,21 +237,13 @@ import Head from 'next/head';
       // Full Amount
       var fullAmount = 0;
       for (let index = 0; index < inputList.length; index++) {
-        fullAmount += parseInt(inputList[index].amount);
+        fullAmount += parseInt(inputList[index].amount) * parseInt(inputList[index].qty);
       }
       setFullAmount(fullAmount);
 
 
-      // Full Tax
-      var fullTax = 0;
-      for (let index = 0; index < inputList.length; index++) {
-        fullTax += parseInt(inputList[index].taxAmount);
-      }
-      setFullTax(fullTax);
-
       // total Amount
-      let totalAmount = fullAmount + fullTax;
-      setTotalAmount(totalAmount);
+      setTotalAmount(fullAmount);
     }
 
     const editEntry = async(id)=>{
@@ -273,7 +254,7 @@ import Head from 'next/head';
         item.billNo = billNo;
       });
 
-      const data = { id, phoneNo, email, discount, amountPaid, amountReceived, billStatus, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path:'PurchaseInvoice' };
+      const data = { id, phoneNo, email, discount, amountPaid, amountReceived, billStatus, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, totalAmount, attachment, path:'PurchaseInvoice' };
       
       let res = await fetch(`/api/editEntry`, {
         method: 'POST',
@@ -338,7 +319,6 @@ import Head from 'next/head';
         setName(response.data.name)
         setAttachment(response.data.attachment.data)
         setFullAmount(response.data.fullAmount)
-        setFullTax(response.data.fullTax)
         setDiscount(response.data.discount)
         setTotalAmount(response.data.totalAmount)
         setPhoneNo(response.data.phoneNo)
@@ -399,7 +379,6 @@ import Head from 'next/head';
                 setMemo('')
                 setAttachment('')
                 setFullAmount(0)
-                setFullTax(0)
                 setTotalAmount(0)
                 setPhoneNo(0)
                 setDiscount('')
@@ -534,7 +513,7 @@ import Head from 'next/head';
         <div className="fixed inset-0 z-10 overflow-y-auto">
           <div className="flex min-h-full items-stretch justify-center text-center md:items-center md:px-2 lg:px-4">
             <Transition.Child as={Fragment} enter="ease-out duration-300" enterFrom="opacity-0 translate-y-4 md:translate-y-0 md:scale-95" enterTo="opacity-100 translate-y-0 md:scale-100" leave="ease-in duration-200" leaveFrom="opacity-100 translate-y-0 md:scale-100" leaveTo="opacity-0 translate-y-4 md:translate-y-0 md:scale-95">
-              <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-6xl">
+              <Dialog.Panel className="flex w-full transform text-left text-base transition md:my-8 md:max-w-2xl md:px-4 lg:max-w-5xl">
                 <div className="relative flex w-full items-center overflow-hidden bg-white px-3 pt-14 pb-8 shadow-2xl sm:px-6 sm:pt-8 md:p-6 lg:p-8">
                   <button type='button' className="absolute top-4 right-4 text-gray-400 hover:text-gray-500 sm:top-8 sm:right-6 md:top-6 md:right-6 lg:top-6 lg:right-8" onClick={() => setOpen(false)}>
                     <span className="sr-only">Close</span>
@@ -705,12 +684,6 @@ import Head from 'next/head';
                                           Amount
                                       </th>
                                       <th scope="col" className="p-2">
-                                          Tax Rate
-                                      </th>
-                                      <th scope="col" className="p-2">
-                                          Tax Amount
-                                      </th>
-                                      <th scope="col" className="p-2">
                                           Total
                                       </th>
                                       <th scope="col" className="p-2">
@@ -763,26 +736,7 @@ import Head from 'next/head';
                                             className="mt-1 p-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                                         />
                                       </td>
-                                      
-                                      <td className="p-2 w-1/6">
-                                        <select id="taxRate" name="taxRate" onChange={ e => change(e, index) } value={inputList.taxRate} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                          <option>select tax</option>
-                                          {filteredTaxRate.map((item, index)=>{
-                                            return <option key={index} value={item.taxRate}>{item.name}({item.taxRate}%) </option>
-                                          })}
-                                        </select>
-                                      </td>
 
-                                      <td className="p-2">
-                                        <input
-                                          type="number"
-                                          value={ inputList.taxAmount }
-                                          name="taxAmount"
-                                          id="taxAmount"
-                                          className="mt-1 p-2 cursor-not-allowed block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                          readOnly
-                                        />
-                                      </td>
 
                                       <td className="p-2">
                                         <input
@@ -821,22 +775,7 @@ import Head from 'next/head';
                                   readOnly
                                 />
                               </div>
-                              <div className="flex items-center">
-                                <label htmlFor="fullTax" className="block w-full text-sm font-medium text-gray-700">
-                                  VAT:
-                                </label>
-                                <input
-                                  type="number"
-                                  value = { fullTax }
-                                  name="fullTax"
-                                  id="fullTax"
-                                  className="mt-1 p-2 cursor-not-allowed block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
-                                  readOnly
-                                />
-                              </div>
-
-
-
+                              
 
                               <div className="flex items-center">
                                 <label htmlFor="discount" className="block w-full text-sm font-medium text-gray-700">
