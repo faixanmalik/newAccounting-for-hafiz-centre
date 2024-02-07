@@ -222,7 +222,7 @@ import Head from 'next/head';
       const values = [...inputList];
       values[index][e.target.name] = e.target.value;
 
-      if (e.target.name === 'amount' || e.target.name === 'taxRate') {
+      if (e.target.name === 'amount') {
         const amount = parseFloat(e.target.name === 'amount' ? e.target.value : values[index].amount);
         const qty = parseFloat(e.target.name === 'qty' ? e.target.value : values[index].qty);
         
