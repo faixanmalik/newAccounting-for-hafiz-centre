@@ -269,6 +269,9 @@ const Sidebar2 = ({ showMobilemenu }) => {
             <MenuItem href="/panel/financialManagment/reports/trialBalance" icon={<HiOutlineDocumentReport className='text-lg'/>} className={ location === '/panel/financialManagment/reports/trialBalance' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Trial Balance
             </MenuItem>
+            <MenuItem href="/panel/financialManagment/reports/inventoryReport" icon={<HiOutlineDocumentReport className='text-lg'/>} className={ location === '/panel/financialManagment/reports/trialBalance' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
+              Inventory Report
+            </MenuItem>
             <MenuItem href="/panel/financialManagment/reports/profitAndLoss" icon={<HiOutlineDocumentReport className='text-lg'/>} className={ location === '/panel/financialManagment/reports/profitAndLoss' ?  'text-indigo-700 bg-zinc-50 font-medium' : 'text-gray-600 font-medium'}>
               Profit And Loss
             </MenuItem>

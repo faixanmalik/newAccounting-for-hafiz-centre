@@ -335,7 +335,7 @@ const ProductAndServices = ({ userEmail, product, charts, dbTaxRate}) => {
                             Name
                         </th>
                         <th scope="col" className="px-6 py-3">
-                            Available Qty
+                            Opening Stock
                         </th>
                         <th scope="col" className="px-6 py-3">
                             View / Edit

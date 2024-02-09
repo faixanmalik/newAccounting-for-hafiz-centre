@@ -616,6 +616,7 @@ const GeneralLedger = ({ userEmail, dbPaymentMethod, dbProducts, dbExpensesVouch
 
     const handleChange = (e) => {
         if (e.target.name === 'account') {
+            console.log(e.target.value)
             setAccount(e.target.value)
         }
         else if (e.target.name === 'fromDate') {

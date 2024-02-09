@@ -687,7 +687,7 @@ import Head from 'next/head';
                                     
                                       <td className="p-2 w-1/5">
                                         <select id="products" name="products" onChange={ e => change(e, index) } value={inputList.products} className="mt-1 p-2 block w-full rounded-md border border-gray-300 bg-white shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-indigo-500 sm:text-sm">
-                                          <option value=''>select products</option>
+                                          <option value=''>select product</option>
                                           {filteredProduct.map((item, index)=>{
                                             return <option key={index} value={item.name}>{item.name}</option>
                                           })}

@@ -27,8 +27,8 @@ function Signup() {
     }
   }, [])
 
-  const [firstname, setFirstname] = useState('')
-  const [lastname, setLastname] = useState('')
+  const [firstName, setFirstName] = useState('')
+  const [lastName, setLastName] = useState('')
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [confirmpassword, setConfirmpassword] = useState('')
@@ -52,7 +52,7 @@ function Signup() {
     e.preventDefault() 
 
     // fetch the data from form to makes a file in local system
-    const data = { firstname, lastname, email, password, confirmpassword, businessName, country, industry, day,  month };
+    const data = { firstName, lastName, email, password, confirmpassword, businessName, country, industry, day,  month };
 
     if( password !== confirmpassword ){
       document.getElementById('checkPassword').innerHTML = "Your Password is not Match!"
@@ -80,11 +80,11 @@ function Signup() {
   }
 
   const handleChange = (e) => {
-    if (e.target.name === 'firstname') {
-      setFirstname(e.target.value)
+    if (e.target.name === 'firstName') {
+      setFirstName(e.target.value)
     }
-    else if (e.target.name === 'lastname') {
-      setLastname(e.target.value)
+    else if (e.target.name === 'lastName') {
+      setLastName(e.target.value)
     }
     else if (e.target.name === 'email') {
       setEmail(e.target.value)
@@ -134,8 +134,8 @@ return (
               <CardBody className="flex flex-col gap-3 py-7">
 
                 <div className='flex space-x-2'>
-                  <input type="text" onChange={handleChange} value={firstname} className="bg-gray-100 bg-opacity-50 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="firstname" placeholder="First Name"/>
-                  <input type="text" onChange={handleChange} value={lastname} className="bg-gray-100 bg-opacity-50 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="lastname" placeholder="Last Name"/>
+                  <input type="text" onChange={handleChange} value={firstName} className="bg-gray-100 bg-opacity-50 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="firstName" placeholder="First Name"/>
+                  <input type="text" onChange={handleChange} value={lastName} className="bg-gray-100 bg-opacity-50 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="lastName" placeholder="Last Name"/>
                 </div>
 
                 <input type="text" onChange={handleChange} value={businessName} className="bg-gray-100 bg-opacity-50 w-full rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 text-base outline-none text-gray-700 p-2 resize-none leading-6 transition-colors duration-200 ease-in-out" name="businessName" placeholder="Business Name"/>

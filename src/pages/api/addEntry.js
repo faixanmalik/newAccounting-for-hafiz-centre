@@ -127,9 +127,10 @@ export default async function handler(req, res) {
         else if( path === 'PurchaseInvoice'){
             const { userEmail, phoneNo, email, discount, billStatus, amountPaid, amountReceived, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
 
-            for (const newItem of inputList) {
-                await Product.findOneAndUpdate({name: newItem.product}, { $inc: { availableQty: newItem.qty } })
-            }
+            // this is for increasing the qty of the inventory
+            // for (const newItem of inputList) {
+            //     await Product.findOneAndUpdate({name: newItem.product}, { $inc: { availableQty: newItem.qty } })
+            // }
 
             let newEntry = new PurchaseInvoice( { userEmail, phoneNo, email, discount, billStatus, amountPaid, amountReceived, city, address, reference, dueDate, inputList, name,  memo, journalDate, billNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
             await newEntry.save();
@@ -149,9 +150,10 @@ export default async function handler(req, res) {
         else if( path === 'SalesInvoice'){
             const { userEmail, discount, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, path, importEntries, row } = req.body;
 
-            for (const newItem of inputList) {
-                await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: -newItem.qty } })
-            }
+            // this is for decreasing the qty of the inventory
+            // for (const newItem of inputList) {
+            //     await Product.findOneAndUpdate({name: newItem.products}, { $inc: { availableQty: -newItem.qty } })
+            // }
 
             let newEntry = new SalesInvoice( { userEmail, discount, phoneNo, email, city, fromAccount, receivedBy, project, dueDate, inputList, name,  memo, journalDate, journalNo, fullAmount, fullTax, totalAmount, attachment, type:path } );
             await newEntry.save();
